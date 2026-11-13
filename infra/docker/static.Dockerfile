@@ -1,5 +1,5 @@
 # Builds the three front ends and ships them inside the Caddy image (non root).
-FROM node:22-bookworm-slim AS build
+FROM node:25-bookworm-slim AS build
 RUN corepack enable
 WORKDIR /repo
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml turbo.json tsconfig.base.json ./
