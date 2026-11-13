@@ -68,6 +68,7 @@ markers = ["integration: requires real provider credentials, run manually"]
 filterwarnings = ["ignore::DeprecationWarning"]
 
 [tool.coverage.run]
+concurrency = ["greenlet", "thread"]
 source = ["src/arha"]
 omit = ["src/arha/modules/forms/schema_models.py", "src/arha/modules/payments/adapters/notchpay.py",
         "src/arha/modules/payments/adapters/campay.py"]
@@ -82,7 +83,8 @@ select = ["E", "F", "W", "I", "B", "UP", "S", "ASYNC", "RUF", "SIM", "BLE"]
 ignore = ["S101", "S608", "RUF001", "RUF002", "RUF003", "B008", "S311"]
 
 [tool.ruff.lint.per-file-ignores]
-"tests/*" = ["S105", "S106", "S108"]
+"tests/*" = ["S105", "S106", "S108", "E501", "RUF059"]
+"src/arha/modules/*/documents.py" = ["E501"]
 
 [tool.mypy]
 python_version = "3.12"
@@ -95,6 +97,7 @@ ignore_missing_imports = true
 module = ["arha.modules.forms.schema_models"]
 ignore_errors = true
 
+# Known debt: 17 cross-module model imports remain (see docs/PROGRESS.md). Contract below is the target.
 [tool.importlinter]
 root_package = "arha"
 

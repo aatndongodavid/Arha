@@ -62,21 +62,15 @@ async def subscribe(body: SubscribeIn, idempotency_key: str | None = Header(defa
                     ctx: Ctx = Depends(require_permission("billing:manage"))) -> dict[str, Any]:
     from arha.modules.payments.service import start_platform_payment
 
-    from arha.db.session import app_tx
-    from arha.modules.orgs.service import get_org
-
     key = idempotency.require_key(idempotency_key)
-    assert ctx.org_id
-    # Committed in its own transaction: the subscription must exist before the provider confirms.
-    async with app_tx(org_id=ctx.org_id, user_id=ctx.user_id) as db:
-        sub = await service.create_subscription(db, await get_org(db, ctx.org_id), body.plan, body.period)
-    payment_id, view = await start_platform_payment(org_id=ctx.org_id, org=ctx.org, amount=sub.amount,
-                                                    msisdn=body.msisdn, idempotency_key=key,
+    sub = await service.create_subscription(ctx.db, ctx.org, body.plan, body.period)
+    await trust.audit(ctx.db, "billing.subscribe_started", org_id=ctx.org_id, actor_id=ctx.user_id,
+                      metadata={"plan": body.plan, "period": body.period, "amount": sub.amount})
+    # The subscription is committed with the payment row before the provider can confirm anything.
+    _, view = await start_platform_payment(ctx, org=ctx.org, amount=sub.amount, msisdn=body.msisdn,
+                                                    idempotency_key=key,
                                                     description=f"Arha {body.plan} {body.period}",
                                                     subscription_id=sub.id)
-    async with app_tx(org_id=ctx.org_id, user_id=ctx.user_id) as db:
-        await trust.audit(db, "billing.subscribe_started", org_id=ctx.org_id, actor_id=ctx.user_id,
-                          metadata={"plan": body.plan, "period": body.period, "amount": sub.amount})
     return {"subscription_id": sub.id, "amount": sub.amount, "discount_bps": sub.discount_bps,
             "pioneer": sub.pioneer, "payment": view}
 

@@ -116,7 +116,8 @@ async def pioneer_seats_left(db: AsyncSession) -> int:
 
 
 async def has_used_pioneer(db: AsyncSession) -> bool:
-    return (await db.execute(select(Subscription.id).where(Subscription.pioneer.is_(True)).limit(1))).first() is not None
+    stmt = select(Subscription.id).where(Subscription.pioneer.is_(True)).limit(1)
+    return (await db.execute(stmt)).first() is not None
 
 
 async def create_subscription(db: AsyncSession, org: Any, plan_code: str, period: str) -> Subscription:
@@ -136,7 +137,8 @@ async def activate(db: AsyncSession, org: Any, payment: Any) -> Invoice | None:
     if sub is None or sub.status == "active":
         return None
     current = await active_subscription(db)
-    start = current.period_end if current and current.period_end and current.period_end > clock.now() else clock.now()
+    now = clock.now()
+    start = current.period_end if current and current.period_end and current.period_end > now else now
     months = 1 if sub.billing_period == "monthly" else 12
     sub.period_start = start
     sub.period_end = _add_months(start, months)

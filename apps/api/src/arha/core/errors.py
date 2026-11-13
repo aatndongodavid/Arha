@@ -53,7 +53,7 @@ def problem(request: Request, status: int, code: str, params: dict[str, Any] | N
     locale = pick_locale(request.headers.get("accept-language"))
     body: dict[str, Any] = {
         "type": f"https://docs.arha.africa/errors/{code}",
-        "title": t(f"error.{code}.title", locale) if t(f"error.{code}.title", locale) != f"error.{code}.title" else code,
+        "title": code,
         "status": status,
         "detail": t(f"error.{code}", locale, **(params or {})),
         "code": code,

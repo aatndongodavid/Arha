@@ -58,7 +58,7 @@ async def flush(db: AsyncSession) -> None:
     for name, kwargs, schedule_in in jobs:
         try:
             await defer(name, kwargs, schedule_in)
-        except Exception:  # noqa: BLE001 - a failed deferral must not fail the committed request
+        except Exception:
             log.exception("job_defer_failed", job=name)
 
 

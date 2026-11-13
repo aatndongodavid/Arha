@@ -175,7 +175,8 @@ async def alerts(ctx: Ctx = Depends(platform_admin)) -> list[dict[str, Any]]:
     async with platform_tx() as db:
         rows = (await db.execute(text(
             "select id, organization_id, provider, provider_ref, payment_id, kind, details, created_at "
-            "from reconciliation_alerts where resolved_at is null order by created_at desc limit 500"))).mappings().all()
+            "from reconciliation_alerts where resolved_at is null order by created_at desc limit 500"))
+                ).mappings().all()
     return [dict(r) for r in rows]
 
 

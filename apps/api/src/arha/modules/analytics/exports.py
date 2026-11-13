@@ -78,8 +78,8 @@ def build_columns(schema: dict[str, Any], locale: str) -> list[Column]:
             elif b["type"] in ("product_choice", "ticket_choice"):
                 for o in opts:
                     name = _var_name({"id": f"{b.get('variableName') or bid}_{o['id']}"}, used)
-                    cols.append(Column(name, f"{label}: {_label(o, locale)}", "num",
-                                       getter=lambda s, bid=bid, oid=o["id"]: ((s.answers or {}).get(bid) or {}).get(oid)))
+                    cols.append(Column(name, f"{label}: {_label(o, locale)}", "num", getter=lambda s, bid=bid, oid=o[
+                        "id"]: ((s.answers or {}).get(bid) or {}).get(oid)))
             elif b["type"] == "yes_no":
                 yes, no = ("Oui", "Non") if locale == "fr" else ("Yes", "No")
                 cols.append(Column(_var_name(b, used), label, "num", {1: yes, 0: no},
@@ -145,15 +145,17 @@ def to_xlsx(df: pl.DataFrame, dico: pl.DataFrame, sheet: str) -> bytes:
 
 def _stat_file(df: pl.DataFrame, cols: list[Column], kind: str) -> bytes:
     pdf = df  # pyreadstat 1.3 writes Polars frames directly
-    labels = {c.name: c.label for c in cols}
-    value_labels = {c.name: {float(k): v for k, v in c.values.items()} for c in cols if c.values}
+    labels: dict[str, str | None] = {c.name: c.label for c in cols}
+    value_labels: dict[str, dict[int | float, str]] = {
+        c.name: {float(k): v for k, v in c.values.items()} for c in cols if c.values}
     with tempfile.TemporaryDirectory() as tmp:
         path = Path(tmp) / f"export.{kind}"
         if kind == "sav":
             pyreadstat.write_sav(pdf, str(path), column_labels=labels, variable_value_labels=value_labels)
         else:
-            dta_labels = {k: {int(x): y[:80] for x, y in v.items()} for k, v in value_labels.items()}
-            pyreadstat.write_dta(pdf, str(path), column_labels={k: v[:80] for k, v in labels.items()},
+            dta_labels: dict[str, dict[int | float, str]] = {
+                k: {int(x): y[:80] for x, y in v.items()} for k, v in value_labels.items()}
+            pyreadstat.write_dta(pdf, str(path), column_labels={k: (v or "")[:80] for k, v in labels.items()},
                                  variable_value_labels=dta_labels, version=15)
         return path.read_bytes()
 

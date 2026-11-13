@@ -56,8 +56,8 @@ def _parse_decimal(text: str) -> int:
     exp = int(m.group(4) or 0) - len(m.group(3) or "") + 6
     n = int(digits)
     if exp >= 0:
-        return sign * n * 10**exp
-    return sign * div_round_half_even(n, 10 ** (-exp))
+        return int(sign * n * 10**exp)
+    return int(sign * div_round_half_even(n, 10 ** (-exp)))
 
 
 def div_round_half_even(a: int, b: int) -> int:
@@ -82,7 +82,7 @@ def fixed_div(a: int, b: int) -> int:
 def fixed_round(a: int, digits: int) -> int:
     digits = max(0, min(6, digits))
     unit = 10 ** (6 - digits)
-    return div_round_half_even(a, unit) * unit
+    return int(div_round_half_even(a, unit) * unit)
 
 
 def to_currency_unit(a: int) -> int:
@@ -417,11 +417,11 @@ class Evaluator:
         path: list[str] = []
         next_page: dict[str, str | None] = {}
         ended = False
-        for i, page in enumerate(self.pages):
-            pid = page["id"]
+        for i, page_def in enumerate(self.pages):
+            pid = page_def["id"]
             if pid in jumps:
-                target = jumps[pid]
-                next_page[pid] = target if target in self.page_index else None
+                dest = jumps[pid]
+                next_page[pid] = dest if dest in self.page_index else None
             else:
                 next_page[pid] = self.pages[i + 1]["id"] if i + 1 < len(self.pages) else None
         current: str | None = self.pages[0]["id"] if self.pages else None
@@ -653,4 +653,4 @@ def evaluate(schema: dict[str, Any], answers: dict[str, Any], hidden: dict[str, 
     return Evaluator(schema).run(answers, hidden)
 
 
-__all__ = ["Result", "evaluate", "SCALE", "INPUT_TYPES", "PAYMENT_TYPES", "_condition_fields"]
+__all__ = ["INPUT_TYPES", "PAYMENT_TYPES", "SCALE", "Result", "_condition_fields", "evaluate"]

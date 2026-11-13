@@ -8,7 +8,7 @@ import uuid
 from datetime import datetime, timedelta
 from typing import Any
 
-from sqlalchemy import func, or_, select, text
+from sqlalchemy import String, func, or_, select, text
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from arha.core import clock, jobs
@@ -217,8 +217,7 @@ async def page(db: AsyncSession, *, form_id: uuid.UUID, status: str | None, paym
         base = base.where(Submission.payment_status == payment_status)
     if q:
         needle = f"%{q.replace('%', '').replace('_', '')}%"
-        base = base.where(or_(Submission.answers.cast(text("text")).ilike(needle),  # type: ignore[arg-type]
-                              func.cast(Submission.id, text("text")).ilike(needle)))  # type: ignore[arg-type]
+        base = base.where(or_(Submission.answers.cast(String).ilike(needle), Submission.id.cast(String).ilike(needle)))
     total = int((await db.execute(select(func.count()).select_from(base.subquery()))).scalar_one())
     stmt = base
     if cursor:

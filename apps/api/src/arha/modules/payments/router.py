@@ -64,7 +64,7 @@ async def pay(code: str, submission_id: uuid.UUID, body: PayIn,
         raise NotFound("submission_not_found")
     used = await ctx.db.get(FormVersion, sub.form_version_id)
     schema = used.schema if used else version.schema
-    return await service.start_payment(org_id=org.id, org=org, form=form, submission_id=submission_id,
+    return await service.start_payment(ctx, org=org, form=form, submission_id=submission_id,
                                        msisdn=body.msisdn, channel=body.channel, idempotency_key=key,
                                        provider_code=_provider_for(schema), schema=schema)
 
@@ -87,7 +87,7 @@ async def payment_status(payment_id: uuid.UUID, ctx: Ctx = Depends(public_route)
 async def _payment_from_token(ctx: Ctx, payment_id: uuid.UUID, token: str) -> Payment:
     try:
         claims = verify_compact(token)
-    except Exception as exc:  # noqa: BLE001
+    except Exception as exc:
         raise NotFound("payment_not_found") from exc
     if claims.get("p") != str(payment_id) or claims.get("k") != "receipt":
         raise NotFound("payment_not_found")

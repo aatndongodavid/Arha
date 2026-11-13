@@ -106,7 +106,7 @@ class PlansConfig(_Strict):
 
     def features_of(self, code: str) -> frozenset[str]:
         plan = self.plans[code]
-        own = set(plan.features) | set(plan.extra_features)
+        own: set[str] = {*plan.features, *plan.extra_features}
         if plan.inherits:
             own |= self.features_of(plan.inherits)
         return frozenset(own)

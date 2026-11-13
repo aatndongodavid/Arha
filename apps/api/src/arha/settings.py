@@ -33,7 +33,7 @@ class Settings(BaseSettings):
     s3_bucket: str = "arha-files"
     s3_access_key: SecretStr | None = None
     s3_secret_key: SecretStr | None = None
-    local_files_dir: Path = Path("/tmp/arha-files")
+    local_files_dir: Path = Path("/tmp/arha-files")  # noqa: S108
 
     # 32 bytes, base64. Required outside dev and test.
     master_key: SecretStr = SecretStr("ZGV2LW9ubHktbWFzdGVyLWtleS0zMi1ieXRlcy0wMDA=")

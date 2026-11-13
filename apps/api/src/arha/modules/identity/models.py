@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import uuid
 
-
 from sqlalchemy import ARRAY, Text
 from sqlalchemy.orm import Mapped, mapped_column
 

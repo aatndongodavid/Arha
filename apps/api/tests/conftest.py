@@ -17,24 +17,23 @@ os.environ.update({
     "LOCAL_FILES_DIR": "/tmp/arha-test-files",
 })
 
-import uuid  # noqa: E402
-from collections.abc import AsyncIterator  # noqa: E402
-from dataclasses import dataclass  # noqa: E402
-from typing import Any  # noqa: E402
+import uuid
+from collections.abc import AsyncIterator
+from dataclasses import dataclass
+from typing import Any
 
-import pytest  # noqa: E402
-from httpx import ASGITransport, AsyncClient  # noqa: E402
-from sqlalchemy import text  # noqa: E402
-from sqlalchemy.ext.asyncio import create_async_engine  # noqa: E402
+import pytest
+from httpx import ASGITransport, AsyncClient
+from sqlalchemy import text
+from sqlalchemy.ext.asyncio import create_async_engine
 
-from arha.core import jobs  # noqa: E402
-from arha.core.ids import uuid7  # noqa: E402
-from arha.core.ratelimit import valkey  # noqa: E402
-from arha.main import app  # noqa: E402
-from arha.modules.messaging import service as mail  # noqa: E402
-from arha.modules.payments.adapters.fake import FAKE  # noqa: E402
-
-import arha.workers.tasks  # noqa: E402, F401  (registers jobs)
+import arha.workers.tasks  # noqa: F401  (registers jobs)
+from arha.core import jobs
+from arha.core.ids import uuid7
+from arha.core.ratelimit import valkey
+from arha.main import app
+from arha.modules.messaging import service as mail
+from arha.modules.payments.adapters.fake import FAKE
 
 OWNER_URL = os.environ["DATABASE_MIGRATION_URL"]
 PASSWORD = "Correct-Horse-Battery-42"

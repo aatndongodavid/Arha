@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import uuid
 
-
 from fastapi import APIRouter, Depends, Response
 from fastapi.responses import RedirectResponse
 

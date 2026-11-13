@@ -259,61 +259,69 @@ def public_view(p: Payment) -> dict[str, Any]:
     return view
 
 
-async def start_payment(*, org_id: uuid.UUID, org: Any, form: Any, submission_id: uuid.UUID, msisdn: str,
+async def start_payment(ctx: Any, *, org: Any, form: Any, submission_id: uuid.UUID, msisdn: str,
                         channel: str | None, idempotency_key: str, provider_code: str,
                         schema: dict[str, Any], purpose: str = "submission") -> dict[str, Any]:
-    """Create the payment, commit, call the provider, then record its answer (two transactions)."""
+    """Create the payment and commit, call the provider outside any transaction, then record its answer.
+
+    `ctx.db` carries the tenant context; `ctx.checkpoint()` commits and reopens it on the same connection.
+    """
     e164, operator = normalize_msisdn(msisdn, org.country)
     chosen = channel if channel in ("mtn", "orange") else operator
-    key_hash = sha256_hex(f"{org_id}:{idempotency_key}")
+    key_hash = sha256_hex(f"{org.id}:{idempotency_key}")
     provider = get_provider(provider_code)
     from arha.modules.submissions.models import Submission
 
+    db: AsyncSession = ctx.db
     # Transaction 1: validate, reserve, create.
-    async with app_tx(org_id=org_id) as db:
-        existing = (await db.execute(select(Payment).where(Payment.idempotency_key == key_hash))).scalar_one_or_none()
-        if existing is not None:
-            return public_view(existing)  # double click or network replay: same payment (F-PAY-04)
-        sub = (await db.execute(select(Submission).where(Submission.id == submission_id).with_for_update())
-               ).scalar_one_or_none()
-        if sub is None or sub.form_id != form.id or sub.submitted_at is None:
-            raise NotFound("submission_not_found")
-        if sub.payment_status == "paid":
-            raise AppError("payment_already_paid", 409)
-        if sub.payment_status == "none" or not sub.amount_due:
-            raise AppError("payment_not_required", 409)
-        active = (await db.execute(select(Payment).where(
-            Payment.submission_id == sub.id, Payment.status.in_(("created", "pending")),
-            Payment.expires_at > clock.now()))).scalar_one_or_none()
-        if active is not None:
-            raise AppError("payment_in_progress", 409, extra={"payment_id": str(active.id)})
-        computed = sub.computed or {}
-        amount = int(computed.get("total_to_pay") or sub.amount_due)  # server computed, never from the browser
-        if amount <= 0:
-            raise AppError("payment_amount_invalid", 422)
-        fee_bearer = ((schema.get("settings") or {}).get("payments") or {}).get("feeBearer", "org")
-        reservation = await _reserve(db, form.id, _ticket_lines(sub, schema))
-        account = await get_account(db, provider.code)
-        connected = account.provider_account_id if account and account.status == "verified" else None
-        if provider.code != "fake" and provider.supports_platform_fee and connected is None:
-            raise AppError("payment_account_required", 422)
-        payment = Payment(
-            id=uuid7(), submission_id=sub.id, purpose=purpose, provider=provider.code, channel=chosen, amount=amount,
-            currency=sub.currency or org.currency, platform_fee=int(computed.get("platform_fee", 0)),
-            provider_fee=int(computed.get("estimated_provider_fee", 0)), fee_bearer=fee_bearer, status="created",
-            idempotency_key=key_hash, payer_msisdn_hash=keyed_hash(e164),
-            raw_events=[{"type": "reservation", "items": reservation}],
-            expires_at=clock.now() + timedelta(minutes=get_plans().payment_expiry_minutes))
-        db.add(payment)
-        await db.flush()
-        payment_id = payment.id
-        request = ChargeRequest(
-            idempotency_key=key_hash, amount=amount, currency=payment.currency, msisdn=e164,
-            channel=chosen if chosen in ("mtn", "orange") else "auto",  # type: ignore[arg-type]
-            connected_account_id=connected, platform_fee=payment.platform_fee,
-            description=form.title[:100], reference=str(payment_id),
-            callback_url=f"{get_settings().arha_api_url}/v1/webhooks/{provider.code}")
+    existing = (await db.execute(select(Payment).where(Payment.idempotency_key == key_hash))).scalar_one_or_none()
+    if existing is not None:
+        return public_view(existing)  # double click or network replay: same payment (F-PAY-04)
+    sub = (await db.execute(select(Submission).where(Submission.id == submission_id).with_for_update())
+           ).scalar_one_or_none()
+    if sub is None or sub.form_id != form.id or sub.submitted_at is None:
+        raise NotFound("submission_not_found")
+    if sub.payment_status == "paid":
+        raise AppError("payment_already_paid", 409)
+    if sub.payment_status == "none" or not sub.amount_due:
+        raise AppError("payment_not_required", 409)
+    active = (await db.execute(select(Payment).where(
+        Payment.submission_id == sub.id, Payment.status.in_(("created", "pending")),
+        Payment.expires_at > clock.now()))).scalar_one_or_none()
+    if active is not None:
+        raise AppError("payment_in_progress", 409, extra={"payment_id": str(active.id)})
+    computed = sub.computed or {}
+    amount = int(computed.get("total_to_pay") or sub.amount_due)  # server computed, never from the browser
+    if amount <= 0:
+        raise AppError("payment_amount_invalid", 422)
+    fee_bearer = ((schema.get("settings") or {}).get("payments") or {}).get("feeBearer", "org")
+    account = await get_account(db, provider.code)
+    connected = account.provider_account_id if account and account.status == "verified" else None
+    if provider.code != "fake" and provider.supports_platform_fee and connected is None:
+        raise AppError("payment_account_required", 422)
+    reservation = await _reserve(db, form.id, _ticket_lines(sub, schema))
+    payment = Payment(
+        id=uuid7(), submission_id=sub.id, purpose=purpose, provider=provider.code, channel=chosen, amount=amount,
+        currency=sub.currency or org.currency, platform_fee=int(computed.get("platform_fee", 0)),
+        provider_fee=int(computed.get("estimated_provider_fee", 0)), fee_bearer=fee_bearer, status="created",
+        idempotency_key=key_hash, payer_msisdn_hash=keyed_hash(e164),
+        raw_events=[{"type": "reservation", "items": reservation}],
+        expires_at=clock.now() + timedelta(minutes=get_plans().payment_expiry_minutes))
+    db.add(payment)
+    await db.flush()
+    payment_id = payment.id
+    request = ChargeRequest(
+        idempotency_key=key_hash, amount=amount, currency=payment.currency, msisdn=e164,
+        channel=chosen if chosen in ("mtn", "orange") else "auto",  # type: ignore[arg-type]
+        connected_account_id=connected, platform_fee=payment.platform_fee,
+        description=form.title[:100], reference=str(payment_id),
+        callback_url=f"{get_settings().arha_api_url}/v1/webhooks/{provider.code}")
+    await ctx.checkpoint()
+    return await _charge_and_record(ctx, provider, request, payment_id)
 
+
+async def _charge_and_record(ctx: Any, provider: Any, request: ChargeRequest, payment_id: uuid.UUID
+                             ) -> dict[str, Any]:
     # Outside any transaction: the provider call.
     try:
         initiated = await provider.initiate_charge(request)
@@ -323,22 +331,22 @@ async def start_payment(*, org_id: uuid.UUID, org: Any, form: Any, submission_id
         provider_error = exc.code
 
     # Transaction 2: record the outcome.
-    async with app_tx(org_id=org_id) as db:
-        payment = (await db.execute(select(Payment).where(Payment.id == payment_id).with_for_update())).scalar_one()
-        if initiated is None:
-            await apply_status(db, payment, "failed", source="initiate", failure_reason=provider_error)
-            view = public_view(payment)
-        else:
-            payment.provider_ref = initiated.provider_ref
-            if initiated.status == "failed":
-                await apply_status(db, payment, "failed", source="initiate", failure_reason="declined")
-            else:
-                await apply_status(db, payment, "pending", source="initiate")
-                payment.next_poll_at = clock.now() + timedelta(seconds=POLL_DELAYS[0])
-                jobs.enqueue(db, "payments.poll", schedule_in=POLL_DELAYS[0], org_id=str(org_id),
-                             payment_id=str(payment_id))
-            view = public_view(payment)
+    db: AsyncSession = ctx.db
+    payment = (await db.execute(select(Payment).where(Payment.id == payment_id).with_for_update())).scalar_one()
+    if initiated is None:
+        await apply_status(db, payment, "failed", source="initiate", failure_reason=provider_error)
+    elif initiated.status == "failed":
+        payment.provider_ref = initiated.provider_ref
+        await apply_status(db, payment, "failed", source="initiate", failure_reason="declined")
+    else:
+        payment.provider_ref = initiated.provider_ref
+        await apply_status(db, payment, "pending", source="initiate")
+        payment.next_poll_at = clock.now() + timedelta(seconds=POLL_DELAYS[0])
+        jobs.enqueue(db, "payments.poll", schedule_in=POLL_DELAYS[0], org_id=str(payment.organization_id),
+                     payment_id=str(payment_id))
+    view = public_view(payment)
     if provider_error:
+        await ctx.checkpoint()  # keep the failed state, then report the outage
         raise AppError("payment_provider_unavailable", 503, extra={"payment": {"id": str(payment_id)}})
     return view
 
@@ -371,7 +379,7 @@ async def confirm_with_provider(db: AsyncSession, payment: Payment, *, source: s
     except ProviderError:
         return
     if status.status == "succeeded":
-        if status.amount is not None and status.amount != payment.amount or (
+        if (status.amount is not None and status.amount != payment.amount) or (
                 status.currency and status.currency != payment.currency):
             db.add(ReconciliationAlert(id=uuid7(), organization_id=payment.organization_id, provider=payment.provider,
                                        provider_ref=payment.provider_ref, payment_id=payment.id,
@@ -458,7 +466,9 @@ async def reconcile(window_hours: int = 48) -> int:
             for tx in txns:
                 seen.add(tx.provider_ref)
                 p = ours.get(tx.provider_ref)
-                kind, details, org = None, {}, None
+                kind: str | None = None
+                details: dict[str, Any] = {}
+                org = None
                 if p is None:
                     kind, details = "unknown_transaction", {"amount": tx.amount, "status": tx.status}
                 else:
@@ -473,7 +483,8 @@ async def reconcile(window_hours: int = 48) -> int:
                                                kind=kind, details=details))
                     created += 1
             for ref, p in ours.items():
-                if p.status == "succeeded" and ref not in seen and p.created_at >= since and not await _alert_exists(
+                fresh = bool(ref) and p.status == "succeeded" and ref not in seen and p.created_at >= since
+                if fresh and ref and not await _alert_exists(
                         db, provider_code, ref, "missing_at_provider"):
                     db.add(ReconciliationAlert(id=uuid7(), organization_id=p.organization_id, provider=provider_code,
                                                provider_ref=ref, payment_id=p.id, kind="missing_at_provider",
@@ -537,7 +548,7 @@ async def scan(db: AsyncSession, token: str, user_id: uuid.UUID) -> dict[str, An
 
     try:
         payload = verify_compact(token)
-    except Exception as exc:  # noqa: BLE001 - any decoding or signature failure is an invalid ticket
+    except Exception as exc:
         raise AppError("ticket_invalid", 422) from exc
     ticket = (await db.execute(select(Ticket).where(Ticket.token_hash == sha256_hex(token)).with_for_update())
               ).scalar_one_or_none()
@@ -581,46 +592,30 @@ async def sync_scans(db: AsyncSession, scans: list[dict[str, Any]], user_id: uui
     return {"accepted": accepted, "duplicates": duplicates}
 
 
-async def start_platform_payment(*, org_id: uuid.UUID, org: Any, amount: int, msisdn: str, idempotency_key: str,
+async def start_platform_payment(ctx: Any, *, org: Any, amount: int, msisdn: str, idempotency_key: str,
                                  description: str, subscription_id: uuid.UUID) -> tuple[uuid.UUID, dict[str, Any]]:
     """Payment of an Arha subscription (F-FAC-01). This is Arha's own revenue: no connected account."""
     e164, operator = normalize_msisdn(msisdn, org.country)
-    key_hash = sha256_hex(f"{org_id}:sub:{idempotency_key}")
+    key_hash = sha256_hex(f"{org.id}:sub:{idempotency_key}")
     provider = get_provider(resolve_code(None))
-    async with app_tx(org_id=org_id) as db:
-        existing = (await db.execute(select(Payment).where(Payment.idempotency_key == key_hash))).scalar_one_or_none()
-        if existing is not None:
-            return existing.id, public_view(existing)
-        payment = Payment(id=uuid7(), purpose="subscription", provider=provider.code, channel=operator,
-                          amount=amount, currency=org.currency, platform_fee=0, fee_bearer="org", status="created",
-                          idempotency_key=key_hash, payer_msisdn_hash=keyed_hash(e164),
-                          expires_at=clock.now() + timedelta(minutes=get_plans().payment_expiry_minutes))
-        db.add(payment)
-        await db.flush()
-        payment_id = payment.id
-        # Linked before the provider call so an early webhook always finds the subscription.
-        await db.execute(text("update subscriptions set payment_id = :p where id = :s"),
-                         {"p": payment_id, "s": subscription_id})
+    db: AsyncSession = ctx.db
+    existing = (await db.execute(select(Payment).where(Payment.idempotency_key == key_hash))).scalar_one_or_none()
+    if existing is not None:
+        return existing.id, public_view(existing)
+    payment = Payment(id=uuid7(), purpose="subscription", provider=provider.code, channel=operator,
+                      amount=amount, currency=org.currency, platform_fee=0, fee_bearer="org", status="created",
+                      idempotency_key=key_hash, payer_msisdn_hash=keyed_hash(e164),
+                      expires_at=clock.now() + timedelta(minutes=get_plans().payment_expiry_minutes))
+    db.add(payment)
+    await db.flush()
+    payment_id = payment.id
+    # Linked before the provider call so an early webhook always finds the subscription.
+    await db.execute(text("update subscriptions set payment_id = :p where id = :s"),
+                     {"p": payment_id, "s": subscription_id})
     request = ChargeRequest(idempotency_key=key_hash, amount=amount, currency=org.currency, msisdn=e164,
                             channel=operator if operator in ("mtn", "orange") else "auto",  # type: ignore[arg-type]
                             connected_account_id=None, platform_fee=0, description=description[:100],
                             reference=str(payment_id),
                             callback_url=f"{get_settings().arha_api_url}/v1/webhooks/{provider.code}")
-    try:
-        initiated = await provider.initiate_charge(request)
-        error = None
-    except ProviderError as exc:
-        initiated, error = None, exc.code
-    async with app_tx(org_id=org_id) as db:
-        payment = (await db.execute(select(Payment).where(Payment.id == payment_id).with_for_update())).scalar_one()
-        if initiated is None or initiated.status == "failed":
-            await apply_status(db, payment, "failed", source="initiate", failure_reason=error or "declined")
-        else:
-            payment.provider_ref = initiated.provider_ref
-            await apply_status(db, payment, "pending", source="initiate")
-            jobs.enqueue(db, "payments.poll", schedule_in=POLL_DELAYS[0], org_id=str(org_id),
-                         payment_id=str(payment_id))
-        view = public_view(payment)
-    if error:
-        raise AppError("payment_provider_unavailable", 503)
-    return payment_id, view
+    await ctx.checkpoint()
+    return payment_id, await _charge_and_record(ctx, provider, request, payment_id)

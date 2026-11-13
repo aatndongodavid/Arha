@@ -27,7 +27,7 @@ async def _schema(ctx: Ctx, form_id: uuid.UUID) -> tuple[Any, dict[str, Any]]:
 
 @router.get("/summary")
 async def summary(form_id: uuid.UUID, ctx: Ctx = Depends(require_permission("analytics:read"))) -> dict[str, Any]:
-    form, schema = await _schema(ctx, form_id)
+    _, schema = await _schema(ctx, form_id)
     subs = await service.completed(ctx.db, form_id)
     raw = await forms.funnel(ctx.db, form_id)
     from arha.modules.payments.service import summary as pay_summary
@@ -76,7 +76,7 @@ async def crosstab(form_id: uuid.UUID, row: str = Query(max_length=40), col: str
                    ctx: Ctx = Depends(require_permission("analytics:read"))) -> dict[str, Any]:
     """F-ANA-04 (V2, Pro): two question cross table with a chi-square test."""
     require_feature(ctx.org, "crosstabs")
-    _, schema = await _schema(ctx, form_id)
+    await _schema(ctx, form_id)
     subs = await service.completed(ctx.db, form_id)
     table: dict[str, dict[str, int]] = {}
     for s in subs:

@@ -106,7 +106,8 @@ async def list_forms(db: AsyncSession, *, folder_id: uuid.UUID | None, query: st
         stmt = stmt.where(Form.folder_id == folder_id)
     if query:
         stmt = stmt.where(Form.title.ilike(f"%{query.replace('%', '').replace('_', '')}%"))
-    order = {"updated": Form.updated_at.desc(), "title": Form.title.asc(), "created": Form.created_at.desc()}
+    order: dict[str, Any] = {"updated": Form.updated_at.desc(), "title": Form.title.asc(),
+                             "created": Form.created_at.desc()}
     stmt = stmt.order_by(order.get(sort, Form.updated_at.desc()), Form.id).limit(limit).offset(offset)
     forms = list((await db.execute(stmt)).scalars())
     counts = await count_by_form(db, [f.id for f in forms])

@@ -7,7 +7,6 @@ import smtplib
 import uuid
 from dataclasses import dataclass, field
 from email.message import EmailMessage
-from pathlib import Path
 
 import structlog
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -51,6 +50,12 @@ def _send_smtp(mail: Mail) -> None:
         smtp.send_message(msg)
 
 
+def _write_dev_mail(mail: Mail) -> None:
+    out = get_settings().local_files_dir.parent / "arha-mail"
+    out.mkdir(parents=True, exist_ok=True)
+    (out / f"{uuid7()}.txt").write_text(f"To: {mail.to}\nSubject: {mail.subject}\n\n{mail.text}", encoding="utf-8")
+
+
 async def send(mail: Mail, *, db: AsyncSession | None = None, org_id: uuid.UUID | None = None) -> None:
     s = get_settings()
     status = "sent"
@@ -59,10 +64,7 @@ async def send(mail: Mail, *, db: AsyncSession | None = None, org_id: uuid.UUID 
             await asyncio.to_thread(_send_smtp, mail)
         else:
             OUTBOX.append(mail)
-            out = Path("/tmp/arha-mail")
-            out.mkdir(exist_ok=True)
-            (out / f"{uuid7()}.txt").write_text(f"To: {mail.to}\nSubject: {mail.subject}\n\n{mail.text}",
-                                                encoding="utf-8")
+            await asyncio.to_thread(_write_dev_mail, mail)
     except (OSError, smtplib.SMTPException) as exc:
         status = "failed"
         log.warning("mail_failed", template=mail.template, error_type=type(exc).__name__)

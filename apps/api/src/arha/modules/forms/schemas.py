@@ -83,8 +83,9 @@ class PublishOut(BaseModel):
 
 
 class TemplateOut(BaseModel):
+    model_config = ConfigDict(populate_by_name=True)
     code: str
     title: dict[str, str]
     description: dict[str, str]
     category: str
-    schema_: dict[str, Any] = Field(serialization_alias="schema")
+    schema_: dict[str, Any] = Field(alias="schema")

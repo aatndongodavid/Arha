@@ -27,6 +27,7 @@ from arha.modules.forms.models import Form, FormVersion
 from arha.modules.orgs import service as orgs
 from arha.modules.submissions import schemas as s
 from arha.modules.submissions import service
+from arha.modules.submissions.models import Submission
 from arha.modules.trust import service as trust
 from arha.modules.trust.models import StoredFile
 from arha.settings import get_settings
@@ -42,6 +43,7 @@ async def resolve(ctx: Ctx, code: str) -> tuple[Form, Any, FormVersion | None]:
     if org_id is None:
         raise NotFound("form_not_found")
     await set_org(ctx.db, org_id)
+    ctx.org_id = org_id
     form = (await ctx.db.execute(select(Form).where(Form.short_code == code))).scalar_one()
     org = await orgs.get_org(ctx.db, org_id)
     version = await forms.current_version(ctx.db, form)
@@ -146,8 +148,9 @@ async def submit(code: str, body: s.SubmissionIn, response: Response,
         replay = await idempotency.lookup(ctx.db, "submission", key, body_hash)
         if replay:
             return JSONResponse(replay["response"], status_code=200)
+    assert target is not None
     reason = service.availability(form, org, await service.completed_count(ctx.db, form.id))
-    already = await ctx.db.get(service.Submission, body.id)
+    already = await ctx.db.get(Submission, body.id)
     if reason and not (already and already.submitted_at and not already.is_partial):
         raise AppError(reason, 410 if reason == "form_unavailable" else 403)
     result, status = await service.intake(ctx.db, form=form, org=org, version=target, payload=body,
@@ -249,4 +252,4 @@ async def download(key: str, e: int, s: str, ctx: Ctx = Depends(public_route)) -
         "Content-Security-Policy": "default-src 'none'; sandbox"})
 
 
-__all__ = ["router", "files_router", "json"]
+__all__ = ["files_router", "json", "router"]

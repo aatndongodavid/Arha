@@ -12,10 +12,11 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from arha.modules.submissions.models import Submission
 
-STOPWORDS = set("""le la les un une des de du et ou en au aux a à ce ces cet cette je tu il elle nous vous ils elles
-on que qui quoi dont pour par sur dans avec sans pas ne plus est sont été être avoir ai as avons avez ont mon ma mes
-ton ta tes son sa ses notre nos votre vos leur leurs se sa y the a an and or of to in on for with is are was were be
-it this that i you he she we they my your our their not no yes oui non très tres bien""".split())
+_STOP = ("le la les un une des de du et ou en au aux a à ce ces cet cette je tu il elle nous vous ils elles on que "
+         "qui quoi dont pour par sur dans avec sans pas ne plus est sont été être avoir ai as avons avez ont mon ma "
+         "mes ton ta tes son sa ses notre nos votre vos leur leurs se y the an and or of to in on for with is are "
+         "was were be it this that i you he she we they my your our their not no yes oui non très tres bien")
+STOPWORDS = frozenset(_STOP.split())
 
 
 async def completed(db: AsyncSession, form_id: uuid.UUID, limit: int = 100_000) -> list[Submission]:

@@ -43,4 +43,4 @@ def test_S_04_every_route_has_permission_or_is_whitelisted() -> None:
 
 def test_S_04_whitelist_has_no_stale_entries() -> None:
     paths = {r.path for r in iter_routes(app.routes)}
-    assert PUBLIC_WHITELIST <= paths
+    assert paths >= PUBLIC_WHITELIST

@@ -167,4 +167,4 @@ async def verification_status(ctx: Ctx = Depends(require_permission("org:read"))
     return {"status": req.status if req else None, "note": req.note if req else None}
 
 
-__all__ = ["router", "set_org", "NotFound"]
+__all__ = ["NotFound", "router", "set_org"]

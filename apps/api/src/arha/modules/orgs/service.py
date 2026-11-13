@@ -135,7 +135,7 @@ async def accept_invitation(db: AsyncSession, *, token: str, user_id: uuid.UUID,
     inv.accepted_at = clock.now()
     await db.flush()
     await trust.audit(db, "member.joined", org_id=org_id, actor_id=user_id, metadata={"role": inv.role})
-    return org_id
+    return uuid.UUID(str(org_id))
 
 
 async def _owner_count(db: AsyncSession) -> int:

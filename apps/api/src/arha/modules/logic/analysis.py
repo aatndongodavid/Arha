@@ -151,8 +151,8 @@ def analyze(schema: dict[str, Any]) -> list[Issue]:
             for loc in locales:
                 if not (label.get(loc) or "").strip():
                     issues.append(Issue("warning", "missing_translation", bid, loc))
-        if t in ("single_choice", "multi_choice", "dropdown", "ranking", "product_choice", "ticket_choice") and not b.get(
-                "options"):
+        with_options = ("single_choice", "multi_choice", "dropdown", "ranking", "product_choice", "ticket_choice")
+        if t in with_options and not b.get("options"):
             issues.append(Issue("error", "options_required", bid))
         if t in ("payment_computed", "computed_display") and b.get("variable") not in variables:
             issues.append(Issue("error", "unknown_reference", bid, b.get("variable")))

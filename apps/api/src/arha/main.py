@@ -92,7 +92,7 @@ def create_app() -> FastAPI:
     return app
 
 
-def Depends_public() -> Ctx:  # noqa: N802
+def Depends_public() -> Ctx:
     from fastapi import Depends
 
     return Depends(public_route)  # type: ignore[no-any-return]

@@ -54,6 +54,18 @@ class Ctx:
     org: Any = None
     extras: dict[str, Any] = field(default_factory=dict)
 
+    async def checkpoint(self) -> None:
+        """Commit now and keep working in a new transaction with the same tenant context.
+
+        Used around external calls (payment providers) so the provider is never called inside an open
+        transaction, without holding a second pooled connection."""
+        from arha.core import jobs
+
+        await self.db.commit()
+        await jobs.flush(self.db)
+        await set_org(self.db, self.org_id)
+        await set_user(self.db, self.user.user_id if self.user else None)
+
     @property
     def user_id(self) -> uuid.UUID:
         if self.user is None:
@@ -66,21 +78,29 @@ def client_ip(request: Request) -> str:
     fwd = request.headers.get("x-forwarded-for")
     if fwd:
         return fwd.split(",")[0].strip()
-    return request.client.host if request.client else "0.0.0.0"
+    return request.client.host if request.client else "unknown"
 
 
 async def db_session() -> AsyncIterator[AsyncSession]:
+    """One session per request. Committed BEFORE the response is sent (scope="function" below), so a client
+    never sees a success for data that failed to commit. Jobs are deferred only after the commit."""
     from arha.core import jobs
 
-    async with _app_factory()() as session:
-        async with session.begin():
-            await set_org(session, None)
-            await set_user(session, None)
-            yield session
-        await jobs.flush(session)  # only after a successful commit
+    session = _app_factory()()
+    try:
+        await set_org(session, None)
+        await set_user(session, None)
+        yield session
+        await session.commit()
+        await jobs.flush(session)
+    except BaseException:
+        await session.rollback()
+        raise
+    finally:
+        await session.close()
 
 
-async def _base_ctx(request: Request, db: AsyncSession = Depends(db_session)) -> Ctx:
+async def _base_ctx(request: Request, db: AsyncSession = Depends(db_session, scope="function")) -> Ctx:
     return Ctx(db=db, request=request, locale=pick_locale(request.headers.get("accept-language")),
                ip_hash=keyed_hash(client_ip(request)))
 
