@@ -15,7 +15,7 @@ jobs:
         with: { node-version: 22, cache: pnpm }
       - name: Build the public form shell needed by the API image
         run: pnpm install --frozen-lockfile && pnpm --filter @arha/forms build
-      - uses: docker/login-action@v3
+      - uses: docker/login-action@v4
         with: { registry: ghcr.io, username: "${{ github.actor }}", password: "${{ secrets.GITHUB_TOKEN }}" }
       - name: Lowercase owner
         run: echo "OWNER=${GITHUB_REPOSITORY_OWNER,,}" >> "$GITHUB_ENV"
