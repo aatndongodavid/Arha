@@ -36,11 +36,16 @@ async def audit(db: AsyncSession, action: str, *, org_id: uuid.UUID | None, acto
                 target_type: str | None = None, target_id: Any = None, ip_hash: str | None = None,
                 metadata: dict[str, Any] | None = None) -> AuditEvent:
     """Append an audit event. hash = sha256(previous_hash || canonical_json(event))."""
-    lock_key = str(org_id) if org_id else "platform"
+    # One chain per scope: organisation, else user, else platform.
+    lock_key = f"org:{org_id}" if org_id else (f"user:{actor_id}" if actor_id else "platform")
     await db.execute(text("select pg_advisory_xact_lock(hashtext(:k))"), {"k": f"audit:{lock_key}"})
     prev_stmt = select(AuditEvent.hash).order_by(AuditEvent.created_at.desc(), AuditEvent.id.desc()).limit(1)
-    prev_stmt = prev_stmt.where(AuditEvent.organization_id == org_id) if org_id else prev_stmt.where(
-        AuditEvent.organization_id.is_(None))
+    if org_id:
+        prev_stmt = prev_stmt.where(AuditEvent.organization_id == org_id)
+    elif actor_id:
+        prev_stmt = prev_stmt.where(AuditEvent.organization_id.is_(None), AuditEvent.actor_id == actor_id)
+    else:
+        prev_stmt = prev_stmt.where(AuditEvent.organization_id.is_(None), AuditEvent.actor_id.is_(None))
     previous = (await db.execute(prev_stmt)).scalar_one_or_none()
     event = AuditEvent(id=uuid7(), organization_id=org_id, actor_id=actor_id, action=action,
                        target_type=target_type, target_id=str(target_id) if target_id is not None else None,

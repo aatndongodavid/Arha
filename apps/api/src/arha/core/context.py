@@ -70,10 +70,14 @@ def client_ip(request: Request) -> str:
 
 
 async def db_session() -> AsyncIterator[AsyncSession]:
-    async with _app_factory()() as session, session.begin():
-        await set_org(session, None)
-        await set_user(session, None)
-        yield session
+    from arha.core import jobs
+
+    async with _app_factory()() as session:
+        async with session.begin():
+            await set_org(session, None)
+            await set_user(session, None)
+            yield session
+        await jobs.flush(session)  # only after a successful commit
 
 
 async def _base_ctx(request: Request, db: AsyncSession = Depends(db_session)) -> Ctx:

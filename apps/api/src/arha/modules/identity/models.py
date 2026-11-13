@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import uuid
-from datetime import datetime
+
 
 from sqlalchemy import ARRAY, Text
 from sqlalchemy.orm import Mapped, mapped_column
@@ -49,6 +49,6 @@ class EmailToken(Base):
     email: Mapped[str]
     purpose: Mapped[str]
     token_hash: Mapped[str]
-    expires_at: Mapped[datetime] = mapped_column()
+    expires_at: Mapped[TS]
     used_at: Mapped[TS | None]
     created_at: Mapped[TSNow]

@@ -55,3 +55,52 @@ dev = [
     "ruff>=0.17.5",
     "types-pyyaml>=6.0.12.20261113",
 ]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "session"
+asyncio_default_test_loop_scope = "session"
+testpaths = ["tests", "src"]
+python_files = ["test_*.py"]
+addopts = "-p no:cacheprovider"
+pythonpath = ["."]
+markers = ["integration: requires real provider credentials, run manually"]
+filterwarnings = ["ignore::DeprecationWarning"]
+
+[tool.coverage.run]
+source = ["src/arha"]
+omit = ["src/arha/modules/forms/schema_models.py", "src/arha/modules/payments/adapters/notchpay.py",
+        "src/arha/modules/payments/adapters/campay.py"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py312"
+extend-exclude = ["src/arha/modules/forms/schema_models.py", "alembic"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "S", "ASYNC", "RUF", "SIM", "BLE"]
+ignore = ["S101", "S608", "RUF001", "RUF002", "RUF003", "B008", "S311"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["S105", "S106", "S108"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+plugins = ["pydantic.mypy"]
+exclude = ["alembic/", "tests/"]
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = ["arha.modules.forms.schema_models"]
+ignore_errors = true
+
+[tool.importlinter]
+root_package = "arha"
+
+[[tool.importlinter.contracts]]
+name = "A module never imports another module's models (master prompt section 5)"
+type = "forbidden"
+source_modules = ["arha.modules.identity", "arha.modules.forms", "arha.modules.billing", "arha.modules.analytics",
+                  "arha.modules.integrations", "arha.modules.messaging", "arha.modules.orgs"]
+forbidden_modules = ["arha.modules.payments.models"]

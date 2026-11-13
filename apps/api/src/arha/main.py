@@ -70,12 +70,13 @@ def create_app() -> FastAPI:
     from arha.modules.integrations.router import router as integrations_router
     from arha.modules.orgs.router import router as orgs_router
     from arha.modules.payments.router import router as payments_router
+    from arha.modules.submissions.public_router import files_router
     from arha.modules.submissions.public_router import router as public_router
     from arha.modules.submissions.router import router as submissions_router
     from arha.modules.trust.router import router as trust_router
 
     for r in (identity_router, orgs_router, forms_router, submissions_router, public_router, payments_router,
-              billing_router, analytics_router, integrations_router, trust_router):
+              billing_router, analytics_router, integrations_router, trust_router, files_router):
         app.include_router(r)
 
     @app.get("/healthz", tags=["ops"])

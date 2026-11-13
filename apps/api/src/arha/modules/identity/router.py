@@ -9,6 +9,7 @@ from fastapi.responses import RedirectResponse
 from arha.core import ratelimit
 from arha.core.context import Ctx, authenticated, cookie_name, public_route
 from arha.core.errors import AppError, NotFound
+from arha.db.session import set_user
 from arha.modules.identity import schemas as s
 from arha.modules.identity import service
 from arha.modules.identity.models import Session, User
@@ -47,6 +48,7 @@ async def _login(ctx: Ctx, response: Response, user: User, *, mfa_passed: bool) 
                                              user_agent=ctx.request.headers.get("user-agent"),
                                              mfa_passed=mfa_passed)
     _set_cookie(response, token)
+    await set_user(ctx.db, user.id)
     await trust.audit(ctx.db, "auth.login", org_id=None, actor_id=user.id, ip_hash=ctx.ip_hash)
     return await _me(ctx, user, sess)
 
@@ -132,6 +134,7 @@ async def password_reset_confirm(body: s.PasswordResetIn, ctx: Ctx = Depends(pub
     user.password_hash = hash_password(body.password)
     for sess in await service.list_sessions(ctx.db, user.id):
         await service.revoke_session(ctx.db, user.id, sess.id)
+    await set_user(ctx.db, user.id)
     await trust.audit(ctx.db, "auth.password_reset", org_id=None, actor_id=user.id, ip_hash=ctx.ip_hash)
 
 

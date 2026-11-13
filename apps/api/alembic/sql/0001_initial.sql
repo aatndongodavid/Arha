@@ -183,7 +183,7 @@ CREATE TABLE submissions (
   anonymized_at timestamptz,
   deleted_at timestamptz
 );
-CREATE INDEX ix_submissions_form_submitted ON submissions(form_id, submitted_at DESC, id DESC);
+CREATE INDEX ix_submissions_form_started ON submissions(form_id, started_at DESC, id DESC);
 CREATE INDEX ix_submissions_org ON submissions(organization_id);
 CREATE INDEX ix_submissions_resume ON submissions(resume_code_hash) WHERE resume_code_hash IS NOT NULL;
 
@@ -314,6 +314,7 @@ CREATE TABLE subscriptions (
 );
 
 CREATE SEQUENCE invoice_number_seq;
+CREATE SEQUENCE receipt_number_seq;
 CREATE TABLE invoices (
   id uuid PRIMARY KEY,
   organization_id uuid NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
@@ -478,6 +479,7 @@ BEGIN
     EXECUTE format('ALTER TABLE %I FORCE ROW LEVEL SECURITY', t);
     EXECUTE format('CREATE POLICY org_isolation ON %I USING (organization_id = app_org()) '
                    'WITH CHECK (organization_id = app_org())', t);
+    EXECUTE format('ALTER TABLE %I ALTER COLUMN organization_id SET DEFAULT app_org()', t);
   END LOOP;
 END $$;
 
@@ -485,7 +487,7 @@ END $$;
 DO $$
 DECLARE t text;
 BEGIN
-  FOREACH t IN ARRAY ARRAY['audit_events','message_logs','reconciliation_alerts']
+  FOREACH t IN ARRAY ARRAY['message_logs','reconciliation_alerts']
   LOOP
     EXECUTE format('ALTER TABLE %I ENABLE ROW LEVEL SECURITY', t);
     EXECUTE format('ALTER TABLE %I FORCE ROW LEVEL SECURITY', t);
@@ -493,6 +495,13 @@ BEGIN
                    'WITH CHECK (organization_id = app_org())', t);
   END LOOP;
 END $$;
+
+-- Audit events: organisation scoped, or user scoped (organization_id null, actor = current user).
+ALTER TABLE audit_events ENABLE ROW LEVEL SECURITY;
+ALTER TABLE audit_events FORCE ROW LEVEL SECURITY;
+CREATE POLICY org_isolation ON audit_events
+  USING (organization_id = app_org() OR (organization_id IS NULL AND actor_id = app_user()))
+  WITH CHECK (organization_id = app_org() OR (organization_id IS NULL AND actor_id = app_user()));
 
 ALTER TABLE memberships ENABLE ROW LEVEL SECURITY;
 ALTER TABLE memberships FORCE ROW LEVEL SECURITY;
@@ -524,6 +533,8 @@ BEGIN
     SELECT organization_id INTO result FROM invitations WHERE token_hash = key;
   ELSIF kind = 'ticket' THEN
     SELECT organization_id INTO result FROM tickets WHERE token_hash = key;
+  ELSIF kind = 'org_slug' THEN
+    SELECT id INTO result FROM organizations WHERE slug = key;
   ELSIF kind = 'resume' THEN
     SELECT organization_id INTO result FROM submissions WHERE resume_code_hash = key;
   ELSE
@@ -534,6 +545,10 @@ EXCEPTION WHEN invalid_text_representation THEN
   RETURN NULL;
 END $$;
 REVOKE ALL ON FUNCTION resolve_org(text, text) FROM PUBLIC;
+-- FORCE RLS also filters the table owner: the resolver must belong to the BYPASSRLS platform role.
+GRANT CREATE ON SCHEMA public TO arha_platform;
+ALTER FUNCTION resolve_org(text, text) OWNER TO arha_platform;
+REVOKE CREATE ON SCHEMA public FROM arha_platform;
 
 -- ---------------------------------------------------------------- grants
 GRANT USAGE ON SCHEMA public TO arha_app, arha_platform;

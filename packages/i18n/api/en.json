@@ -75,6 +75,7 @@
  "export.dictionary.type": "Type",
  "export.dictionary.values": "Values",
  "export.dictionary.variable": "Variable",
+ "form.copy_suffix": "(copy)",
  "invoice.billed_to": "Billed to",
  "invoice.issuer": "Issuer",
  "invoice.legal": "Arha SAS, Douala, Cameroon. Tax ID and trade register number to be completed before launch.",

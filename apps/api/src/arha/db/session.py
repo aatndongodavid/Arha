@@ -51,16 +51,24 @@ async def set_user(session: AsyncSession, user_id: uuid.UUID | None) -> None:
 
 @asynccontextmanager
 async def app_tx(org_id: uuid.UUID | None = None, user_id: uuid.UUID | None = None) -> AsyncIterator[AsyncSession]:
-    async with _app_factory()() as session, session.begin():
-        await set_org(session, org_id)
-        await set_user(session, user_id)
-        yield session
+    from arha.core import jobs
+
+    async with _app_factory()() as session:
+        async with session.begin():
+            await set_org(session, org_id)
+            await set_user(session, user_id)
+            yield session
+        await jobs.flush(session)  # jobs are deferred only once the transaction committed
 
 
 @asynccontextmanager
 async def platform_tx() -> AsyncIterator[AsyncSession]:
-    async with _platform_factory()() as session, session.begin():
-        yield session
+    from arha.core import jobs
+
+    async with _platform_factory()() as session:
+        async with session.begin():
+            yield session
+        await jobs.flush(session)
 
 
 async def dispose_engines() -> None:

@@ -75,6 +75,7 @@
  "export.dictionary.type": "Type",
  "export.dictionary.values": "Modalités",
  "export.dictionary.variable": "Variable",
+ "form.copy_suffix": "(copie)",
  "invoice.billed_to": "Facturé à",
  "invoice.issuer": "Émetteur",
  "invoice.legal": "Arha SAS, Douala, Cameroun. NIU et RCCM à compléter avant le lancement.",

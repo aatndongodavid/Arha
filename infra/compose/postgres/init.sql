@@ -12,5 +12,7 @@ BEGIN
     CREATE ROLE arha_platform LOGIN PASSWORD 'arha_platform' NOSUPERUSER NOCREATEROLE BYPASSRLS;
   END IF;
 END $$;
+-- The migration role may hand the narrow tenant resolver to the platform role (BYPASSRLS).
+GRANT arha_platform TO arha_owner;
 SELECT 'CREATE DATABASE arha OWNER arha_owner' WHERE NOT EXISTS (SELECT 1 FROM pg_database WHERE datname = 'arha')\gexec
 SELECT 'CREATE DATABASE arha_test OWNER arha_owner' WHERE NOT EXISTS (SELECT 1 FROM pg_database WHERE datname = 'arha_test')\gexec
