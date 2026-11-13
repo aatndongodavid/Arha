@@ -112,8 +112,6 @@ async def intake(db: AsyncSession, *, form: Any, org: Any, version: Any, payload
         sub.last_field_id = payload.last_field_id
         if existing is None:
             db.add(sub)
-            from arha.modules.forms.service import bump_funnel
-            await bump_funnel(db, form.id, "start")
         await db.flush()
         return {"id": sub.id, "status": "draft", "payment_required": False, "payment_status": "none",
                 "amount": 0, "currency": None}, 202

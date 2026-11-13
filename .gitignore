@@ -18,3 +18,5 @@ htmlcov/
 playwright-report/
 test-results/
 /tmp/
+packages/i18n/compiled/
+dev-dist/

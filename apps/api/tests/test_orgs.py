@@ -86,3 +86,11 @@ async def test_F_ORG_04_folders_search_and_sort() -> None:
     assert [f["title"] for f in found] == ["Inscription CM2", "Inscription CP"]
     in_folder = (await owner.get(f"/v1/orgs/{org}/forms?folder_id={folder['id']}")).json()
     assert len(in_folder) == 3
+
+
+async def test_F_ORG_01_two_organisations_with_the_same_name_get_distinct_slugs() -> None:
+    a = await signup()
+    b = await signup()
+    first = (await a.post("/v1/orgs", json={"name": "Gala des Lions"})).json()
+    second = await b.post("/v1/orgs", json={"name": "Gala des Lions"})
+    assert second.status_code == 201 and second.json()["slug"] != first["slug"]

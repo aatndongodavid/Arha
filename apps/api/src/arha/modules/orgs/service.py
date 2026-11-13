@@ -62,8 +62,9 @@ async def create_org(db: AsyncSession, *, user_id: uuid.UUID, name: str, country
     base = slugify(name)
     slug = base
     for _ in range(5):
-        exists = (await db.execute(text("select 1 from organizations where slug = :s"), {"s": slug})).first()
-        if not exists:
+        # Other organisations are invisible under RLS: uniqueness goes through the narrow resolver.
+        taken = (await db.execute(text("select resolve_org('org_slug', :s)"), {"s": slug})).scalar()
+        if taken is None:
             break
         slug = f"{base}-{short_code(4).lower()}"
     org = Organization(id=org_id, name=name, slug=slug, country=country, currency="XAF",

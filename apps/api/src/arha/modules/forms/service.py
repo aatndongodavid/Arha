@@ -48,12 +48,14 @@ def empty_schema(title: str, locale: str = "fr") -> dict[str, Any]:
     }
 
 
-def _sanitize(node: Any, key: str | None = None) -> Any:
+def _sanitize(node: Any, key: str | None = None, rich: bool = False) -> Any:
+    """Only `content` texts are rich (rendered as HTML): they are cleaned with a whitelist. Every other
+    text is rendered as plain text by the clients and is stored untouched."""
     if isinstance(node, dict):
-        return {k: _sanitize(v, k) for k, v in node.items()}
+        return {k: _sanitize(v, k, rich or k == "content") for k, v in node.items()}
     if isinstance(node, list):
-        return [_sanitize(v, key) for v in node]
-    if isinstance(node, str) and key in ("fr", "en"):
+        return [_sanitize(v, key, rich) for v in node]
+    if isinstance(node, str) and rich and key in ("fr", "en"):
         return nh3.clean(node, tags=RICH_TAGS, attributes={"a": {"href"}}, url_schemes={"https", "mailto"},
                          link_rel="noopener noreferrer nofollow")
     return node
