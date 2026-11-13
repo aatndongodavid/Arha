@@ -45,3 +45,18 @@ describe("formula parser", () => {
     expect(evaluate(schema, { qte: 12 }).amount).toBe(54000);
   });
 });
+
+import { formatFormula } from "../src/formula";
+
+describe("formula printer", () => {
+  it.each([
+    "SI(qte >= 10; qte * 4500; qte * 5000)",
+    "(a + b) * 3",
+    "ARRONDI(a / 3; 0)",
+    'ET(VRAI; role = "vip")',
+    "MIN(a; b; 2,5)",
+  ])("round trips %s", (src) => {
+    const ast = parseFormula(src);
+    expect(parseFormula(formatFormula(ast))).toEqual(ast);
+  });
+});

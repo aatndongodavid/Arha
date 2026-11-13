@@ -1,7 +1,7 @@
 /** Public form: pages, logic, local draft, offline queue, payment and ending (F-PUB-01..09). */
 import { evaluate, type LogicResult } from "@arha/logic-ts";
 import { useEffect, useMemo, useRef, useState } from "preact/hooks";
-import { api, ApiError } from "./api";
+import { api } from "./api";
 import { Field, type FieldCtx } from "./fields";
 import { activate, browserLocale, type Locale, t, tx } from "./i18n";
 import { type Due, Payment } from "./pay";
@@ -12,6 +12,8 @@ type Meta = Record<string, any>;
 type View = "loading" | "notfound" | "closed" | "form" | "queued" | "pay" | "done";
 
 const code = location.pathname.split("/").filter(Boolean)[0] ?? "";
+/** Editor preview: the management application sends the draft by postMessage. Nothing is ever submitted. */
+const preview = code === "_preview";
 const hidden: Record<string, string> = {};
 new URLSearchParams(location.search).forEach((v, k) => {
   if (Object.keys(hidden).length < 20 && k.length <= 32) hidden[k] = v.slice(0, 500);
@@ -50,25 +52,44 @@ export function App() {
   const fallback: Locale = schema?.defaultLocale ?? "fr";
 
   useEffect(() => {
+    const applyTheme = (m: Meta) => {
+      const theme = m.schema.settings?.theme ?? {};
+      const root = document.documentElement.style;
+      root.setProperty("--p", theme.primary ?? "#C9621B");
+      root.setProperty("--on-p", onColor(theme.primary ?? "#C9621B"));
+      root.setProperty("--bg", theme.background ?? "#FCF9F4");
+    };
+    if (preview) {
+      void (async () => {
+        const { app_origin } = await api<{ app_origin: string }>("/config");
+        addEventListener("message", (e) => {
+          if (e.origin !== app_origin || e.data?.type !== "arha-preview") return; // only the configured application
+          const m: Meta = e.data.meta;
+          void activate(e.data.locale ?? "fr").then(() => {
+            setLocale(e.data.locale ?? "fr");
+            applyTheme(m);
+            setMeta(m);
+            setPage((p) => (m.schema.pages.some((x: Meta) => x.id === p) ? p : m.schema.pages[0]?.id ?? null));
+            setView("form");
+          });
+        });
+        parent.postMessage({ type: "arha-preview-ready" }, app_origin);
+      })();
+      return;
+    }
     void (async () => {
       let m: Meta;
       try {
         m = await api(`/forms/${code}`);
-      } catch (e) {
+      } catch {
         await activate(browserLocale(["fr", "en"], "fr"));
-        return setView(e instanceof ApiError && e.status < 500 ? "notfound" : "notfound");
+        return setView("notfound");
       }
       const loc = browserLocale(m.schema.locales ?? ["fr"], m.schema.defaultLocale ?? "fr");
       await activate(loc);
       setLocale(loc);
       document.title = m.title;
-      const theme = m.schema.settings?.theme ?? {};
-      const root = document.documentElement.style;
-      if (theme.primary) {
-        root.setProperty("--p", theme.primary);
-        root.setProperty("--on-p", onColor(theme.primary));
-      }
-      if (theme.background) root.setProperty("--bg", theme.background);
+      applyTheme(m);
       const draft = await loadDraft(m.version_id);
       if (draft) {
         subId.current = draft.id;
@@ -120,7 +141,7 @@ export function App() {
 
   // Written at once on every change: a reload or a crash loses nothing (F-PUB-03, F-EDI-02 spirit).
   const persist = (a: Record<string, unknown>, p: string | null, h: string[]) =>
-    void saveDraft(meta.version_id, { id: subId.current, answers: a, page: p, history: h });
+    preview ? undefined : void saveDraft(meta.version_id, { id: subId.current, answers: a, page: p, history: h });
 
   const payload = (partial: boolean, lastField?: string) => ({
     id: subId.current, form_version_id: meta.version_id, answers: partial ? answers : result.cleanAnswers, hidden,
@@ -132,7 +153,7 @@ export function App() {
     if (v === null || v === "" || v === undefined) delete a[id];
     setAnswers(a);
     persist(a, page, history);
-    if (!started.current) {
+    if (!started.current && !preview) {
       started.current = true;
       void api(`/forms/${code}/events`, { method: "POST", json: { step: "start", field_id: id } }).catch(() => {});
     }
@@ -148,6 +169,7 @@ export function App() {
   };
 
   const finish = async () => {
+    if (preview) return setView("done");
     setBusy(true);
     setNotice(t("state.sending"));
     const q: Queued = { code, key: uuid7(), payload: payload(false) };
@@ -180,7 +202,7 @@ export function App() {
       return;
     }
     if (isLast) return void finish();
-    if (online) {
+    if (online && !preview) {
       void api(`/forms/${code}/submissions`, { method: "POST", json: payload(true, blocks[blocks.length - 1]?.id) }).catch(() => {});
     }
     go(next, [...history, current.id]);

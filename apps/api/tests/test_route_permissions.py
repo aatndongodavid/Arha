@@ -8,7 +8,7 @@ from tests.routes import dependency_markers, iter_routes
 
 FRAMEWORK = {"/openapi.json", "/docs", "/docs/oauth2-redirect", "/redoc"}
 PUBLIC_WHITELIST = {
-    "/healthz", "/metrics", "/v1/plans", "/files/{key:path}",
+    "/healthz", "/metrics", "/v1/plans", "/v1/public/config", "/files/{key:path}",
     "/v1/auth/signup", "/v1/auth/login", "/v1/auth/verify-email", "/v1/auth/magic-link",
     "/v1/auth/magic-link/consume", "/v1/auth/password-reset", "/v1/auth/password-reset/confirm",
     "/v1/auth/google/start", "/v1/auth/google/callback",

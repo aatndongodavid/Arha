@@ -154,3 +154,21 @@ export function parseFormula(src: string, knownRefs?: Set<string>): Expr {
   if (p < tokens.length) throw new FormulaError("unexpected_token", tokens[p]!.pos);
   return expr;
 }
+
+const INFIX: Record<string, string> = { add: "+", sub: "-", mul: "*", div: "/", gte: ">=", lte: "<=", neq: "<>", eq: "=", gt: ">", lt: "<" };
+const NAMES: Record<string, string> = { if: "SI", sum: "SOMME", round: "ARRONDI", min: "MIN", max: "MAX", and: "ET", or: "OU", not: "NON", count_selected: "NB_SELECTION" };
+
+/** Prints an AST back to formula text so the editor can show and edit stored formulas. */
+export function formatFormula(expr: Expr | undefined | null): string {
+  if (!expr) return "";
+  if ("num" in expr) return String(expr.num).replace(".", ",");
+  if ("str" in expr) return `"${expr.str}"`;
+  if ("bool" in expr) return expr.bool ? "VRAI" : "FAUX";
+  if ("ref" in expr) return expr.ref;
+  const { op, args } = expr;
+  if (op in INFIX && args.length === 2) {
+    const wrap = (e: Expr) => ("op" in e && e.op in INFIX ? `(${formatFormula(e)})` : formatFormula(e));
+    return `${wrap(args[0]!)} ${INFIX[op]} ${wrap(args[1]!)}`;
+  }
+  return `${NAMES[op] ?? op.toUpperCase()}(${args.map(formatFormula).join("; ")})`;
+}

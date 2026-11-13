@@ -57,6 +57,13 @@ def _provider_for(schema: dict[str, Any]) -> str:
     return str(((schema.get("settings") or {}).get("payments") or {}).get("provider") or "notchpay")
 
 
+@router.get("/config")
+async def public_config(ctx: Ctx = Depends(public_route)) -> dict[str, str]:
+    """Origins read from configuration, never hard coded in the clients."""
+    st = get_settings()
+    return {"app_origin": st.arha_app_url, "site_url": st.arha_site_url}
+
+
 @router.get("/forms/{code}")
 async def get_public_form(code: str, ctx: Ctx = Depends(public_route)) -> dict[str, Any]:
     form, org, version = await resolve(ctx, code)
