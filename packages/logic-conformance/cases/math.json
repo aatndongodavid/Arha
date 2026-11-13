@@ -1,0 +1,2013 @@
+[
+ {
+  "name": "math_division",
+  "base": "math",
+  "answers": {
+   "q_a": 10,
+   "q_b": 4
+  },
+  "expect": {
+   "variables": {
+    "ratio": 2.5,
+    "rounded": 2
+   }
+  }
+ },
+ {
+  "name": "math_bankers_round_odd",
+  "base": "math",
+  "answers": {
+   "q_a": 7,
+   "q_b": 2
+  },
+  "expect": {
+   "variables": {
+    "ratio": 3.5,
+    "rounded": 4
+   }
+  }
+ },
+ {
+  "name": "math_division_by_zero",
+  "base": "math",
+  "answers": {
+   "q_a": 10,
+   "q_b": 0
+  },
+  "expect": {
+   "variables": {
+    "ratio": 0,
+    "both": false
+   },
+   "errors": [
+    {
+     "field": "_formula",
+     "code": "division_by_zero"
+    }
+   ]
+  }
+ },
+ {
+  "name": "math_decimal_exactness",
+  "base": "math",
+  "answers": {
+   "q_a": 0.1,
+   "q_b": 0.2
+  },
+  "expect": {
+   "variables": {
+    "ratio": 0.5,
+    "big": 3,
+    "small": 0.1,
+    "diff": -1.1
+   }
+  }
+ },
+ {
+  "name": "math_count_and_half_even_amount",
+  "base": "math",
+  "answers": {
+   "q_a": 1234,
+   "q_b": 1,
+   "q_tags": [
+    "x"
+   ]
+  },
+  "expect": {
+   "variables": {
+    "count": 1,
+    "price": 1234.5
+   },
+   "amount": 1234
+  }
+ },
+ {
+  "name": "math_half_even_up",
+  "base": "math",
+  "answers": {
+   "q_a": 1235,
+   "q_b": 1,
+   "q_tags": [
+    "x"
+   ]
+  },
+  "expect": {
+   "variables": {
+    "price": 1235.5
+   },
+   "amount": 1236
+  }
+ },
+ {
+  "name": "math_too_many_tags",
+  "base": "math",
+  "answers": {
+   "q_a": 1,
+   "q_b": 1,
+   "q_tags": [
+    "x",
+    "y",
+    "z"
+   ]
+  },
+  "expect": {
+   "errors": [
+    {
+     "field": "q_tags",
+     "code": "too_many"
+    }
+   ]
+  }
+ },
+ {
+  "name": "gen_math_000",
+  "base": "math",
+  "answers": {},
+  "expect": {
+   "visible": [
+    "q_a",
+    "q_b",
+    "q_tags",
+    "pay"
+   ],
+   "required": [],
+   "variables": {
+    "ratio": 0,
+    "rounded": 0,
+    "count": 0,
+    "price": 0,
+    "big": 3,
+    "small": 0,
+    "diff": -1,
+    "both": false
+   },
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "_formula",
+     "code": "division_by_zero"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_math_001",
+  "base": "math",
+  "answers": {
+   "q_a": null
+  },
+  "expect": {
+   "visible": [
+    "q_a",
+    "q_b",
+    "q_tags",
+    "pay"
+   ],
+   "required": [],
+   "variables": {
+    "ratio": 0,
+    "rounded": 0,
+    "count": 0,
+    "price": 0,
+    "big": 3,
+    "small": 0,
+    "diff": -1,
+    "both": false
+   },
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "_formula",
+     "code": "division_by_zero"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_math_002",
+  "base": "math",
+  "answers": {
+   "q_tags": -4
+  },
+  "expect": {
+   "visible": [
+    "q_a",
+    "q_b",
+    "q_tags",
+    "pay"
+   ],
+   "required": [],
+   "variables": {
+    "ratio": 0,
+    "rounded": 0,
+    "count": 1,
+    "price": 0.5,
+    "big": 3,
+    "small": 0,
+    "diff": -1,
+    "both": false
+   },
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "_formula",
+     "code": "division_by_zero"
+    },
+    {
+     "field": "q_tags",
+     "code": "invalid_choice"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_math_003",
+  "base": "math",
+  "answers": {
+   "q_b": null
+  },
+  "expect": {
+   "visible": [
+    "q_a",
+    "q_b",
+    "q_tags",
+    "pay"
+   ],
+   "required": [],
+   "variables": {
+    "ratio": 0,
+    "rounded": 0,
+    "count": 0,
+    "price": 0,
+    "big": 3,
+    "small": 0,
+    "diff": -1,
+    "both": false
+   },
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "_formula",
+     "code": "division_by_zero"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_math_004",
+  "base": "math",
+  "answers": {
+   "q_a": 0
+  },
+  "expect": {
+   "visible": [
+    "q_a",
+    "q_b",
+    "q_tags",
+    "pay"
+   ],
+   "required": [],
+   "variables": {
+    "ratio": 0,
+    "rounded": 0,
+    "count": 0,
+    "price": 0,
+    "big": 3,
+    "small": 0,
+    "diff": -1,
+    "both": false
+   },
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "_formula",
+     "code": "division_by_zero"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_math_005",
+  "base": "math",
+  "answers": {
+   "q_b": false
+  },
+  "expect": {
+   "visible": [
+    "q_a",
+    "q_b",
+    "q_tags",
+    "pay"
+   ],
+   "required": [],
+   "variables": {
+    "ratio": 0,
+    "rounded": 0,
+    "count": 0,
+    "price": 0,
+    "big": 3,
+    "small": 0,
+    "diff": -1,
+    "both": false
+   },
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "_formula",
+     "code": "division_by_zero"
+    },
+    {
+     "field": "q_b",
+     "code": "invalid_number"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_math_006",
+  "base": "math",
+  "answers": {
+   "q_b": true
+  },
+  "expect": {
+   "visible": [
+    "q_a",
+    "q_b",
+    "q_tags",
+    "pay"
+   ],
+   "required": [],
+   "variables": {
+    "ratio": 0,
+    "rounded": 0,
+    "count": 0,
+    "price": 0,
+    "big": 3,
+    "small": 0,
+    "diff": -1,
+    "both": false
+   },
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "_formula",
+     "code": "division_by_zero"
+    },
+    {
+     "field": "q_b",
+     "code": "invalid_number"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_math_007",
+  "base": "math",
+  "answers": {
+   "q_b": 0
+  },
+  "expect": {
+   "visible": [
+    "q_a",
+    "q_b",
+    "q_tags",
+    "pay"
+   ],
+   "required": [],
+   "variables": {
+    "ratio": 0,
+    "rounded": 0,
+    "count": 0,
+    "price": 0,
+    "big": 3,
+    "small": 0,
+    "diff": -1,
+    "both": false
+   },
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "_formula",
+     "code": "division_by_zero"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_math_008",
+  "base": "math",
+  "answers": {
+   "q_tags": 0.1
+  },
+  "expect": {
+   "visible": [
+    "q_a",
+    "q_b",
+    "q_tags",
+    "pay"
+   ],
+   "required": [],
+   "variables": {
+    "ratio": 0,
+    "rounded": 0,
+    "count": 1,
+    "price": 0.5,
+    "big": 3,
+    "small": 0,
+    "diff": -1,
+    "both": false
+   },
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "_formula",
+     "code": "division_by_zero"
+    },
+    {
+     "field": "q_tags",
+     "code": "invalid_choice"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_math_009",
+  "base": "math",
+  "answers": {
+   "q_tags": 1000.0
+  },
+  "expect": {
+   "visible": [
+    "q_a",
+    "q_b",
+    "q_tags",
+    "pay"
+   ],
+   "required": [],
+   "variables": {
+    "ratio": 0,
+    "rounded": 0,
+    "count": 1,
+    "price": 0.5,
+    "big": 3,
+    "small": 0,
+    "diff": -1,
+    "both": false
+   },
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "_formula",
+     "code": "division_by_zero"
+    },
+    {
+     "field": "q_tags",
+     "code": "invalid_choice"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_math_010",
+  "base": "math",
+  "answers": {
+   "q_b": 25
+  },
+  "expect": {
+   "visible": [
+    "q_a",
+    "q_b",
+    "q_tags",
+    "pay"
+   ],
+   "required": [],
+   "variables": {
+    "ratio": 0,
+    "rounded": 0,
+    "count": 0,
+    "price": 0,
+    "big": 25,
+    "small": 0,
+    "diff": -26,
+    "both": false
+   },
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_math_011",
+  "base": "math",
+  "answers": {
+   "q_b": 0.1
+  },
+  "expect": {
+   "visible": [
+    "q_a",
+    "q_b",
+    "q_tags",
+    "pay"
+   ],
+   "required": [],
+   "variables": {
+    "ratio": 0,
+    "rounded": 0,
+    "count": 0,
+    "price": 0,
+    "big": 3,
+    "small": 0,
+    "diff": -1.1,
+    "both": false
+   },
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_math_012",
+  "base": "math",
+  "answers": {
+   "q_b": 0.5,
+   "q_tags": " "
+  },
+  "expect": {
+   "visible": [
+    "q_a",
+    "q_b",
+    "q_tags",
+    "pay"
+   ],
+   "required": [],
+   "variables": {
+    "ratio": 0,
+    "rounded": 0,
+    "count": 0,
+    "price": 0,
+    "big": 3,
+    "small": 0,
+    "diff": -1.5,
+    "both": false
+   },
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_math_013",
+  "base": "math",
+  "answers": {
+   "q_tags": ""
+  },
+  "expect": {
+   "visible": [
+    "q_a",
+    "q_b",
+    "q_tags",
+    "pay"
+   ],
+   "required": [],
+   "variables": {
+    "ratio": 0,
+    "rounded": 0,
+    "count": 0,
+    "price": 0,
+    "big": 3,
+    "small": 0,
+    "diff": -1,
+    "both": false
+   },
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "_formula",
+     "code": "division_by_zero"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_math_014",
+  "base": "math",
+  "answers": {
+   "q_tags": " "
+  },
+  "expect": {
+   "visible": [
+    "q_a",
+    "q_b",
+    "q_tags",
+    "pay"
+   ],
+   "required": [],
+   "variables": {
+    "ratio": 0,
+    "rounded": 0,
+    "count": 0,
+    "price": 0,
+    "big": 3,
+    "small": 0,
+    "diff": -1,
+    "both": false
+   },
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "_formula",
+     "code": "division_by_zero"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_math_015",
+  "base": "math",
+  "answers": {
+   "q_a": false
+  },
+  "expect": {
+   "visible": [
+    "q_a",
+    "q_b",
+    "q_tags",
+    "pay"
+   ],
+   "required": [],
+   "variables": {
+    "ratio": 0,
+    "rounded": 0,
+    "count": 0,
+    "price": 0,
+    "big": 3,
+    "small": 0,
+    "diff": -1,
+    "both": false
+   },
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "_formula",
+     "code": "division_by_zero"
+    },
+    {
+     "field": "q_a",
+     "code": "invalid_number"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_math_016",
+  "base": "math",
+  "answers": {
+   "q_tags": null
+  },
+  "expect": {
+   "visible": [
+    "q_a",
+    "q_b",
+    "q_tags",
+    "pay"
+   ],
+   "required": [],
+   "variables": {
+    "ratio": 0,
+    "rounded": 0,
+    "count": 0,
+    "price": 0,
+    "big": 3,
+    "small": 0,
+    "diff": -1,
+    "both": false
+   },
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "_formula",
+     "code": "division_by_zero"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_math_017",
+  "base": "math",
+  "answers": {
+   "q_tags": false
+  },
+  "expect": {
+   "visible": [
+    "q_a",
+    "q_b",
+    "q_tags",
+    "pay"
+   ],
+   "required": [],
+   "variables": {
+    "ratio": 0,
+    "rounded": 0,
+    "count": 1,
+    "price": 0.5,
+    "big": 3,
+    "small": 0,
+    "diff": -1,
+    "both": false
+   },
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "_formula",
+     "code": "division_by_zero"
+    },
+    {
+     "field": "q_tags",
+     "code": "invalid_choice"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_math_018",
+  "base": "math",
+  "answers": {
+   "q_a": null,
+   "q_b": null,
+   "q_tags": false
+  },
+  "expect": {
+   "visible": [
+    "q_a",
+    "q_b",
+    "q_tags",
+    "pay"
+   ],
+   "required": [],
+   "variables": {
+    "ratio": 0,
+    "rounded": 0,
+    "count": 1,
+    "price": 0.5,
+    "big": 3,
+    "small": 0,
+    "diff": -1,
+    "both": false
+   },
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "_formula",
+     "code": "division_by_zero"
+    },
+    {
+     "field": "q_tags",
+     "code": "invalid_choice"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_math_019",
+  "base": "math",
+  "answers": {
+   "q_tags": false,
+   "q_b": null
+  },
+  "expect": {
+   "visible": [
+    "q_a",
+    "q_b",
+    "q_tags",
+    "pay"
+   ],
+   "required": [],
+   "variables": {
+    "ratio": 0,
+    "rounded": 0,
+    "count": 1,
+    "price": 0.5,
+    "big": 3,
+    "small": 0,
+    "diff": -1,
+    "both": false
+   },
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "_formula",
+     "code": "division_by_zero"
+    },
+    {
+     "field": "q_tags",
+     "code": "invalid_choice"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_math_020",
+  "base": "math",
+  "answers": {
+   "q_tags": false,
+   "q_a": true,
+   "q_b": false
+  },
+  "expect": {
+   "visible": [
+    "q_a",
+    "q_b",
+    "q_tags",
+    "pay"
+   ],
+   "required": [],
+   "variables": {
+    "ratio": 0,
+    "rounded": 0,
+    "count": 1,
+    "price": 0.5,
+    "big": 3,
+    "small": 0,
+    "diff": -1,
+    "both": false
+   },
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "_formula",
+     "code": "division_by_zero"
+    },
+    {
+     "field": "q_a",
+     "code": "invalid_number"
+    },
+    {
+     "field": "q_b",
+     "code": "invalid_number"
+    },
+    {
+     "field": "q_tags",
+     "code": "invalid_choice"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_math_021",
+  "base": "math",
+  "answers": {
+   "q_a": true,
+   "q_tags": null
+  },
+  "expect": {
+   "visible": [
+    "q_a",
+    "q_b",
+    "q_tags",
+    "pay"
+   ],
+   "required": [],
+   "variables": {
+    "ratio": 0,
+    "rounded": 0,
+    "count": 0,
+    "price": 0,
+    "big": 3,
+    "small": 0,
+    "diff": -1,
+    "both": false
+   },
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "_formula",
+     "code": "division_by_zero"
+    },
+    {
+     "field": "q_a",
+     "code": "invalid_number"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_math_022",
+  "base": "math",
+  "answers": {
+   "q_a": true
+  },
+  "expect": {
+   "visible": [
+    "q_a",
+    "q_b",
+    "q_tags",
+    "pay"
+   ],
+   "required": [],
+   "variables": {
+    "ratio": 0,
+    "rounded": 0,
+    "count": 0,
+    "price": 0,
+    "big": 3,
+    "small": 0,
+    "diff": -1,
+    "both": false
+   },
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "_formula",
+     "code": "division_by_zero"
+    },
+    {
+     "field": "q_a",
+     "code": "invalid_number"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_math_023",
+  "base": "math",
+  "answers": {
+   "q_tags": 9.99,
+   "q_a": " ",
+   "q_b": null
+  },
+  "expect": {
+   "visible": [
+    "q_a",
+    "q_b",
+    "q_tags",
+    "pay"
+   ],
+   "required": [],
+   "variables": {
+    "ratio": 0,
+    "rounded": 0,
+    "count": 1,
+    "price": 0.5,
+    "big": 3,
+    "small": 0,
+    "diff": -1,
+    "both": false
+   },
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "_formula",
+     "code": "division_by_zero"
+    },
+    {
+     "field": "q_tags",
+     "code": "invalid_choice"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_math_024",
+  "base": "math",
+  "answers": {
+   "q_tags": 9.99,
+   "q_a": " ",
+   "q_b": " "
+  },
+  "expect": {
+   "visible": [
+    "q_a",
+    "q_b",
+    "q_tags",
+    "pay"
+   ],
+   "required": [],
+   "variables": {
+    "ratio": 0,
+    "rounded": 0,
+    "count": 1,
+    "price": 0.5,
+    "big": 3,
+    "small": 0,
+    "diff": -1,
+    "both": false
+   },
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "_formula",
+     "code": "division_by_zero"
+    },
+    {
+     "field": "q_tags",
+     "code": "invalid_choice"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_math_025",
+  "base": "math",
+  "answers": {
+   "q_a": null,
+   "q_b": "3",
+   "q_tags": "2026-01-01"
+  },
+  "expect": {
+   "visible": [
+    "q_a",
+    "q_b",
+    "q_tags",
+    "pay"
+   ],
+   "required": [],
+   "variables": {
+    "ratio": 0,
+    "rounded": 0,
+    "count": 1,
+    "price": 0.5,
+    "big": 3,
+    "small": 0,
+    "diff": -4,
+    "both": false
+   },
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_tags",
+     "code": "invalid_choice"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_math_026",
+  "base": "math",
+  "answers": {
+   "q_b": "3",
+   "q_a": "3",
+   "q_tags": "2026-01-01"
+  },
+  "expect": {
+   "visible": [
+    "q_a",
+    "q_b",
+    "q_tags",
+    "pay"
+   ],
+   "required": [],
+   "variables": {
+    "ratio": 1,
+    "rounded": 1,
+    "count": 1,
+    "price": 3.5,
+    "big": 3,
+    "small": 3,
+    "diff": -1,
+    "both": true
+   },
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_tags",
+     "code": "invalid_choice"
+    }
+   ],
+   "amount": 4
+  }
+ },
+ {
+  "name": "gen_math_027",
+  "base": "math",
+  "answers": {
+   "q_b": "3",
+   "q_a": "2026-01-01",
+   "q_tags": "2026-01-01"
+  },
+  "expect": {
+   "visible": [
+    "q_a",
+    "q_b",
+    "q_tags",
+    "pay"
+   ],
+   "required": [],
+   "variables": {
+    "ratio": 0,
+    "rounded": 0,
+    "count": 1,
+    "price": 0.5,
+    "big": 3,
+    "small": 0,
+    "diff": -4,
+    "both": false
+   },
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_a",
+     "code": "invalid_number"
+    },
+    {
+     "field": "q_tags",
+     "code": "invalid_choice"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_math_028",
+  "base": "math",
+  "answers": {
+   "q_b": "2026-01-01",
+   "q_a": "3",
+   "q_tags": "2026-01-01"
+  },
+  "expect": {
+   "visible": [
+    "q_a",
+    "q_b",
+    "q_tags",
+    "pay"
+   ],
+   "required": [],
+   "variables": {
+    "ratio": 0,
+    "rounded": 0,
+    "count": 1,
+    "price": 3.5,
+    "big": 3,
+    "small": 0,
+    "diff": 2,
+    "both": true
+   },
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "_formula",
+     "code": "division_by_zero"
+    },
+    {
+     "field": "q_b",
+     "code": "invalid_number"
+    },
+    {
+     "field": "q_tags",
+     "code": "invalid_choice"
+    }
+   ],
+   "amount": 4
+  }
+ },
+ {
+  "name": "gen_math_029",
+  "base": "math",
+  "answers": {
+   "q_b": "2026-01-01",
+   "q_a": "3",
+   "q_tags": "3"
+  },
+  "expect": {
+   "visible": [
+    "q_a",
+    "q_b",
+    "q_tags",
+    "pay"
+   ],
+   "required": [],
+   "variables": {
+    "ratio": 0,
+    "rounded": 0,
+    "count": 1,
+    "price": 3.5,
+    "big": 3,
+    "small": 0,
+    "diff": 2,
+    "both": true
+   },
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "_formula",
+     "code": "division_by_zero"
+    },
+    {
+     "field": "q_b",
+     "code": "invalid_number"
+    },
+    {
+     "field": "q_tags",
+     "code": "invalid_choice"
+    }
+   ],
+   "amount": 4
+  }
+ },
+ {
+  "name": "gen_math_030",
+  "base": "math",
+  "answers": {
+   "q_b": "3",
+   "q_a": "3",
+   "q_tags": "3"
+  },
+  "expect": {
+   "visible": [
+    "q_a",
+    "q_b",
+    "q_tags",
+    "pay"
+   ],
+   "required": [],
+   "variables": {
+    "ratio": 1,
+    "rounded": 1,
+    "count": 1,
+    "price": 3.5,
+    "big": 3,
+    "small": 3,
+    "diff": -1,
+    "both": true
+   },
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_tags",
+     "code": "invalid_choice"
+    }
+   ],
+   "amount": 4
+  }
+ },
+ {
+  "name": "gen_math_031",
+  "base": "math",
+  "answers": {
+   "q_a": true,
+   "q_b": 9.99,
+   "q_tags": null
+  },
+  "expect": {
+   "visible": [
+    "q_a",
+    "q_b",
+    "q_tags",
+    "pay"
+   ],
+   "required": [],
+   "variables": {
+    "ratio": 0,
+    "rounded": 0,
+    "count": 0,
+    "price": 0,
+    "big": 9.99,
+    "small": 0,
+    "diff": -10.99,
+    "both": false
+   },
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_a",
+     "code": "invalid_number"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_math_032",
+  "base": "math",
+  "answers": {
+   "q_tags": 2
+  },
+  "expect": {
+   "visible": [
+    "q_a",
+    "q_b",
+    "q_tags",
+    "pay"
+   ],
+   "required": [],
+   "variables": {
+    "ratio": 0,
+    "rounded": 0,
+    "count": 1,
+    "price": 0.5,
+    "big": 3,
+    "small": 0,
+    "diff": -1,
+    "both": false
+   },
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "_formula",
+     "code": "division_by_zero"
+    },
+    {
+     "field": "q_tags",
+     "code": "invalid_choice"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_math_033",
+  "base": "math",
+  "answers": {
+   "q_b": 25,
+   "q_tags": [
+    "z"
+   ],
+   "q_a": 0.5
+  },
+  "expect": {
+   "visible": [
+    "q_a",
+    "q_b",
+    "q_tags",
+    "pay"
+   ],
+   "required": [],
+   "variables": {
+    "ratio": 0.02,
+    "rounded": 0,
+    "count": 1,
+    "price": 1,
+    "big": 25,
+    "small": 0.5,
+    "diff": -25.5,
+    "both": true
+   },
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [],
+   "amount": 1
+  }
+ },
+ {
+  "name": "gen_math_034",
+  "base": "math",
+  "answers": {
+   "q_b": 0.1,
+   "q_tags": [
+    "z"
+   ],
+   "q_a": 0.5
+  },
+  "expect": {
+   "visible": [
+    "q_a",
+    "q_b",
+    "q_tags",
+    "pay"
+   ],
+   "required": [],
+   "variables": {
+    "ratio": 5,
+    "rounded": 5,
+    "count": 1,
+    "price": 1,
+    "big": 3,
+    "small": 0.1,
+    "diff": -0.6,
+    "both": true
+   },
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [],
+   "amount": 1
+  }
+ },
+ {
+  "name": "gen_math_035",
+  "base": "math",
+  "answers": {
+   "q_tags": []
+  },
+  "expect": {
+   "visible": [
+    "q_a",
+    "q_b",
+    "q_tags",
+    "pay"
+   ],
+   "required": [],
+   "variables": {
+    "ratio": 0,
+    "rounded": 0,
+    "count": 0,
+    "price": 0,
+    "big": 3,
+    "small": 0,
+    "diff": -1,
+    "both": false
+   },
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "_formula",
+     "code": "division_by_zero"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_math_036",
+  "base": "math",
+  "answers": {
+   "q_tags": [
+    "z"
+   ]
+  },
+  "expect": {
+   "visible": [
+    "q_a",
+    "q_b",
+    "q_tags",
+    "pay"
+   ],
+   "required": [],
+   "variables": {
+    "ratio": 0,
+    "rounded": 0,
+    "count": 1,
+    "price": 0.5,
+    "big": 3,
+    "small": 0,
+    "diff": -1,
+    "both": false
+   },
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "_formula",
+     "code": "division_by_zero"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_math_037",
+  "base": "math",
+  "answers": {
+   "q_a": 6
+  },
+  "expect": {
+   "visible": [
+    "q_a",
+    "q_b",
+    "q_tags",
+    "pay"
+   ],
+   "required": [],
+   "variables": {
+    "ratio": 0,
+    "rounded": 0,
+    "count": 0,
+    "price": 6,
+    "big": 6,
+    "small": 0,
+    "diff": 5,
+    "both": true
+   },
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "_formula",
+     "code": "division_by_zero"
+    }
+   ],
+   "amount": 6
+  }
+ },
+ {
+  "name": "gen_math_038",
+  "base": "math",
+  "answers": {
+   "q_b": 1000.0,
+   "q_a": "a@b.cm",
+   "q_tags": []
+  },
+  "expect": {
+   "visible": [
+    "q_a",
+    "q_b",
+    "q_tags",
+    "pay"
+   ],
+   "required": [],
+   "variables": {
+    "ratio": 0,
+    "rounded": 0,
+    "count": 0,
+    "price": 0,
+    "big": 1000,
+    "small": 0,
+    "diff": -1001,
+    "both": false
+   },
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_a",
+     "code": "invalid_number"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_math_039",
+  "base": "math",
+  "answers": {
+   "q_b": 1000.0,
+   "q_tags": 4,
+   "q_a": null
+  },
+  "expect": {
+   "visible": [
+    "q_a",
+    "q_b",
+    "q_tags",
+    "pay"
+   ],
+   "required": [],
+   "variables": {
+    "ratio": 0,
+    "rounded": 0,
+    "count": 1,
+    "price": 0.5,
+    "big": 1000,
+    "small": 0,
+    "diff": -1001,
+    "both": false
+   },
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_tags",
+     "code": "invalid_choice"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_math_040",
+  "base": "math",
+  "answers": {
+   "q_b": 1000.0,
+   "q_tags": 4,
+   "q_a": 1000.0
+  },
+  "expect": {
+   "visible": [
+    "q_a",
+    "q_b",
+    "q_tags",
+    "pay"
+   ],
+   "required": [],
+   "variables": {
+    "ratio": 1,
+    "rounded": 1,
+    "count": 1,
+    "price": 1000.5,
+    "big": 1000,
+    "small": 1000,
+    "diff": -1,
+    "both": true
+   },
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_tags",
+     "code": "invalid_choice"
+    }
+   ],
+   "amount": 1000
+  }
+ },
+ {
+  "name": "gen_math_041",
+  "base": "math",
+  "answers": {
+   "q_b": 0.5
+  },
+  "expect": {
+   "visible": [
+    "q_a",
+    "q_b",
+    "q_tags",
+    "pay"
+   ],
+   "required": [],
+   "variables": {
+    "ratio": 0,
+    "rounded": 0,
+    "count": 0,
+    "price": 0,
+    "big": 3,
+    "small": 0,
+    "diff": -1.5,
+    "both": false
+   },
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_math_042",
+  "base": "math",
+  "answers": {
+   "q_tags": null,
+   "q_a": 5,
+   "q_b": 1000.0
+  },
+  "expect": {
+   "visible": [
+    "q_a",
+    "q_b",
+    "q_tags",
+    "pay"
+   ],
+   "required": [],
+   "variables": {
+    "ratio": 0.005,
+    "rounded": 0,
+    "count": 0,
+    "price": 5,
+    "big": 1000,
+    "small": 5,
+    "diff": -996,
+    "both": true
+   },
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [],
+   "amount": 5
+  }
+ },
+ {
+  "name": "gen_math_043",
+  "base": "math",
+  "answers": {
+   "q_a": 1000.0,
+   "q_b": 1000.0,
+   "q_tags": null
+  },
+  "expect": {
+   "visible": [
+    "q_a",
+    "q_b",
+    "q_tags",
+    "pay"
+   ],
+   "required": [],
+   "variables": {
+    "ratio": 1,
+    "rounded": 1,
+    "count": 0,
+    "price": 1000,
+    "big": 1000,
+    "small": 1000,
+    "diff": -1,
+    "both": true
+   },
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [],
+   "amount": 1000
+  }
+ },
+ {
+  "name": "gen_math_044",
+  "base": "math",
+  "answers": {
+   "q_a": -3
+  },
+  "expect": {
+   "visible": [
+    "q_a",
+    "q_b",
+    "q_tags",
+    "pay"
+   ],
+   "required": [],
+   "variables": {
+    "ratio": 0,
+    "rounded": 0,
+    "count": 0,
+    "price": -3,
+    "big": 3,
+    "small": -3,
+    "diff": -4,
+    "both": false
+   },
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "_formula",
+     "code": "division_by_zero"
+    }
+   ],
+   "amount": 0
+  }
+ }
+]

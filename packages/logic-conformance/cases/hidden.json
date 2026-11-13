@@ -1,0 +1,325 @@
+[
+ {
+  "name": "hidden_param_prefill",
+  "base": "hidden",
+  "answers": {},
+  "expect": {
+   "visible": [
+    "src",
+    "q_x",
+    "t_wa"
+   ],
+   "errors": []
+  },
+  "hidden": {
+   "source": "whatsapp"
+  }
+ },
+ {
+  "name": "hidden_param_overrides_answer",
+  "base": "hidden",
+  "answers": {
+   "src": "facebook"
+  },
+  "expect": {
+   "visible": [
+    "src",
+    "q_x",
+    "t_wa"
+   ]
+  },
+  "hidden": {
+   "source": "whatsapp"
+  }
+ },
+ {
+  "name": "hidden_param_absent",
+  "base": "hidden",
+  "answers": {},
+  "expect": {
+   "visible": [
+    "src",
+    "q_x"
+   ]
+  },
+  "hidden": {}
+ },
+ {
+  "name": "gen_hidden_000",
+  "base": "hidden",
+  "answers": {},
+  "expect": {
+   "visible": [
+    "src",
+    "q_x"
+   ],
+   "required": [],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_hidden_001",
+  "base": "hidden",
+  "answers": {
+   "src": null
+  },
+  "expect": {
+   "visible": [
+    "src",
+    "q_x"
+   ],
+   "required": [],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_hidden_002",
+  "base": "hidden",
+  "answers": {
+   "t_wa": -4
+  },
+  "expect": {
+   "visible": [
+    "src",
+    "q_x"
+   ],
+   "required": [],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_hidden_003",
+  "base": "hidden",
+  "answers": {
+   "q_x": null
+  },
+  "expect": {
+   "visible": [
+    "src",
+    "q_x"
+   ],
+   "required": [],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_hidden_004",
+  "base": "hidden",
+  "answers": {
+   "src": 0
+  },
+  "expect": {
+   "visible": [
+    "src",
+    "q_x"
+   ],
+   "required": [],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "src",
+     "code": "invalid_type"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_hidden_005",
+  "base": "hidden",
+  "answers": {
+   "q_x": null,
+   "t_wa": true,
+   "src": 9
+  },
+  "expect": {
+   "visible": [
+    "src",
+    "q_x"
+   ],
+   "required": [],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "src",
+     "code": "invalid_type"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_hidden_006",
+  "base": "hidden",
+  "answers": {
+   "q_x": false
+  },
+  "expect": {
+   "visible": [
+    "src",
+    "q_x"
+   ],
+   "required": [],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_x",
+     "code": "invalid_type"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_hidden_007",
+  "base": "hidden",
+  "answers": {
+   "src": 14,
+   "t_wa": "x"
+  },
+  "expect": {
+   "visible": [
+    "src",
+    "q_x"
+   ],
+   "required": [],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "src",
+     "code": "invalid_type"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_hidden_008",
+  "base": "hidden",
+  "answers": {
+   "t_wa": 19,
+   "src": true
+  },
+  "expect": {
+   "visible": [
+    "src",
+    "q_x"
+   ],
+   "required": [],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "src",
+     "code": "invalid_type"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_hidden_009",
+  "base": "hidden",
+  "answers": {
+   "q_x": true,
+   "src": false,
+   "t_wa": 26
+  },
+  "expect": {
+   "visible": [
+    "src",
+    "q_x"
+   ],
+   "required": [],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "src",
+     "code": "invalid_type"
+    },
+    {
+     "field": "q_x",
+     "code": "invalid_type"
+    }
+   ],
+   "amount": 0
+  }
+ }
+]

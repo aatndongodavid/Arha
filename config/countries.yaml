@@ -1,0 +1,31 @@
+# Countries, currencies and active payment providers.
+# Changing provider requires no business code change (F-PAY-10).
+default_country: CM
+countries:
+  CM:
+    currency: XAF
+    phone_prefix: "+237"
+    providers: [notchpay, campay]
+    primary_provider: notchpay
+    fallback_provider: campay
+    channels: [mtn, orange]
+    timezone: Africa/Douala
+  # Prepared in the data model, not active in V1 (NF-12).
+  SN: { currency: XOF, phone_prefix: "+221", providers: [], channels: [], timezone: Africa/Dakar, active: false }
+  CI: { currency: XOF, phone_prefix: "+225", providers: [], channels: [], timezone: Africa/Abidjan, active: false }
+  NG: { currency: NGN, phone_prefix: "+234", providers: [], channels: [], timezone: Africa/Lagos, active: false }
+  GH: { currency: GHS, phone_prefix: "+233", providers: [], channels: [], timezone: Africa/Accra, active: false }
+  KE: { currency: KES, phone_prefix: "+254", providers: [], channels: [], timezone: Africa/Nairobi, active: false }
+
+providers:
+  notchpay:
+    # Estimated aggregator fee shown to payers. VERIFY against Notch Pay pricing before launch.
+    estimated_fee_bps: 300
+    supports_platform_fee: true
+  campay:
+    # VERIFY against Campay pricing before launch.
+    estimated_fee_bps: 200
+    supports_platform_fee: false
+  fake:
+    estimated_fee_bps: 300
+    supports_platform_fee: true

@@ -1,0 +1,756 @@
+[
+ {
+  "name": "ending_stops_form",
+  "base": "ending",
+  "answers": {
+   "q_ok": false
+  },
+  "expect": {
+   "path": [
+    "p1"
+   ],
+   "ended": true,
+   "errors": [],
+   "visible": [
+    "q_ok"
+   ]
+  }
+ },
+ {
+  "name": "ending_continues",
+  "base": "ending",
+  "answers": {
+   "q_ok": true
+  },
+  "expect": {
+   "path": [
+    "p1",
+    "p2"
+   ],
+   "ended": false,
+   "errors": [
+    {
+     "field": "q_name",
+     "code": "required"
+    }
+   ]
+  }
+ },
+ {
+  "name": "gen_ending_000",
+  "base": "ending",
+  "answers": {},
+  "expect": {
+   "visible": [
+    "q_ok",
+    "q_name"
+   ],
+   "required": [
+    "q_ok",
+    "q_name"
+   ],
+   "variables": {},
+   "path": [
+    "p1",
+    "p2"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": "p2",
+    "p2": null
+   },
+   "errors": [
+    {
+     "field": "q_ok",
+     "code": "required"
+    },
+    {
+     "field": "q_name",
+     "code": "required"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_ending_001",
+  "base": "ending",
+  "answers": {
+   "q_ok": false
+  },
+  "expect": {
+   "visible": [
+    "q_ok"
+   ],
+   "required": [
+    "q_ok"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": true,
+   "nextPage": {
+    "p1": null,
+    "p2": null
+   },
+   "errors": [],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_ending_002",
+  "base": "ending",
+  "answers": {
+   "q_name": -4
+  },
+  "expect": {
+   "visible": [
+    "q_ok",
+    "q_name"
+   ],
+   "required": [
+    "q_ok",
+    "q_name"
+   ],
+   "variables": {},
+   "path": [
+    "p1",
+    "p2"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": "p2",
+    "p2": null
+   },
+   "errors": [
+    {
+     "field": "q_ok",
+     "code": "required"
+    },
+    {
+     "field": "q_name",
+     "code": "invalid_type"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_ending_003",
+  "base": "ending",
+  "answers": {
+   "q_name": ""
+  },
+  "expect": {
+   "visible": [
+    "q_ok",
+    "q_name"
+   ],
+   "required": [
+    "q_ok",
+    "q_name"
+   ],
+   "variables": {},
+   "path": [
+    "p1",
+    "p2"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": "p2",
+    "p2": null
+   },
+   "errors": [
+    {
+     "field": "q_ok",
+     "code": "required"
+    },
+    {
+     "field": "q_name",
+     "code": "required"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_ending_004",
+  "base": "ending",
+  "answers": {
+   "q_ok": null,
+   "q_name": "10"
+  },
+  "expect": {
+   "visible": [
+    "q_ok",
+    "q_name"
+   ],
+   "required": [
+    "q_ok",
+    "q_name"
+   ],
+   "variables": {},
+   "path": [
+    "p1",
+    "p2"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": "p2",
+    "p2": null
+   },
+   "errors": [
+    {
+     "field": "q_ok",
+     "code": "required"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_ending_005",
+  "base": "ending",
+  "answers": {
+   "q_name": " "
+  },
+  "expect": {
+   "visible": [
+    "q_ok",
+    "q_name"
+   ],
+   "required": [
+    "q_ok",
+    "q_name"
+   ],
+   "variables": {},
+   "path": [
+    "p1",
+    "p2"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": "p2",
+    "p2": null
+   },
+   "errors": [
+    {
+     "field": "q_ok",
+     "code": "required"
+    },
+    {
+     "field": "q_name",
+     "code": "required"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_ending_006",
+  "base": "ending",
+  "answers": {
+   "q_ok": 0
+  },
+  "expect": {
+   "visible": [
+    "q_ok",
+    "q_name"
+   ],
+   "required": [
+    "q_ok",
+    "q_name"
+   ],
+   "variables": {},
+   "path": [
+    "p1",
+    "p2"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": "p2",
+    "p2": null
+   },
+   "errors": [
+    {
+     "field": "q_ok",
+     "code": "invalid_choice"
+    },
+    {
+     "field": "q_name",
+     "code": "required"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_ending_007",
+  "base": "ending",
+  "answers": {
+   "q_ok": 24
+  },
+  "expect": {
+   "visible": [
+    "q_ok",
+    "q_name"
+   ],
+   "required": [
+    "q_ok",
+    "q_name"
+   ],
+   "variables": {},
+   "path": [
+    "p1",
+    "p2"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": "p2",
+    "p2": null
+   },
+   "errors": [
+    {
+     "field": "q_ok",
+     "code": "invalid_choice"
+    },
+    {
+     "field": "q_name",
+     "code": "required"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_ending_008",
+  "base": "ending",
+  "answers": {
+   "q_ok": 0.1
+  },
+  "expect": {
+   "visible": [
+    "q_ok",
+    "q_name"
+   ],
+   "required": [
+    "q_ok",
+    "q_name"
+   ],
+   "variables": {},
+   "path": [
+    "p1",
+    "p2"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": "p2",
+    "p2": null
+   },
+   "errors": [
+    {
+     "field": "q_ok",
+     "code": "invalid_choice"
+    },
+    {
+     "field": "q_name",
+     "code": "required"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_ending_009",
+  "base": "ending",
+  "answers": {
+   "q_ok": 2.5,
+   "q_name": 15
+  },
+  "expect": {
+   "visible": [
+    "q_ok",
+    "q_name"
+   ],
+   "required": [
+    "q_ok",
+    "q_name"
+   ],
+   "variables": {},
+   "path": [
+    "p1",
+    "p2"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": "p2",
+    "p2": null
+   },
+   "errors": [
+    {
+     "field": "q_ok",
+     "code": "invalid_choice"
+    },
+    {
+     "field": "q_name",
+     "code": "invalid_type"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_ending_010",
+  "base": "ending",
+  "answers": {
+   "q_ok": null,
+   "q_name": 2.5
+  },
+  "expect": {
+   "visible": [
+    "q_ok",
+    "q_name"
+   ],
+   "required": [
+    "q_ok",
+    "q_name"
+   ],
+   "variables": {},
+   "path": [
+    "p1",
+    "p2"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": "p2",
+    "p2": null
+   },
+   "errors": [
+    {
+     "field": "q_ok",
+     "code": "required"
+    },
+    {
+     "field": "q_name",
+     "code": "invalid_type"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_ending_011",
+  "base": "ending",
+  "answers": {
+   "q_ok": null
+  },
+  "expect": {
+   "visible": [
+    "q_ok",
+    "q_name"
+   ],
+   "required": [
+    "q_ok",
+    "q_name"
+   ],
+   "variables": {},
+   "path": [
+    "p1",
+    "p2"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": "p2",
+    "p2": null
+   },
+   "errors": [
+    {
+     "field": "q_ok",
+     "code": "required"
+    },
+    {
+     "field": "q_name",
+     "code": "required"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_ending_012",
+  "base": "ending",
+  "answers": {
+   "q_ok": 9.99
+  },
+  "expect": {
+   "visible": [
+    "q_ok",
+    "q_name"
+   ],
+   "required": [
+    "q_ok",
+    "q_name"
+   ],
+   "variables": {},
+   "path": [
+    "p1",
+    "p2"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": "p2",
+    "p2": null
+   },
+   "errors": [
+    {
+     "field": "q_ok",
+     "code": "invalid_choice"
+    },
+    {
+     "field": "q_name",
+     "code": "required"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_ending_013",
+  "base": "ending",
+  "answers": {
+   "q_name": -3
+  },
+  "expect": {
+   "visible": [
+    "q_ok",
+    "q_name"
+   ],
+   "required": [
+    "q_ok",
+    "q_name"
+   ],
+   "variables": {},
+   "path": [
+    "p1",
+    "p2"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": "p2",
+    "p2": null
+   },
+   "errors": [
+    {
+     "field": "q_ok",
+     "code": "required"
+    },
+    {
+     "field": "q_name",
+     "code": "invalid_type"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_ending_014",
+  "base": "ending",
+  "answers": {
+   "q_name": 9.99,
+   "q_ok": false
+  },
+  "expect": {
+   "visible": [
+    "q_ok"
+   ],
+   "required": [
+    "q_ok"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": true,
+   "nextPage": {
+    "p1": null,
+    "p2": null
+   },
+   "errors": [],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_ending_015",
+  "base": "ending",
+  "answers": {
+   "q_ok": null,
+   "q_name": null
+  },
+  "expect": {
+   "visible": [
+    "q_ok",
+    "q_name"
+   ],
+   "required": [
+    "q_ok",
+    "q_name"
+   ],
+   "variables": {},
+   "path": [
+    "p1",
+    "p2"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": "p2",
+    "p2": null
+   },
+   "errors": [
+    {
+     "field": "q_ok",
+     "code": "required"
+    },
+    {
+     "field": "q_name",
+     "code": "required"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_ending_016",
+  "base": "ending",
+  "answers": {
+   "q_name": "2026-01-01"
+  },
+  "expect": {
+   "visible": [
+    "q_ok",
+    "q_name"
+   ],
+   "required": [
+    "q_ok",
+    "q_name"
+   ],
+   "variables": {},
+   "path": [
+    "p1",
+    "p2"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": "p2",
+    "p2": null
+   },
+   "errors": [
+    {
+     "field": "q_ok",
+     "code": "required"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_ending_017",
+  "base": "ending",
+  "answers": {
+   "q_ok": false,
+   "q_name": true
+  },
+  "expect": {
+   "visible": [
+    "q_ok"
+   ],
+   "required": [
+    "q_ok"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": true,
+   "nextPage": {
+    "p1": null,
+    "p2": null
+   },
+   "errors": [],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_ending_018",
+  "base": "ending",
+  "answers": {
+   "q_ok": true,
+   "q_name": true
+  },
+  "expect": {
+   "visible": [
+    "q_ok",
+    "q_name"
+   ],
+   "required": [
+    "q_ok",
+    "q_name"
+   ],
+   "variables": {},
+   "path": [
+    "p1",
+    "p2"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": "p2",
+    "p2": null
+   },
+   "errors": [
+    {
+     "field": "q_name",
+     "code": "invalid_type"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_ending_019",
+  "base": "ending",
+  "answers": {
+   "q_name": false
+  },
+  "expect": {
+   "visible": [
+    "q_ok",
+    "q_name"
+   ],
+   "required": [
+    "q_ok",
+    "q_name"
+   ],
+   "variables": {},
+   "path": [
+    "p1",
+    "p2"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": "p2",
+    "p2": null
+   },
+   "errors": [
+    {
+     "field": "q_ok",
+     "code": "required"
+    },
+    {
+     "field": "q_name",
+     "code": "invalid_type"
+    }
+   ],
+   "amount": 0
+  }
+ }
+]

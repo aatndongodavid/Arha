@@ -1,0 +1,1407 @@
+{
+ "registration": {
+  "schemaVersion": 1,
+  "defaultLocale": "fr",
+  "locales": [
+   "fr",
+   "en"
+  ],
+  "settings": {
+   "payments": {
+    "enabled": false,
+    "currency": "XAF",
+    "feeBearer": "org",
+    "provider": "fake"
+   }
+  },
+  "variables": [],
+  "pages": [
+   {
+    "id": "p1",
+    "blocks": [
+     {
+      "id": "h1",
+      "type": "heading",
+      "content": {
+       "fr": "Inscription",
+       "en": "Inscription"
+      }
+     },
+     {
+      "id": "q_role",
+      "type": "single_choice",
+      "label": {
+       "fr": "Role",
+       "en": "Role"
+      },
+      "required": true,
+      "options": [
+       {
+        "id": "parent",
+        "label": {
+         "fr": "parent",
+         "en": "parent"
+        },
+        "code": 1
+       },
+       {
+        "id": "student",
+        "label": {
+         "fr": "student",
+         "en": "student"
+        },
+        "code": 2
+       },
+       {
+        "id": "teacher",
+        "label": {
+         "fr": "teacher",
+         "en": "teacher"
+        },
+        "code": 3
+       }
+      ]
+     },
+     {
+      "id": "q_age",
+      "type": "number",
+      "label": {
+       "fr": "Age",
+       "en": "Age"
+      },
+      "validation": {
+       "min": 0,
+       "max": 120,
+       "integer": true
+      }
+     },
+     {
+      "id": "q_guardian",
+      "type": "short_text",
+      "label": {
+       "fr": "Tuteur",
+       "en": "Tuteur"
+      }
+     }
+    ]
+   },
+   {
+    "id": "p2",
+    "blocks": [
+     {
+      "id": "q_children",
+      "type": "number",
+      "label": {
+       "fr": "Enfants",
+       "en": "Enfants"
+      },
+      "validation": {
+       "min": 1,
+       "max": 20
+      }
+     },
+     {
+      "id": "q_email",
+      "type": "email",
+      "label": {
+       "fr": "E-mail",
+       "en": "E-mail"
+      },
+      "required": true
+     }
+    ]
+   },
+   {
+    "id": "p3",
+    "blocks": [
+     {
+      "id": "q_comment",
+      "type": "long_text",
+      "label": {
+       "fr": "Commentaire",
+       "en": "Commentaire"
+      }
+     }
+    ]
+   }
+  ],
+  "rules": [
+   {
+    "id": "r1",
+    "when": {
+     "all": [
+      {
+       "field": "q_role",
+       "op": "eq",
+       "value": "parent"
+      },
+      {
+       "any": [
+        {
+         "field": "q_age",
+         "op": "gte",
+         "value": 18
+        },
+        {
+         "field": "q_guardian",
+         "op": "not_empty"
+        }
+       ]
+      }
+     ]
+    },
+    "then": [
+     {
+      "action": "show",
+      "target": "q_children"
+     },
+     {
+      "action": "require",
+      "target": "q_children"
+     }
+    ]
+   },
+   {
+    "id": "r2",
+    "when": {
+     "field": "q_role",
+     "op": "eq",
+     "value": "teacher"
+    },
+    "then": [
+     {
+      "action": "jump_to_page",
+      "target": "p3"
+     }
+    ]
+   }
+  ]
+ },
+ "pricing": {
+  "schemaVersion": 1,
+  "defaultLocale": "fr",
+  "locales": [
+   "fr",
+   "en"
+  ],
+  "settings": {
+   "payments": {
+    "enabled": true,
+    "currency": "XAF",
+    "feeBearer": "org",
+    "provider": "fake"
+   }
+  },
+  "variables": [
+   {
+    "id": "total",
+    "type": "number",
+    "formula": {
+     "op": "if",
+     "args": [
+      {
+       "op": "gte",
+       "args": [
+        {
+         "ref": "q_qty"
+        },
+        {
+         "num": 10
+        }
+       ]
+      },
+      {
+       "op": "mul",
+       "args": [
+        {
+         "ref": "q_qty"
+        },
+        {
+         "num": 4500
+        }
+       ]
+      },
+      {
+       "op": "mul",
+       "args": [
+        {
+         "ref": "q_qty"
+        },
+        {
+         "num": 5000
+        }
+       ]
+      }
+     ]
+    }
+   }
+  ],
+  "pages": [
+   {
+    "id": "p1",
+    "blocks": [
+     {
+      "id": "q_qty",
+      "type": "number",
+      "label": {
+       "fr": "Quantite",
+       "en": "Quantite"
+      },
+      "required": true,
+      "validation": {
+       "min": 1,
+       "max": 1000,
+       "integer": true
+      }
+     },
+     {
+      "id": "show_total",
+      "type": "computed_display",
+      "variable": "total"
+     },
+     {
+      "id": "pay",
+      "type": "payment_computed",
+      "label": {
+       "fr": "Paiement",
+       "en": "Paiement"
+      },
+      "variable": "total"
+     }
+    ]
+   }
+  ],
+  "rules": []
+ },
+ "products": {
+  "schemaVersion": 1,
+  "defaultLocale": "fr",
+  "locales": [
+   "fr",
+   "en"
+  ],
+  "settings": {
+   "payments": {
+    "enabled": true,
+    "currency": "XAF",
+    "feeBearer": "org",
+    "provider": "fake"
+   }
+  },
+  "variables": [],
+  "pages": [
+   {
+    "id": "p1",
+    "blocks": [
+     {
+      "id": "q_member",
+      "type": "yes_no",
+      "label": {
+       "fr": "Membre",
+       "en": "Membre"
+      },
+      "required": true
+     },
+     {
+      "id": "q_items",
+      "type": "product_choice",
+      "label": {
+       "fr": "Articles",
+       "en": "Articles"
+      },
+      "options": [
+       {
+        "id": "tshirt",
+        "label": {
+         "fr": "tshirt",
+         "en": "tshirt"
+        },
+        "code": 1,
+        "price": 7500
+       },
+       {
+        "id": "cap",
+        "label": {
+         "fr": "cap",
+         "en": "cap"
+        },
+        "code": 2,
+        "price": 3000
+       }
+      ]
+     },
+     {
+      "id": "fee",
+      "type": "payment_fixed",
+      "label": {
+       "fr": "Frais",
+       "en": "Frais"
+      },
+      "amount": 2000
+     }
+    ]
+   }
+  ],
+  "rules": [
+   {
+    "id": "r1",
+    "when": {
+     "field": "q_member",
+     "op": "eq",
+     "value": true
+    },
+    "then": [
+     {
+      "action": "hide",
+      "target": "fee"
+     }
+    ]
+   }
+  ]
+ },
+ "ending": {
+  "schemaVersion": 1,
+  "defaultLocale": "fr",
+  "locales": [
+   "fr",
+   "en"
+  ],
+  "settings": {
+   "payments": {
+    "enabled": false,
+    "currency": "XAF",
+    "feeBearer": "org",
+    "provider": "fake"
+   }
+  },
+  "variables": [],
+  "pages": [
+   {
+    "id": "p1",
+    "blocks": [
+     {
+      "id": "q_ok",
+      "type": "yes_no",
+      "label": {
+       "fr": "Accord",
+       "en": "Accord"
+      },
+      "required": true
+     }
+    ]
+   },
+   {
+    "id": "p2",
+    "blocks": [
+     {
+      "id": "q_name",
+      "type": "short_text",
+      "label": {
+       "fr": "Nom",
+       "en": "Nom"
+      },
+      "required": true
+     }
+    ]
+   }
+  ],
+  "rules": [
+   {
+    "id": "r1",
+    "when": {
+     "field": "q_ok",
+     "op": "eq",
+     "value": false
+    },
+    "then": [
+     {
+      "action": "end_form"
+     }
+    ]
+   }
+  ]
+ },
+ "math": {
+  "schemaVersion": 1,
+  "defaultLocale": "fr",
+  "locales": [
+   "fr",
+   "en"
+  ],
+  "settings": {
+   "payments": {
+    "enabled": true,
+    "currency": "XAF",
+    "feeBearer": "org",
+    "provider": "fake"
+   }
+  },
+  "variables": [
+   {
+    "id": "ratio",
+    "type": "number",
+    "formula": {
+     "op": "div",
+     "args": [
+      {
+       "ref": "q_a"
+      },
+      {
+       "ref": "q_b"
+      }
+     ]
+    }
+   },
+   {
+    "id": "rounded",
+    "type": "number",
+    "formula": {
+     "op": "round",
+     "args": [
+      {
+       "ref": "ratio"
+      },
+      {
+       "num": 0
+      }
+     ]
+    }
+   },
+   {
+    "id": "count",
+    "type": "number",
+    "formula": {
+     "op": "count_selected",
+     "args": [
+      {
+       "ref": "q_tags"
+      }
+     ]
+    }
+   },
+   {
+    "id": "price",
+    "type": "number",
+    "formula": {
+     "op": "add",
+     "args": [
+      {
+       "ref": "q_a"
+      },
+      {
+       "op": "mul",
+       "args": [
+        {
+         "ref": "count"
+        },
+        {
+         "num": 0.5
+        }
+       ]
+      }
+     ]
+    }
+   },
+   {
+    "id": "big",
+    "type": "number",
+    "formula": {
+     "op": "max",
+     "args": [
+      {
+       "ref": "q_a"
+      },
+      {
+       "ref": "q_b"
+      },
+      {
+       "num": 3
+      }
+     ]
+    }
+   },
+   {
+    "id": "small",
+    "type": "number",
+    "formula": {
+     "op": "min",
+     "args": [
+      {
+       "ref": "q_a"
+      },
+      {
+       "ref": "q_b"
+      }
+     ]
+    }
+   },
+   {
+    "id": "diff",
+    "type": "number",
+    "formula": {
+     "op": "sub",
+     "args": [
+      {
+       "ref": "q_a"
+      },
+      {
+       "ref": "q_b"
+      },
+      {
+       "num": 1
+      }
+     ]
+    }
+   },
+   {
+    "id": "both",
+    "type": "boolean",
+    "formula": {
+     "op": "and",
+     "args": [
+      {
+       "op": "gt",
+       "args": [
+        {
+         "ref": "q_a"
+        },
+        {
+         "num": 0
+        }
+       ]
+      },
+      {
+       "op": "not",
+       "args": [
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "q_b"
+          },
+          {
+           "num": 0
+          }
+         ]
+        }
+       ]
+      }
+     ]
+    }
+   }
+  ],
+  "pages": [
+   {
+    "id": "p1",
+    "blocks": [
+     {
+      "id": "q_a",
+      "type": "number",
+      "label": {
+       "fr": "A",
+       "en": "A"
+      }
+     },
+     {
+      "id": "q_b",
+      "type": "number",
+      "label": {
+       "fr": "B",
+       "en": "B"
+      }
+     },
+     {
+      "id": "q_tags",
+      "type": "multi_choice",
+      "label": {
+       "fr": "Tags",
+       "en": "Tags"
+      },
+      "options": [
+       {
+        "id": "x",
+        "label": {
+         "fr": "x",
+         "en": "x"
+        },
+        "code": 1
+       },
+       {
+        "id": "y",
+        "label": {
+         "fr": "y",
+         "en": "y"
+        },
+        "code": 2
+       },
+       {
+        "id": "z",
+        "label": {
+         "fr": "z",
+         "en": "z"
+        },
+        "code": 3
+       }
+      ],
+      "validation": {
+       "maxSelected": 2
+      }
+     },
+     {
+      "id": "pay",
+      "type": "payment_computed",
+      "label": {
+       "fr": "Paiement",
+       "en": "Paiement"
+      },
+      "variable": "price"
+     }
+    ]
+   }
+  ],
+  "rules": []
+ },
+ "operators": {
+  "schemaVersion": 1,
+  "defaultLocale": "fr",
+  "locales": [
+   "fr",
+   "en"
+  ],
+  "settings": {
+   "payments": {
+    "enabled": false,
+    "currency": "XAF",
+    "feeBearer": "org",
+    "provider": "fake"
+   }
+  },
+  "variables": [],
+  "pages": [
+   {
+    "id": "p1",
+    "blocks": [
+     {
+      "id": "q_txt",
+      "type": "short_text",
+      "label": {
+       "fr": "Texte",
+       "en": "Texte"
+      }
+     },
+     {
+      "id": "q_n",
+      "type": "number",
+      "label": {
+       "fr": "N",
+       "en": "N"
+      }
+     },
+     {
+      "id": "q_multi",
+      "type": "multi_choice",
+      "label": {
+       "fr": "Multi",
+       "en": "Multi"
+      },
+      "options": [
+       {
+        "id": "a",
+        "label": {
+         "fr": "a",
+         "en": "a"
+        },
+        "code": 1
+       },
+       {
+        "id": "b",
+        "label": {
+         "fr": "b",
+         "en": "b"
+        },
+        "code": 2
+       },
+       {
+        "id": "c",
+        "label": {
+         "fr": "c",
+         "en": "c"
+        },
+        "code": 3
+       }
+      ]
+     },
+     {
+      "id": "q_date",
+      "type": "date",
+      "label": {
+       "fr": "Date",
+       "en": "Date"
+      }
+     },
+     {
+      "id": "t_contains",
+      "type": "short_text",
+      "label": {
+       "fr": "contains",
+       "en": "contains"
+      }
+     },
+     {
+      "id": "t_not_contains",
+      "type": "short_text",
+      "label": {
+       "fr": "not_contains",
+       "en": "not_contains"
+      }
+     },
+     {
+      "id": "t_between",
+      "type": "short_text",
+      "label": {
+       "fr": "between",
+       "en": "between"
+      }
+     },
+     {
+      "id": "t_in",
+      "type": "short_text",
+      "label": {
+       "fr": "in",
+       "en": "in"
+      }
+     },
+     {
+      "id": "t_not_in",
+      "type": "short_text",
+      "label": {
+       "fr": "not_in",
+       "en": "not_in"
+      }
+     },
+     {
+      "id": "t_lt",
+      "type": "short_text",
+      "label": {
+       "fr": "lt",
+       "en": "lt"
+      }
+     },
+     {
+      "id": "t_lte",
+      "type": "short_text",
+      "label": {
+       "fr": "lte",
+       "en": "lte"
+      }
+     },
+     {
+      "id": "t_gt",
+      "type": "short_text",
+      "label": {
+       "fr": "gt",
+       "en": "gt"
+      }
+     },
+     {
+      "id": "t_neq",
+      "type": "short_text",
+      "label": {
+       "fr": "neq",
+       "en": "neq"
+      }
+     },
+     {
+      "id": "t_empty",
+      "type": "short_text",
+      "label": {
+       "fr": "empty",
+       "en": "empty"
+      }
+     },
+     {
+      "id": "t_date",
+      "type": "short_text",
+      "label": {
+       "fr": "date",
+       "en": "date"
+      }
+     },
+     {
+      "id": "t_multi",
+      "type": "short_text",
+      "label": {
+       "fr": "multi",
+       "en": "multi"
+      }
+     }
+    ]
+   }
+  ],
+  "rules": [
+   {
+    "id": "r1",
+    "when": {
+     "field": "q_txt",
+     "op": "contains",
+     "value": "arha"
+    },
+    "then": [
+     {
+      "action": "show",
+      "target": "t_contains"
+     }
+    ]
+   },
+   {
+    "id": "r2",
+    "when": {
+     "field": "q_txt",
+     "op": "not_contains",
+     "value": "arha"
+    },
+    "then": [
+     {
+      "action": "show",
+      "target": "t_not_contains"
+     }
+    ]
+   },
+   {
+    "id": "r3",
+    "when": {
+     "field": "q_n",
+     "op": "between",
+     "value": [
+      10,
+      20
+     ]
+    },
+    "then": [
+     {
+      "action": "show",
+      "target": "t_between"
+     }
+    ]
+   },
+   {
+    "id": "r4",
+    "when": {
+     "field": "q_n",
+     "op": "in",
+     "value": [
+      1,
+      2,
+      3
+     ]
+    },
+    "then": [
+     {
+      "action": "show",
+      "target": "t_in"
+     }
+    ]
+   },
+   {
+    "id": "r5",
+    "when": {
+     "field": "q_n",
+     "op": "not_in",
+     "value": [
+      1,
+      2,
+      3
+     ]
+    },
+    "then": [
+     {
+      "action": "show",
+      "target": "t_not_in"
+     }
+    ]
+   },
+   {
+    "id": "r6",
+    "when": {
+     "field": "q_n",
+     "op": "lt",
+     "value": 5
+    },
+    "then": [
+     {
+      "action": "show",
+      "target": "t_lt"
+     }
+    ]
+   },
+   {
+    "id": "r7",
+    "when": {
+     "field": "q_n",
+     "op": "lte",
+     "value": 5
+    },
+    "then": [
+     {
+      "action": "show",
+      "target": "t_lte"
+     }
+    ]
+   },
+   {
+    "id": "r8",
+    "when": {
+     "field": "q_n",
+     "op": "gt",
+     "value": 5
+    },
+    "then": [
+     {
+      "action": "show",
+      "target": "t_gt"
+     }
+    ]
+   },
+   {
+    "id": "r9",
+    "when": {
+     "field": "q_txt",
+     "op": "neq",
+     "value": "x"
+    },
+    "then": [
+     {
+      "action": "show",
+      "target": "t_neq"
+     }
+    ]
+   },
+   {
+    "id": "r10",
+    "when": {
+     "field": "q_txt",
+     "op": "empty"
+    },
+    "then": [
+     {
+      "action": "show",
+      "target": "t_empty"
+     }
+    ]
+   },
+   {
+    "id": "r11",
+    "when": {
+     "field": "q_date",
+     "op": "gte",
+     "value": "2027-03-02"
+    },
+    "then": [
+     {
+      "action": "show",
+      "target": "t_date"
+     }
+    ]
+   },
+   {
+    "id": "r12",
+    "when": {
+     "field": "q_multi",
+     "op": "contains",
+     "value": "b"
+    },
+    "then": [
+     {
+      "action": "show",
+      "target": "t_multi"
+     },
+     {
+      "action": "require",
+      "target": "t_multi"
+     }
+    ]
+   }
+  ]
+ },
+ "setvar": {
+  "schemaVersion": 1,
+  "defaultLocale": "fr",
+  "locales": [
+   "fr",
+   "en"
+  ],
+  "settings": {
+   "payments": {
+    "enabled": true,
+    "currency": "XAF",
+    "feeBearer": "org",
+    "provider": "fake"
+   }
+  },
+  "variables": [
+   {
+    "id": "price",
+    "type": "number",
+    "initial": 10000
+   }
+  ],
+  "pages": [
+   {
+    "id": "p1",
+    "blocks": [
+     {
+      "id": "q_type",
+      "type": "dropdown",
+      "label": {
+       "fr": "Type",
+       "en": "Type"
+      },
+      "options": [
+       {
+        "id": "std",
+        "label": {
+         "fr": "std",
+         "en": "std"
+        },
+        "code": 1
+       },
+       {
+        "id": "vip",
+        "label": {
+         "fr": "vip",
+         "en": "vip"
+        },
+        "code": 2
+       }
+      ]
+     },
+     {
+      "id": "q_n",
+      "type": "number",
+      "label": {
+       "fr": "N",
+       "en": "N"
+      },
+      "validation": {
+       "integer": true,
+       "min": 0
+      }
+     },
+     {
+      "id": "pay",
+      "type": "payment_computed",
+      "label": {
+       "fr": "Paiement",
+       "en": "Paiement"
+      },
+      "variable": "price"
+     }
+    ]
+   }
+  ],
+  "rules": [
+   {
+    "id": "r1",
+    "when": {
+     "field": "q_type",
+     "op": "eq",
+     "value": "vip"
+    },
+    "then": [
+     {
+      "action": "set_variable",
+      "target": "price",
+      "value": {
+       "op": "add",
+       "args": [
+        {
+         "ref": "price"
+        },
+        {
+         "op": "mul",
+         "args": [
+          {
+           "ref": "q_n"
+          },
+          {
+           "num": 2500.5
+          }
+         ]
+        }
+       ]
+      }
+     }
+    ]
+   }
+  ]
+ },
+ "validation": {
+  "schemaVersion": 1,
+  "defaultLocale": "fr",
+  "locales": [
+   "fr",
+   "en"
+  ],
+  "settings": {
+   "payments": {
+    "enabled": true,
+    "currency": "XAF",
+    "feeBearer": "org",
+    "provider": "fake"
+   }
+  },
+  "variables": [],
+  "pages": [
+   {
+    "id": "p1",
+    "blocks": [
+     {
+      "id": "q_email",
+      "type": "email",
+      "label": {
+       "fr": "E-mail",
+       "en": "E-mail"
+      }
+     },
+     {
+      "id": "q_phone",
+      "type": "phone",
+      "label": {
+       "fr": "Telephone",
+       "en": "Telephone"
+      }
+     },
+     {
+      "id": "q_url",
+      "type": "url",
+      "label": {
+       "fr": "Site",
+       "en": "Site"
+      }
+     },
+     {
+      "id": "q_rating",
+      "type": "rating",
+      "label": {
+       "fr": "Note",
+       "en": "Note"
+      },
+      "scale": {
+       "max": 5
+      }
+     },
+     {
+      "id": "q_nps",
+      "type": "nps",
+      "label": {
+       "fr": "NPS",
+       "en": "NPS"
+      }
+     },
+     {
+      "id": "q_scale",
+      "type": "linear_scale",
+      "label": {
+       "fr": "Echelle",
+       "en": "Echelle"
+      },
+      "scale": {
+       "min": 1,
+       "max": 7
+      }
+     },
+     {
+      "id": "q_date",
+      "type": "date",
+      "label": {
+       "fr": "Date",
+       "en": "Date"
+      },
+      "validation": {
+       "minDate": "2026-01-01"
+      }
+     },
+     {
+      "id": "q_time",
+      "type": "time",
+      "label": {
+       "fr": "Heure",
+       "en": "Heure"
+      }
+     },
+     {
+      "id": "q_range",
+      "type": "date_range",
+      "label": {
+       "fr": "Periode",
+       "en": "Periode"
+      }
+     },
+     {
+      "id": "q_grid",
+      "type": "choice_grid",
+      "label": {
+       "fr": "Grille",
+       "en": "Grille"
+      },
+      "rows": [
+       {
+        "id": "r1",
+        "label": {
+         "fr": "r1",
+         "en": "r1"
+        },
+        "code": 1
+       },
+       {
+        "id": "r2",
+        "label": {
+         "fr": "r2",
+         "en": "r2"
+        },
+        "code": 2
+       }
+      ],
+      "columns": [
+       {
+        "id": "c1",
+        "label": {
+         "fr": "c1",
+         "en": "c1"
+        },
+        "code": 1
+       },
+       {
+        "id": "c2",
+        "label": {
+         "fr": "c2",
+         "en": "c2"
+        },
+        "code": 2
+       }
+      ]
+     },
+     {
+      "id": "q_rank",
+      "type": "ranking",
+      "label": {
+       "fr": "Classement",
+       "en": "Classement"
+      },
+      "options": [
+       {
+        "id": "a",
+        "label": {
+         "fr": "a",
+         "en": "a"
+        },
+        "code": 1
+       },
+       {
+        "id": "b",
+        "label": {
+         "fr": "b",
+         "en": "b"
+        },
+        "code": 2
+       }
+      ]
+     },
+     {
+      "id": "q_short",
+      "type": "short_text",
+      "label": {
+       "fr": "Court",
+       "en": "Court"
+      },
+      "validation": {
+       "minLength": 3,
+       "maxLength": 10
+      }
+     },
+     {
+      "id": "q_consent",
+      "type": "consent",
+      "label": {
+       "fr": "Consentement",
+       "en": "Consentement"
+      },
+      "required": true
+     },
+     {
+      "id": "q_open",
+      "type": "payment_open",
+      "label": {
+       "fr": "Don",
+       "en": "Don"
+      },
+      "minAmount": 500,
+      "maxAmount": 100000
+     }
+    ]
+   }
+  ],
+  "rules": []
+ },
+ "hidden": {
+  "schemaVersion": 1,
+  "defaultLocale": "fr",
+  "locales": [
+   "fr",
+   "en"
+  ],
+  "settings": {
+   "payments": {
+    "enabled": false,
+    "currency": "XAF",
+    "feeBearer": "org",
+    "provider": "fake"
+   }
+  },
+  "variables": [],
+  "pages": [
+   {
+    "id": "p1",
+    "blocks": [
+     {
+      "id": "src",
+      "type": "hidden",
+      "param": "source"
+     },
+     {
+      "id": "q_x",
+      "type": "short_text",
+      "label": {
+       "fr": "X",
+       "en": "X"
+      }
+     },
+     {
+      "id": "t_wa",
+      "type": "short_text",
+      "label": {
+       "fr": "WhatsApp",
+       "en": "WhatsApp"
+      }
+     }
+    ]
+   }
+  ],
+  "rules": [
+   {
+    "id": "r1",
+    "when": {
+     "field": "src",
+     "op": "eq",
+     "value": "whatsapp"
+    },
+    "then": [
+     {
+      "action": "show",
+      "target": "t_wa"
+     }
+    ]
+   }
+  ]
+ }
+}

@@ -1,0 +1,2233 @@
+[
+ {
+  "name": "op_contains_case_insensitive",
+  "base": "operators",
+  "answers": {
+   "q_txt": "Bienvenue sur ARHA"
+  },
+  "expect": {
+   "visible": [
+    "q_txt",
+    "q_n",
+    "q_multi",
+    "q_date",
+    "t_contains",
+    "t_not_in",
+    "t_neq"
+   ]
+  }
+ },
+ {
+  "name": "op_between_inclusive",
+  "base": "operators",
+  "answers": {
+   "q_txt": "x",
+   "q_n": 20
+  },
+  "expect": {
+   "visible": [
+    "q_txt",
+    "q_n",
+    "q_multi",
+    "q_date",
+    "t_not_contains",
+    "t_between",
+    "t_not_in",
+    "t_gt"
+   ]
+  }
+ },
+ {
+  "name": "op_in_list",
+  "base": "operators",
+  "answers": {
+   "q_n": 2
+  },
+  "expect": {
+   "visible": [
+    "q_txt",
+    "q_n",
+    "q_multi",
+    "q_date",
+    "t_not_contains",
+    "t_in",
+    "t_lt",
+    "t_lte",
+    "t_neq",
+    "t_empty"
+   ]
+  }
+ },
+ {
+  "name": "op_lte_boundary",
+  "base": "operators",
+  "answers": {
+   "q_n": 5,
+   "q_txt": "x"
+  },
+  "expect": {
+   "visible": [
+    "q_txt",
+    "q_n",
+    "q_multi",
+    "q_date",
+    "t_not_contains",
+    "t_not_in",
+    "t_lte"
+   ]
+  }
+ },
+ {
+  "name": "op_date_and_multi",
+  "base": "operators",
+  "answers": {
+   "q_txt": "x",
+   "q_date": "2027-03-02",
+   "q_multi": [
+    "b",
+    "c"
+   ]
+  },
+  "expect": {
+   "visible": [
+    "q_txt",
+    "q_n",
+    "q_multi",
+    "q_date",
+    "t_not_contains",
+    "t_not_in",
+    "t_date",
+    "t_multi"
+   ],
+   "required": [
+    "t_multi"
+   ],
+   "errors": [
+    {
+     "field": "t_multi",
+     "code": "required"
+    }
+   ]
+  }
+ },
+ {
+  "name": "gen_operators_000",
+  "base": "operators",
+  "answers": {},
+  "expect": {
+   "visible": [
+    "q_txt",
+    "q_n",
+    "q_multi",
+    "q_date",
+    "t_not_contains",
+    "t_not_in",
+    "t_neq",
+    "t_empty"
+   ],
+   "required": [],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_operators_001",
+  "base": "operators",
+  "answers": {
+   "q_txt": null
+  },
+  "expect": {
+   "visible": [
+    "q_txt",
+    "q_n",
+    "q_multi",
+    "q_date",
+    "t_not_contains",
+    "t_not_in",
+    "t_neq",
+    "t_empty"
+   ],
+   "required": [],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_operators_002",
+  "base": "operators",
+  "answers": {
+   "t_empty": -4
+  },
+  "expect": {
+   "visible": [
+    "q_txt",
+    "q_n",
+    "q_multi",
+    "q_date",
+    "t_not_contains",
+    "t_not_in",
+    "t_neq",
+    "t_empty"
+   ],
+   "required": [],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "t_empty",
+     "code": "invalid_type"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_operators_003",
+  "base": "operators",
+  "answers": {
+   "t_lt": null
+  },
+  "expect": {
+   "visible": [
+    "q_txt",
+    "q_n",
+    "q_multi",
+    "q_date",
+    "t_not_contains",
+    "t_not_in",
+    "t_neq",
+    "t_empty"
+   ],
+   "required": [],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_operators_004",
+  "base": "operators",
+  "answers": {
+   "q_date": null
+  },
+  "expect": {
+   "visible": [
+    "q_txt",
+    "q_n",
+    "q_multi",
+    "q_date",
+    "t_not_contains",
+    "t_not_in",
+    "t_neq",
+    "t_empty"
+   ],
+   "required": [],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_operators_005",
+  "base": "operators",
+  "answers": {
+   "q_date": 9
+  },
+  "expect": {
+   "visible": [
+    "q_txt",
+    "q_n",
+    "q_multi",
+    "q_date",
+    "t_not_contains",
+    "t_not_in",
+    "t_neq",
+    "t_empty"
+   ],
+   "required": [],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_date",
+     "code": "invalid_date"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_operators_006",
+  "base": "operators",
+  "answers": {
+   "q_date": 0.1
+  },
+  "expect": {
+   "visible": [
+    "q_txt",
+    "q_n",
+    "q_multi",
+    "q_date",
+    "t_not_contains",
+    "t_not_in",
+    "t_neq",
+    "t_empty"
+   ],
+   "required": [],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_date",
+     "code": "invalid_date"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_operators_007",
+  "base": "operators",
+  "answers": {
+   "t_between": null
+  },
+  "expect": {
+   "visible": [
+    "q_txt",
+    "q_n",
+    "q_multi",
+    "q_date",
+    "t_not_contains",
+    "t_not_in",
+    "t_neq",
+    "t_empty"
+   ],
+   "required": [],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_operators_008",
+  "base": "operators",
+  "answers": {
+   "t_lte": null
+  },
+  "expect": {
+   "visible": [
+    "q_txt",
+    "q_n",
+    "q_multi",
+    "q_date",
+    "t_not_contains",
+    "t_not_in",
+    "t_neq",
+    "t_empty"
+   ],
+   "required": [],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_operators_009",
+  "base": "operators",
+  "answers": {
+   "t_multi": null
+  },
+  "expect": {
+   "visible": [
+    "q_txt",
+    "q_n",
+    "q_multi",
+    "q_date",
+    "t_not_contains",
+    "t_not_in",
+    "t_neq",
+    "t_empty"
+   ],
+   "required": [],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_operators_010",
+  "base": "operators",
+  "answers": {
+   "t_neq": null
+  },
+  "expect": {
+   "visible": [
+    "q_txt",
+    "q_n",
+    "q_multi",
+    "q_date",
+    "t_not_contains",
+    "t_not_in",
+    "t_neq",
+    "t_empty"
+   ],
+   "required": [],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_operators_011",
+  "base": "operators",
+  "answers": {
+   "q_txt": 0.1
+  },
+  "expect": {
+   "visible": [
+    "q_txt",
+    "q_n",
+    "q_multi",
+    "q_date",
+    "t_not_contains",
+    "t_not_in",
+    "t_neq"
+   ],
+   "required": [],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_txt",
+     "code": "invalid_type"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_operators_012",
+  "base": "operators",
+  "answers": {
+   "t_multi": false
+  },
+  "expect": {
+   "visible": [
+    "q_txt",
+    "q_n",
+    "q_multi",
+    "q_date",
+    "t_not_contains",
+    "t_not_in",
+    "t_neq",
+    "t_empty"
+   ],
+   "required": [],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_operators_013",
+  "base": "operators",
+  "answers": {
+   "q_date": false
+  },
+  "expect": {
+   "visible": [
+    "q_txt",
+    "q_n",
+    "q_multi",
+    "q_date",
+    "t_not_contains",
+    "t_not_in",
+    "t_neq",
+    "t_empty"
+   ],
+   "required": [],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_date",
+     "code": "invalid_date"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_operators_014",
+  "base": "operators",
+  "answers": {
+   "t_multi": true
+  },
+  "expect": {
+   "visible": [
+    "q_txt",
+    "q_n",
+    "q_multi",
+    "q_date",
+    "t_not_contains",
+    "t_not_in",
+    "t_neq",
+    "t_empty"
+   ],
+   "required": [],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_operators_015",
+  "base": "operators",
+  "answers": {
+   "t_neq": null,
+   "q_txt": null
+  },
+  "expect": {
+   "visible": [
+    "q_txt",
+    "q_n",
+    "q_multi",
+    "q_date",
+    "t_not_contains",
+    "t_not_in",
+    "t_neq",
+    "t_empty"
+   ],
+   "required": [],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_operators_016",
+  "base": "operators",
+  "answers": {
+   "t_neq": null,
+   "t_contains": "x"
+  },
+  "expect": {
+   "visible": [
+    "q_txt",
+    "q_n",
+    "q_multi",
+    "q_date",
+    "t_not_contains",
+    "t_not_in",
+    "t_neq",
+    "t_empty"
+   ],
+   "required": [],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_operators_017",
+  "base": "operators",
+  "answers": {
+   "t_neq": "x",
+   "t_contains": "x"
+  },
+  "expect": {
+   "visible": [
+    "q_txt",
+    "q_n",
+    "q_multi",
+    "q_date",
+    "t_not_contains",
+    "t_not_in",
+    "t_neq",
+    "t_empty"
+   ],
+   "required": [],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_operators_018",
+  "base": "operators",
+  "answers": {
+   "q_txt": 0
+  },
+  "expect": {
+   "visible": [
+    "q_txt",
+    "q_n",
+    "q_multi",
+    "q_date",
+    "t_not_contains",
+    "t_not_in",
+    "t_neq"
+   ],
+   "required": [],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_txt",
+     "code": "invalid_type"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_operators_019",
+  "base": "operators",
+  "answers": {
+   "t_lte": 9.99,
+   "t_multi": 1000.0,
+   "t_neq": true,
+   "t_not_in": true,
+   "t_in": 9.99,
+   "t_empty": 9.99,
+   "t_lt": false,
+   "q_n": true,
+   "q_multi": [
+    "b"
+   ],
+   "t_not_contains": "arha",
+   "q_date": "2026-01-01",
+   "t_date": "3",
+   "q_txt": null,
+   "t_gt": null,
+   "t_contains": 7,
+   "t_between": "arha"
+  },
+  "expect": {
+   "visible": [
+    "q_txt",
+    "q_n",
+    "q_multi",
+    "q_date",
+    "t_not_contains",
+    "t_not_in",
+    "t_neq",
+    "t_empty",
+    "t_multi"
+   ],
+   "required": [
+    "t_multi"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_n",
+     "code": "invalid_number"
+    },
+    {
+     "field": "t_not_in",
+     "code": "invalid_type"
+    },
+    {
+     "field": "t_neq",
+     "code": "invalid_type"
+    },
+    {
+     "field": "t_empty",
+     "code": "invalid_type"
+    },
+    {
+     "field": "t_multi",
+     "code": "invalid_type"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_operators_020",
+  "base": "operators",
+  "answers": {
+   "t_lte": 9.99,
+   "t_multi": 1000.0,
+   "t_neq": true,
+   "t_not_in": true,
+   "t_in": 9.99,
+   "t_empty": 9.99,
+   "t_lt": false,
+   "q_n": true,
+   "q_multi": [
+    "b"
+   ],
+   "t_not_contains": 9.99,
+   "q_date": "2026-01-01",
+   "t_date": "3",
+   "q_txt": null,
+   "t_gt": null,
+   "t_contains": 7,
+   "t_between": "arha"
+  },
+  "expect": {
+   "visible": [
+    "q_txt",
+    "q_n",
+    "q_multi",
+    "q_date",
+    "t_not_contains",
+    "t_not_in",
+    "t_neq",
+    "t_empty",
+    "t_multi"
+   ],
+   "required": [
+    "t_multi"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_n",
+     "code": "invalid_number"
+    },
+    {
+     "field": "t_not_contains",
+     "code": "invalid_type"
+    },
+    {
+     "field": "t_not_in",
+     "code": "invalid_type"
+    },
+    {
+     "field": "t_neq",
+     "code": "invalid_type"
+    },
+    {
+     "field": "t_empty",
+     "code": "invalid_type"
+    },
+    {
+     "field": "t_multi",
+     "code": "invalid_type"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_operators_021",
+  "base": "operators",
+  "answers": {
+   "t_lte": 9.99,
+   "t_multi": 1000.0,
+   "t_neq": true,
+   "t_not_in": true,
+   "t_in": 9.99,
+   "t_empty": 9.99,
+   "t_lt": false,
+   "q_n": true,
+   "q_multi": [
+    "b"
+   ],
+   "t_not_contains": 9.99,
+   "q_date": "3",
+   "t_date": "3",
+   "q_txt": null,
+   "t_gt": null,
+   "t_contains": 7,
+   "t_between": "arha"
+  },
+  "expect": {
+   "visible": [
+    "q_txt",
+    "q_n",
+    "q_multi",
+    "q_date",
+    "t_not_contains",
+    "t_not_in",
+    "t_neq",
+    "t_empty",
+    "t_date",
+    "t_multi"
+   ],
+   "required": [
+    "t_multi"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_n",
+     "code": "invalid_number"
+    },
+    {
+     "field": "q_date",
+     "code": "invalid_date"
+    },
+    {
+     "field": "t_not_contains",
+     "code": "invalid_type"
+    },
+    {
+     "field": "t_not_in",
+     "code": "invalid_type"
+    },
+    {
+     "field": "t_neq",
+     "code": "invalid_type"
+    },
+    {
+     "field": "t_empty",
+     "code": "invalid_type"
+    },
+    {
+     "field": "t_multi",
+     "code": "invalid_type"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_operators_022",
+  "base": "operators",
+  "answers": {
+   "t_lte": 9.99,
+   "t_multi": 1000.0,
+   "t_neq": true,
+   "t_not_in": true,
+   "t_in": 9.99,
+   "t_empty": 9.99,
+   "t_lt": false,
+   "q_n": false,
+   "q_multi": [
+    "b"
+   ],
+   "t_not_contains": 9.99,
+   "q_date": "3",
+   "t_date": "3",
+   "q_txt": null,
+   "t_gt": null,
+   "t_contains": 7,
+   "t_between": "arha"
+  },
+  "expect": {
+   "visible": [
+    "q_txt",
+    "q_n",
+    "q_multi",
+    "q_date",
+    "t_not_contains",
+    "t_not_in",
+    "t_neq",
+    "t_empty",
+    "t_date",
+    "t_multi"
+   ],
+   "required": [
+    "t_multi"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_n",
+     "code": "invalid_number"
+    },
+    {
+     "field": "q_date",
+     "code": "invalid_date"
+    },
+    {
+     "field": "t_not_contains",
+     "code": "invalid_type"
+    },
+    {
+     "field": "t_not_in",
+     "code": "invalid_type"
+    },
+    {
+     "field": "t_neq",
+     "code": "invalid_type"
+    },
+    {
+     "field": "t_empty",
+     "code": "invalid_type"
+    },
+    {
+     "field": "t_multi",
+     "code": "invalid_type"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_operators_023",
+  "base": "operators",
+  "answers": {
+   "t_lte": 9.99,
+   "t_multi": 1000.0,
+   "t_neq": true,
+   "t_not_in": true,
+   "t_in": 9.99,
+   "t_empty": 9.99,
+   "t_lt": false,
+   "q_n": false,
+   "q_multi": [
+    "b"
+   ],
+   "t_not_contains": 9.99,
+   "q_date": "3",
+   "t_date": "3",
+   "q_txt": null,
+   "t_gt": null,
+   "t_contains": 0.1,
+   "t_between": "arha"
+  },
+  "expect": {
+   "visible": [
+    "q_txt",
+    "q_n",
+    "q_multi",
+    "q_date",
+    "t_not_contains",
+    "t_not_in",
+    "t_neq",
+    "t_empty",
+    "t_date",
+    "t_multi"
+   ],
+   "required": [
+    "t_multi"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_n",
+     "code": "invalid_number"
+    },
+    {
+     "field": "q_date",
+     "code": "invalid_date"
+    },
+    {
+     "field": "t_not_contains",
+     "code": "invalid_type"
+    },
+    {
+     "field": "t_not_in",
+     "code": "invalid_type"
+    },
+    {
+     "field": "t_neq",
+     "code": "invalid_type"
+    },
+    {
+     "field": "t_empty",
+     "code": "invalid_type"
+    },
+    {
+     "field": "t_multi",
+     "code": "invalid_type"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_operators_024",
+  "base": "operators",
+  "answers": {
+   "t_lte": 0.1,
+   "t_multi": 1000.0,
+   "t_neq": true,
+   "t_not_in": true,
+   "t_in": 9.99,
+   "t_empty": 9.99,
+   "t_lt": false,
+   "q_n": false,
+   "q_multi": [
+    "b"
+   ],
+   "t_not_contains": 9.99,
+   "q_date": "3",
+   "t_date": "3",
+   "q_txt": null,
+   "t_gt": null,
+   "t_contains": 0.1,
+   "t_between": "arha"
+  },
+  "expect": {
+   "visible": [
+    "q_txt",
+    "q_n",
+    "q_multi",
+    "q_date",
+    "t_not_contains",
+    "t_not_in",
+    "t_neq",
+    "t_empty",
+    "t_date",
+    "t_multi"
+   ],
+   "required": [
+    "t_multi"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_n",
+     "code": "invalid_number"
+    },
+    {
+     "field": "q_date",
+     "code": "invalid_date"
+    },
+    {
+     "field": "t_not_contains",
+     "code": "invalid_type"
+    },
+    {
+     "field": "t_not_in",
+     "code": "invalid_type"
+    },
+    {
+     "field": "t_neq",
+     "code": "invalid_type"
+    },
+    {
+     "field": "t_empty",
+     "code": "invalid_type"
+    },
+    {
+     "field": "t_multi",
+     "code": "invalid_type"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_operators_025",
+  "base": "operators",
+  "answers": {
+   "t_lte": 0.1,
+   "t_multi": 1000.0,
+   "t_neq": true,
+   "t_not_in": true,
+   "t_in": 9.99,
+   "t_empty": 9.99,
+   "t_lt": false,
+   "q_n": false,
+   "q_multi": [
+    "b"
+   ],
+   "t_not_contains": 9.99,
+   "q_date": "3",
+   "t_date": "3",
+   "q_txt": null,
+   "t_gt": null,
+   "t_contains": 0.1,
+   "t_between": "3"
+  },
+  "expect": {
+   "visible": [
+    "q_txt",
+    "q_n",
+    "q_multi",
+    "q_date",
+    "t_not_contains",
+    "t_not_in",
+    "t_neq",
+    "t_empty",
+    "t_date",
+    "t_multi"
+   ],
+   "required": [
+    "t_multi"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_n",
+     "code": "invalid_number"
+    },
+    {
+     "field": "q_date",
+     "code": "invalid_date"
+    },
+    {
+     "field": "t_not_contains",
+     "code": "invalid_type"
+    },
+    {
+     "field": "t_not_in",
+     "code": "invalid_type"
+    },
+    {
+     "field": "t_neq",
+     "code": "invalid_type"
+    },
+    {
+     "field": "t_empty",
+     "code": "invalid_type"
+    },
+    {
+     "field": "t_multi",
+     "code": "invalid_type"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_operators_026",
+  "base": "operators",
+  "answers": {
+   "t_lte": -0.5,
+   "t_neq": false,
+   "q_multi": 0,
+   "q_txt": "2027-03-02",
+   "q_n": false,
+   "t_gt": false,
+   "t_date": 16,
+   "t_not_contains": 18,
+   "t_not_in": true,
+   "t_contains": -0.5,
+   "t_lt": null,
+   "t_multi": 9.99,
+   "t_between": "x",
+   "q_date": 4,
+   "t_empty": " ",
+   "t_in": 0.1
+  },
+  "expect": {
+   "visible": [
+    "q_txt",
+    "q_n",
+    "q_multi",
+    "q_date",
+    "t_not_contains",
+    "t_not_in",
+    "t_neq"
+   ],
+   "required": [],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_n",
+     "code": "invalid_number"
+    },
+    {
+     "field": "q_multi",
+     "code": "invalid_choice"
+    },
+    {
+     "field": "q_date",
+     "code": "invalid_date"
+    },
+    {
+     "field": "t_not_contains",
+     "code": "invalid_type"
+    },
+    {
+     "field": "t_not_in",
+     "code": "invalid_type"
+    },
+    {
+     "field": "t_neq",
+     "code": "invalid_type"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_operators_027",
+  "base": "operators",
+  "answers": {
+   "t_lte": -0.5,
+   "t_neq": false,
+   "q_multi": 16,
+   "q_txt": "2027-03-02",
+   "q_n": false,
+   "t_gt": false,
+   "t_date": 16,
+   "t_not_contains": 18,
+   "t_not_in": true,
+   "t_contains": -0.5,
+   "t_lt": null,
+   "t_multi": 9.99,
+   "t_between": "x",
+   "q_date": 4,
+   "t_empty": " ",
+   "t_in": 0.1
+  },
+  "expect": {
+   "visible": [
+    "q_txt",
+    "q_n",
+    "q_multi",
+    "q_date",
+    "t_not_contains",
+    "t_not_in",
+    "t_neq"
+   ],
+   "required": [],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_n",
+     "code": "invalid_number"
+    },
+    {
+     "field": "q_multi",
+     "code": "invalid_choice"
+    },
+    {
+     "field": "q_date",
+     "code": "invalid_date"
+    },
+    {
+     "field": "t_not_contains",
+     "code": "invalid_type"
+    },
+    {
+     "field": "t_not_in",
+     "code": "invalid_type"
+    },
+    {
+     "field": "t_neq",
+     "code": "invalid_type"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_operators_028",
+  "base": "operators",
+  "answers": {
+   "t_lte": 9.99,
+   "t_neq": false,
+   "q_multi": 16,
+   "q_txt": "2027-03-02",
+   "q_n": false,
+   "t_gt": false,
+   "t_date": 16,
+   "t_not_contains": 18,
+   "t_not_in": true,
+   "t_contains": -0.5,
+   "t_lt": null,
+   "t_multi": 9.99,
+   "t_between": "x",
+   "q_date": 4,
+   "t_empty": " ",
+   "t_in": 0.1
+  },
+  "expect": {
+   "visible": [
+    "q_txt",
+    "q_n",
+    "q_multi",
+    "q_date",
+    "t_not_contains",
+    "t_not_in",
+    "t_neq"
+   ],
+   "required": [],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_n",
+     "code": "invalid_number"
+    },
+    {
+     "field": "q_multi",
+     "code": "invalid_choice"
+    },
+    {
+     "field": "q_date",
+     "code": "invalid_date"
+    },
+    {
+     "field": "t_not_contains",
+     "code": "invalid_type"
+    },
+    {
+     "field": "t_not_in",
+     "code": "invalid_type"
+    },
+    {
+     "field": "t_neq",
+     "code": "invalid_type"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_operators_029",
+  "base": "operators",
+  "answers": {
+   "t_lte": 9.99,
+   "t_neq": false,
+   "q_multi": 16,
+   "q_txt": "2027-03-02",
+   "q_n": false,
+   "t_gt": false,
+   "t_date": 16,
+   "t_not_contains": false,
+   "t_not_in": true,
+   "t_contains": -0.5,
+   "t_lt": null,
+   "t_multi": 9.99,
+   "t_between": "x",
+   "q_date": 4,
+   "t_empty": " ",
+   "t_in": 0.1
+  },
+  "expect": {
+   "visible": [
+    "q_txt",
+    "q_n",
+    "q_multi",
+    "q_date",
+    "t_not_contains",
+    "t_not_in",
+    "t_neq"
+   ],
+   "required": [],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_n",
+     "code": "invalid_number"
+    },
+    {
+     "field": "q_multi",
+     "code": "invalid_choice"
+    },
+    {
+     "field": "q_date",
+     "code": "invalid_date"
+    },
+    {
+     "field": "t_not_contains",
+     "code": "invalid_type"
+    },
+    {
+     "field": "t_not_in",
+     "code": "invalid_type"
+    },
+    {
+     "field": "t_neq",
+     "code": "invalid_type"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_operators_030",
+  "base": "operators",
+  "answers": {
+   "t_lte": 9.99,
+   "t_neq": false,
+   "q_multi": 16,
+   "q_txt": "2027-03-02",
+   "q_n": false,
+   "t_gt": false,
+   "t_date": 16,
+   "t_not_contains": false,
+   "t_not_in": true,
+   "t_contains": -0.5,
+   "t_lt": null,
+   "t_multi": 9.99,
+   "t_between": "x",
+   "q_date": 4,
+   "t_empty": false,
+   "t_in": 0.1
+  },
+  "expect": {
+   "visible": [
+    "q_txt",
+    "q_n",
+    "q_multi",
+    "q_date",
+    "t_not_contains",
+    "t_not_in",
+    "t_neq"
+   ],
+   "required": [],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_n",
+     "code": "invalid_number"
+    },
+    {
+     "field": "q_multi",
+     "code": "invalid_choice"
+    },
+    {
+     "field": "q_date",
+     "code": "invalid_date"
+    },
+    {
+     "field": "t_not_contains",
+     "code": "invalid_type"
+    },
+    {
+     "field": "t_not_in",
+     "code": "invalid_type"
+    },
+    {
+     "field": "t_neq",
+     "code": "invalid_type"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_operators_031",
+  "base": "operators",
+  "answers": {
+   "t_lte": 9.99,
+   "t_neq": false,
+   "q_multi": 16,
+   "q_txt": "2027-03-02",
+   "q_n": false,
+   "t_gt": false,
+   "t_date": 4,
+   "t_not_contains": false,
+   "t_not_in": true,
+   "t_contains": -0.5,
+   "t_lt": null,
+   "t_multi": 9.99,
+   "t_between": "x",
+   "q_date": 4,
+   "t_empty": false,
+   "t_in": 0.1
+  },
+  "expect": {
+   "visible": [
+    "q_txt",
+    "q_n",
+    "q_multi",
+    "q_date",
+    "t_not_contains",
+    "t_not_in",
+    "t_neq"
+   ],
+   "required": [],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_n",
+     "code": "invalid_number"
+    },
+    {
+     "field": "q_multi",
+     "code": "invalid_choice"
+    },
+    {
+     "field": "q_date",
+     "code": "invalid_date"
+    },
+    {
+     "field": "t_not_contains",
+     "code": "invalid_type"
+    },
+    {
+     "field": "t_not_in",
+     "code": "invalid_type"
+    },
+    {
+     "field": "t_neq",
+     "code": "invalid_type"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_operators_032",
+  "base": "operators",
+  "answers": {
+   "q_date": 4,
+   "t_lte": 9.99,
+   "t_neq": false,
+   "t_not_contains": false,
+   "q_txt": "2027-03-02",
+   "q_n": false,
+   "t_gt": false,
+   "t_date": 4,
+   "t_contains": -0.5,
+   "t_not_in": true,
+   "q_multi": 16,
+   "t_lt": null,
+   "t_multi": 9.99,
+   "t_between": "x",
+   "t_in": 0.1
+  },
+  "expect": {
+   "visible": [
+    "q_txt",
+    "q_n",
+    "q_multi",
+    "q_date",
+    "t_not_contains",
+    "t_not_in",
+    "t_neq"
+   ],
+   "required": [],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_n",
+     "code": "invalid_number"
+    },
+    {
+     "field": "q_multi",
+     "code": "invalid_choice"
+    },
+    {
+     "field": "q_date",
+     "code": "invalid_date"
+    },
+    {
+     "field": "t_not_contains",
+     "code": "invalid_type"
+    },
+    {
+     "field": "t_not_in",
+     "code": "invalid_type"
+    },
+    {
+     "field": "t_neq",
+     "code": "invalid_type"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_operators_033",
+  "base": "operators",
+  "answers": {
+   "t_lt": "2027-03-02"
+  },
+  "expect": {
+   "visible": [
+    "q_txt",
+    "q_n",
+    "q_multi",
+    "q_date",
+    "t_not_contains",
+    "t_not_in",
+    "t_neq",
+    "t_empty"
+   ],
+   "required": [],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_operators_034",
+  "base": "operators",
+  "answers": {
+   "q_n": false,
+   "t_not_contains": false,
+   "t_gt": null,
+   "q_date": 23,
+   "t_multi": null,
+   "t_in": "3",
+   "t_lt": null,
+   "t_between": 0.1,
+   "q_txt": true
+  },
+  "expect": {
+   "visible": [
+    "q_txt",
+    "q_n",
+    "q_multi",
+    "q_date",
+    "t_not_contains",
+    "t_not_in",
+    "t_neq"
+   ],
+   "required": [],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_txt",
+     "code": "invalid_type"
+    },
+    {
+     "field": "q_n",
+     "code": "invalid_number"
+    },
+    {
+     "field": "q_date",
+     "code": "invalid_date"
+    },
+    {
+     "field": "t_not_contains",
+     "code": "invalid_type"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_operators_035",
+  "base": "operators",
+  "answers": {
+   "t_gt": null,
+   "q_n": false,
+   "t_in": "3",
+   "t_multi": true,
+   "q_txt": true,
+   "q_date": 23
+  },
+  "expect": {
+   "visible": [
+    "q_txt",
+    "q_n",
+    "q_multi",
+    "q_date",
+    "t_not_contains",
+    "t_not_in",
+    "t_neq"
+   ],
+   "required": [],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_txt",
+     "code": "invalid_type"
+    },
+    {
+     "field": "q_n",
+     "code": "invalid_number"
+    },
+    {
+     "field": "q_date",
+     "code": "invalid_date"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_operators_036",
+  "base": "operators",
+  "answers": {
+   "t_gt": null,
+   "q_n": "3",
+   "t_in": "3",
+   "t_multi": true,
+   "q_txt": true,
+   "q_date": 23
+  },
+  "expect": {
+   "visible": [
+    "q_txt",
+    "q_n",
+    "q_multi",
+    "q_date",
+    "t_not_contains",
+    "t_in",
+    "t_lt",
+    "t_lte",
+    "t_neq"
+   ],
+   "required": [],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_txt",
+     "code": "invalid_type"
+    },
+    {
+     "field": "q_date",
+     "code": "invalid_date"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_operators_037",
+  "base": "operators",
+  "answers": {
+   "t_gt": "3",
+   "q_n": "3",
+   "t_in": "3",
+   "t_multi": true,
+   "q_txt": true,
+   "q_date": 23
+  },
+  "expect": {
+   "visible": [
+    "q_txt",
+    "q_n",
+    "q_multi",
+    "q_date",
+    "t_not_contains",
+    "t_in",
+    "t_lt",
+    "t_lte",
+    "t_neq"
+   ],
+   "required": [],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_txt",
+     "code": "invalid_type"
+    },
+    {
+     "field": "q_date",
+     "code": "invalid_date"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_operators_038",
+  "base": "operators",
+  "answers": {
+   "t_gt": "3",
+   "q_n": "3",
+   "t_in": "3",
+   "t_multi": true,
+   "q_txt": "",
+   "q_date": 23
+  },
+  "expect": {
+   "visible": [
+    "q_txt",
+    "q_n",
+    "q_multi",
+    "q_date",
+    "t_not_contains",
+    "t_in",
+    "t_lt",
+    "t_lte",
+    "t_neq",
+    "t_empty"
+   ],
+   "required": [],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_date",
+     "code": "invalid_date"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_operators_039",
+  "base": "operators",
+  "answers": {
+   "t_gt": "3",
+   "q_n": "",
+   "t_in": "3",
+   "t_multi": true,
+   "q_txt": "",
+   "q_date": 23
+  },
+  "expect": {
+   "visible": [
+    "q_txt",
+    "q_n",
+    "q_multi",
+    "q_date",
+    "t_not_contains",
+    "t_not_in",
+    "t_neq",
+    "t_empty"
+   ],
+   "required": [],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_date",
+     "code": "invalid_date"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_operators_040",
+  "base": "operators",
+  "answers": {
+   "t_gt": "3",
+   "q_n": 0,
+   "t_in": "3",
+   "t_multi": true,
+   "q_txt": "",
+   "q_date": 23
+  },
+  "expect": {
+   "visible": [
+    "q_txt",
+    "q_n",
+    "q_multi",
+    "q_date",
+    "t_not_contains",
+    "t_not_in",
+    "t_lt",
+    "t_lte",
+    "t_neq",
+    "t_empty"
+   ],
+   "required": [],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_date",
+     "code": "invalid_date"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_operators_041",
+  "base": "operators",
+  "answers": {
+   "t_date": -2,
+   "q_date": false
+  },
+  "expect": {
+   "visible": [
+    "q_txt",
+    "q_n",
+    "q_multi",
+    "q_date",
+    "t_not_contains",
+    "t_not_in",
+    "t_neq",
+    "t_empty"
+   ],
+   "required": [],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_date",
+     "code": "invalid_date"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_operators_042",
+  "base": "operators",
+  "answers": {
+   "t_date": false,
+   "q_date": false
+  },
+  "expect": {
+   "visible": [
+    "q_txt",
+    "q_n",
+    "q_multi",
+    "q_date",
+    "t_not_contains",
+    "t_not_in",
+    "t_neq",
+    "t_empty"
+   ],
+   "required": [],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_date",
+     "code": "invalid_date"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_operators_043",
+  "base": "operators",
+  "answers": {
+   "t_date": false,
+   "t_multi": false
+  },
+  "expect": {
+   "visible": [
+    "q_txt",
+    "q_n",
+    "q_multi",
+    "q_date",
+    "t_not_contains",
+    "t_not_in",
+    "t_neq",
+    "t_empty"
+   ],
+   "required": [],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_operators_044",
+  "base": "operators",
+  "answers": {
+   "t_neq": -0.5,
+   "t_contains": 26,
+   "t_in": 19,
+   "t_empty": "10",
+   "t_lte": 0.5,
+   "t_multi": null,
+   "q_n": "2026-01-01"
+  },
+  "expect": {
+   "visible": [
+    "q_txt",
+    "q_n",
+    "q_multi",
+    "q_date",
+    "t_not_contains",
+    "t_not_in",
+    "t_neq",
+    "t_empty"
+   ],
+   "required": [],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_n",
+     "code": "invalid_number"
+    },
+    {
+     "field": "t_neq",
+     "code": "invalid_type"
+    }
+   ],
+   "amount": 0
+  }
+ }
+]

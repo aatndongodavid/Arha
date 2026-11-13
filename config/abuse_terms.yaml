@@ -1,0 +1,27 @@
+# Terms that block form publication (S-20, F-ADM-01). Matching is case and accent insensitive.
+# Each entry: a phrase. Card numbers are detected separately with the Luhn algorithm.
+fr:
+  - code pin
+  - code secret
+  - mot de passe
+  - code orange money
+  - code om
+  - code momo
+  - code mtn
+  - code de retrait
+  - code confidentiel
+  - code de validation mobile money
+  - cryptogramme
+  - numero de carte bancaire
+en:
+  - pin code
+  - pin number
+  - secret code
+  - password
+  - passcode
+  - cvv
+  - cvc
+  - card security code
+  - mobile money pin
+  - momo pin
+  - full card number
