@@ -1,0 +1,25 @@
+name: deploy-staging
+on:
+  workflow_run:
+    workflows: [build]
+    types: [completed]
+jobs:
+  deploy:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-24.04
+    environment: staging
+    steps:
+      - name: Deploy over SSH
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.STAGING_HOST }}
+          username: deploy
+          key: ${{ secrets.STAGING_SSH_KEY }}
+          script: |
+            set -e
+            cd /opt/arha && git fetch --depth 1 origin ${{ github.event.workflow_run.head_sha }} && git checkout FETCH_HEAD
+            sops -d infra/secrets/staging.enc.env > /run/arha/env
+            export ARHA_TAG=${{ github.event.workflow_run.head_sha }} ARHA_IMAGE_OWNER=${{ vars.IMAGE_OWNER }}
+            C="docker compose -f infra/compose/docker-compose.staging.yml"
+            $C pull && $C --profile migrate run --rm migrate && $C up -d --remove-orphans
+            for i in $(seq 1 30); do curl -fsS https://${{ vars.STAGING_API_HOST }}/healthz && exit 0; sleep 4; done; exit 1

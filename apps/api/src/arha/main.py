@@ -38,7 +38,8 @@ def create_app() -> FastAPI:
                   docs_url="/docs" if settings.is_dev else None, redoc_url=None,
                   openapi_url="/openapi.json" if settings.is_dev else None)
     install_error_handlers(app)
-    app.add_middleware(CORSMiddleware, allow_origins=[settings.arha_app_url, settings.arha_forms_url],
+    origins = [settings.arha_app_url, settings.arha_forms_url, settings.arha_site_url]
+    app.add_middleware(CORSMiddleware, allow_origins=origins,
                        allow_credentials=True, allow_methods=["GET", "POST", "PATCH", "PUT", "DELETE"],
                        allow_headers=["content-type", "x-csrf-token", "idempotency-key", "accept-language"])
 

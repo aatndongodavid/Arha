@@ -1,0 +1,11 @@
+@import "tailwindcss";
+@import "../../../packages/ui/tokens.css";
+@theme {
+  --color-orange: var(--arha-orange); --color-orange-dark: var(--arha-orange-dark); --color-beige: var(--arha-beige);
+  --color-sand: var(--arha-sand); --color-cream: var(--arha-cream); --color-ink: var(--arha-ink);
+  --color-grey: var(--arha-grey); --color-green: var(--arha-green);
+  --font-serif: var(--arha-serif); --font-sans: var(--arha-sans);
+}
+body { background: var(--arha-cream); color: var(--arha-ink); font-family: var(--arha-sans); }
+h1, h2, h3, .serif { font-family: var(--arha-serif); font-weight: 500; letter-spacing: -0.01em; }
+:focus-visible { outline: 2px solid var(--arha-orange); outline-offset: 2px; }

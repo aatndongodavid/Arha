@@ -1,0 +1,44 @@
+---
+import "../styles.css";
+import { APP_URL } from "../config";
+import { type Locale, tr } from "../i18n";
+interface Props { locale: Locale; title?: string }
+const { locale, title } = Astro.props;
+const t = tr(locale);
+const home = locale === "fr" ? "/" : "/en/";
+const other = locale === "fr" ? "/en/" : "/";
+const ref = "";
+---
+<!doctype html>
+<html lang={locale}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title ?? t("meta.title")}</title>
+    <meta name="description" content={t("meta.description")} />
+    <meta property="og:title" content={title ?? t("meta.title")} />
+    <meta property="og:description" content={t("meta.description")} />
+    <link rel="alternate" hreflang="fr" href="/" />
+    <link rel="alternate" hreflang="en" href="/en/" />
+    <link rel="stylesheet" href="/fonts/fonts.css" />
+  </head>
+  <body>
+    <header class="mx-auto flex max-w-6xl items-center justify-between px-5 py-5">
+      <a href={home} class="serif text-3xl">Arha</a>
+      <nav class="flex items-center gap-5 text-[15px]" aria-label="Arha">
+        <a href={`${home}#fonctionnement`} class="hidden sm:inline">{t("nav.how")}</a>
+        <a href={`${home}#tarifs`} class="hidden sm:inline">{t("nav.pricing")}</a>
+        <a href={other} class="text-grey">{t("nav.lang")}</a>
+        <a href={`${APP_URL}/login${ref}`} class="hidden sm:inline">{t("nav.login")}</a>
+        <a href={`${APP_URL}/signup`} class="rounded-lg bg-orange px-4 py-2.5 font-medium text-white hover:bg-orange-dark">{t("nav.start")}</a>
+      </nav>
+    </header>
+    <main><slot /></main>
+    <footer class="mt-24 border-t border-sand">
+      <div class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-5 py-8 text-sm text-grey">
+        <p><span class="serif mr-3 text-xl text-ink">Arha</span>{t("footer.made")}</p>
+        <a href="/.well-known/security.txt" class="underline">{t("footer.security")}</a>
+      </div>
+    </footer>
+  </body>
+</html>

@@ -83,7 +83,7 @@ async def get_public_form(code: str, ctx: Ctx = Depends(public_route)) -> dict[s
         "form_id": form.id, "version_id": version.id, "version": version.number, "code": form.short_code,
         "title": form.title, "schema": schema, "status": "closed" if reason == "form_closed" else "open",
         "organization": {"name": org.name, "slug": org.slug, "verified": org.verified_at is not None,
-                         "verification_url": f"{st.arha_site_url}/verification/{org.slug}"},
+                         "verification_url": f"{st.arha_site_url}/verification?org={org.slug}"},
         "branding_required": bool(plans.plans[org.plan_code].branding_required),
         "branding_url": f"{st.arha_site_url}/?ref={org.referral_code}",
         "payments": {"currency": payments.get("currency", org.currency),

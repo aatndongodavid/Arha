@@ -105,7 +105,7 @@ await page.getByText("Réponses envoyées").waitFor();
 await page.screenshot({ path: `${shots}/web-6-results.png`, fullPage: true });
 
 const orgUrl = formUrl.split("/forms/")[0];
-for (const [path, text, shot] of [["payments", "Compte de paiement", "web-7-payments"], ["team", "Votre offre permet 1 membres", null], ["billing", "Changer d'offre", "web-8-billing"], ["settings", "Webhooks", null], ["scan", "Contrôle des billets", null]]) {
+for (const [path, text, shot] of [["payments", "Compte de paiement", "web-7-payments"], ["team", "Membres inclus dans votre offre : 1", null], ["billing", "Changer d'offre", "web-8-billing"], ["settings", "Webhooks", null], ["scan", "Contrôle des billets", null]]) {
   await page.goto(`${orgUrl}/${path}`);
   await page.getByText(text).first().waitFor();
   if (shot) await page.screenshot({ path: `${shots}/${shot}.png`, fullPage: true });
