@@ -37,7 +37,7 @@ compressés ; les deux parcours navigateur verts ; `pip-audit` sans faille ; `pn
 ## Fait mais non vérifié en conditions réelles
 
 - **Adaptateurs Notch Pay et Campay.** Écrits sans accès à la documentation (hôte `developer.notchpay.co` bloqué
-  dans la session). 27 marqueurs `VERIFY` dans le code et la configuration. Aucun appel réel n'a été fait.
+  dans la session). 31 marqueurs `VERIFY` dans le code et la configuration. Aucun appel réel n'a été fait.
 - **Infrastructure.** Dockerfiles, Compose, Caddyfile, `harden.sh`, scripts de sauvegarde et workflows GitHub
   Actions sont écrits et validés en syntaxe seulement. Aucune image n'a été construite, aucun serveur durci.
 - **Worker Procrastinate.** Les tâches tournent en mode immédiat dans les tests. Le worker réel et ses tâches
