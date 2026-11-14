@@ -1,6 +1,27 @@
 version: 2
+# Every update waits 7 days after its release (supply chain, S-15).
 updates:
-  - { package-ecosystem: uv, directory: /apps/api, schedule: { interval: weekly }, cooldown: { default-days: 7 } }
-  - { package-ecosystem: npm, directory: /, schedule: { interval: weekly }, cooldown: { default-days: 7 } }
-  - { package-ecosystem: github-actions, directory: /, schedule: { interval: weekly }, cooldown: { default-days: 7 } }
-  - { package-ecosystem: docker, directory: /infra/docker, schedule: { interval: weekly }, cooldown: { default-days: 7 } }
+  - package-ecosystem: uv
+    directory: /apps/api
+    schedule: { interval: weekly }
+    cooldown: { default-days: 7 }
+  - package-ecosystem: npm
+    directory: /
+    schedule: { interval: weekly }
+    cooldown: { default-days: 7 }
+  - package-ecosystem: github-actions
+    directory: /
+    schedule: { interval: weekly }
+    cooldown: { default-days: 7 }
+  - package-ecosystem: docker
+    directory: /infra/docker
+    schedule: { interval: weekly }
+    cooldown: { default-days: 7 }
+    ignore:
+      # Python stays on 3.12, the version set by the master prompt (section 4).
+      # A change of Python version needs an ADR, not an automatic update.
+      - dependency-name: python
+        update-types: ["version-update:semver-major", "version-update:semver-minor"]
+      # Node follows long-term support releases only, chosen by hand.
+      - dependency-name: node
+        update-types: ["version-update:semver-major"]
