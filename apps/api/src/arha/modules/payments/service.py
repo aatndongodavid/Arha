@@ -235,8 +235,8 @@ async def apply_status(db: AsyncSession, payment: Payment, target: str, *, sourc
             sub.payment_status = target
     elif target == "pending" and sub is not None and sub.payment_status != "paid":
         sub.payment_status = "pending"
-    if payment.purpose == "subscription" and target == "succeeded":
-        jobs.enqueue(db, "billing.subscription_paid", org_id=str(payment.organization_id),
+    if payment.purpose in ("subscription", "pass", "study") and target == "succeeded":
+        jobs.enqueue(db, f"billing.{payment.purpose}_paid", org_id=str(payment.organization_id),
                      payment_id=str(payment.id))
     return True
 
@@ -592,26 +592,40 @@ async def sync_scans(db: AsyncSession, scans: list[dict[str, Any]], user_id: uui
     return {"accepted": accepted, "duplicates": duplicates}
 
 
+# One constant statement per purpose: no SQL is assembled from a variable.
+_LINKS = {
+    "subscription": text("update subscriptions set payment_id = :p where id = :s"),
+    "pass": text("update student_passes set payment_id = :p where id = :s"),
+    "study": text("update study_orders set payment_id = :p where id = :s"),
+}
+
+
 async def start_platform_payment(ctx: Any, *, org: Any, amount: int, msisdn: str, idempotency_key: str,
-                                 description: str, subscription_id: uuid.UUID) -> tuple[uuid.UUID, dict[str, Any]]:
-    """Payment of an Arha subscription (F-FAC-01). This is Arha's own revenue: no connected account."""
+                                 description: str, purpose: str, link_id: uuid.UUID
+                                 ) -> tuple[uuid.UUID, dict[str, Any]]:
+    """Payment of an Arha sale (subscription, Pass Mémoire, Arha Services or Arha Études order, section 9.0).
+
+    This is Arha's own revenue, collected on Arha's merchant account: never a connected account.
+    """
+    if purpose not in _LINKS:
+        raise ValueError(purpose)
     e164, operator = normalize_msisdn(msisdn, org.country)
-    key_hash = sha256_hex(f"{org.id}:sub:{idempotency_key}")
+    key_hash = sha256_hex(f"{org.id}:{purpose}:{idempotency_key}")
     provider = get_provider(resolve_code(None))
     db: AsyncSession = ctx.db
     existing = (await db.execute(select(Payment).where(Payment.idempotency_key == key_hash))).scalar_one_or_none()
     if existing is not None:
         return existing.id, public_view(existing)
-    payment = Payment(id=uuid7(), purpose="subscription", provider=provider.code, channel=operator,
+    payment = Payment(id=uuid7(), purpose=purpose, provider=provider.code, channel=operator,
                       amount=amount, currency=org.currency, platform_fee=0, fee_bearer="org", status="created",
                       idempotency_key=key_hash, payer_msisdn_hash=keyed_hash(e164),
                       expires_at=clock.now() + timedelta(minutes=get_plans().payment_expiry_minutes))
     db.add(payment)
     await db.flush()
     payment_id = payment.id
-    # Linked before the provider call so an early webhook always finds the subscription.
-    await db.execute(text("update subscriptions set payment_id = :p where id = :s"),
-                     {"p": payment_id, "s": subscription_id})
+    # Linked before the provider call so an early webhook always finds what was bought.
+    await db.execute(_LINKS[purpose],
+                     {"p": payment_id, "s": link_id})
     request = ChargeRequest(idempotency_key=key_hash, amount=amount, currency=org.currency, msisdn=e164,
                             channel=operator if operator in ("mtn", "orange") else "auto",  # type: ignore[arg-type]
                             connected_account_id=None, platform_fee=0, description=description[:100],

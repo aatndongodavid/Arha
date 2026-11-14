@@ -23,3 +23,9 @@ def require_feature(org: Any, feature: str) -> None:
 
 def plan_limit(org: Any, attr: str) -> int | None:
     return get_plans().limit(org.plan_code, attr)
+
+
+def require_export(org: Any, fmt: str) -> None:
+    """Export formats come from the plan's `exports` list (config/plans.yaml, section 11)."""
+    if fmt not in get_plans().exports_of(org.plan_code):
+        raise AppError("export_not_in_plan", 402, params={"format": fmt}, extra={"format": fmt})

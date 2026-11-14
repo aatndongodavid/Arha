@@ -9,7 +9,7 @@ export interface Me {
 export interface Org {
   id: string; name: string; slug: string; plan_code: string; currency: string; role: string; verified: boolean;
   suspended: boolean; features: string[]; limits: Record<string, number | null>; viewer_can_export: boolean;
-  is_nonprofit: boolean; referral_code: string;
+  is_nonprofit: boolean; referral_code: string; payment_fee_bps: number; exports: string[]; responses_period: string;
 }
 
 export function useMe() {

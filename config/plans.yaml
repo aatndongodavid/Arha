@@ -1,86 +1,108 @@
-# Arha commercial configuration. Single source of truth for prices, quotas and fees.
-# Source: Cahier des charges Arha v1.0, section 9.2 and master prompt section 11.
-# Any change here takes effect without code change (F-FAC-05).
+# Arha commercial configuration, cahier des charges v1.2 (section 11 of the master prompt, chapter 9).
+# Single source of truth for prices, quotas, commissions and durations (rule 7, F-FAC-05).
+# Any change takes effect without code change and must be announced 30 days in advance (E-01).
 currency: XAF
-annual_months_charged: 10
-pioneer: { seats: 30, discount_bps: 2000, months: 12 }
-nonprofit_discount: { plan: pro, discount_bps: 3000, cumulative: false }
+annual_months_charged: 10          # yearly commitment: 2 months free
+pioneer: { seats: 30, discount_bps: 2000, months: 12, plans: [pro, equipe, terrain] }
+supervisor_program: { min_students: 5, grants_plan: pro, duration: academic_year }
 quota_policy: { alert_at_pct: 80, grace_hours: 72 }
 renewal: { remind_days_before: 7, downgrade_after_days_unpaid: 7 }
-ambassador: { reward: one_month_of_plan, paid_after_months_paid: 2 }
+ambassador: { subscription_reward: one_month_of_plan, paid_after_months_paid: 2, pass_reward: 1000 }
 payment_expiry_minutes: 15
 resume_code_days: 30
 
 plans:
-  discovery:
-    price_monthly: 0
-    responses_per_month: 1000
+  decouverte:
+    price: 0
+    responses: { per_month: 500 }
     members: 1
-    fee_bps: 300
+    reviewers: 1
+    enumerators: 1
     storage_gb: 1
     max_file_mb: 10
     version_history_days: 7
-    whatsapp_included: 0
-    features: [logic, calculations, tickets, csv_export, email_notifications_owner]
+    exports: [csv, xlsx]
+    features: [logic, calculations, descriptive_stats, field_mode, email_notifications_owner,
+               payments, tickets, payment_dashboard]
     branding_required: true
+    payment_fee_bps: 300                # moteur Encaissement, dès la V1
+  pass_memoire:
+    price_once: 5000
+    duration_days: 120
+    auto_renew: false
+    responses: { total: 3000 }
+    members: 1
+    reviewers: 2
+    enumerators: 3
+    storage_gb: 2
+    max_file_mb: 25
+    version_history_days: 30
+    exports: [csv, xlsx, sav, dta, r, codebook]
+    features: [logic, calculations, descriptive_stats, crosstabs, field_mode, quality_basic,
+               partial_responses, respondent_emails, payments, tickets, payment_dashboard]
+    branding_required: false
+    payment_fee_bps: 300
   pro:
     price_monthly: 9900
     price_yearly: 99000
-    responses_per_month: 10000
+    responses: { per_month: 10000 }
     members: 3
-    fee_bps: 150
+    reviewers: unlimited
+    enumerators: 3
     storage_gb: 10
     max_file_mb: 100
     version_history_days: 30
-    whatsapp_included: 200
-    features: [logic, calculations, tickets, csv_export, email_notifications_owner,
-               partial_responses, stats_exports, respondent_emails, google_sheets,
-               webhooks, custom_theme, crosstabs]
+    whatsapp_included: 200              # V2
+    exports: [csv, xlsx, sav, dta, r, codebook]
+    features: [logic, calculations, descriptive_stats, crosstabs, field_mode, quality_basic,
+               partial_responses, respondent_emails, google_sheets, webhooks, custom_theme,
+               payments, tickets, payment_dashboard]
     branding_required: false
-  business:
+    payment_fee_bps: 150
+  equipe:
+    inherits: pro
     price_monthly: 29900
     price_yearly: 299000
-    responses_per_month: 50000
+    responses: { per_month: 50000 }
     members: 10
-    fee_bps: 100
+    enumerators: 10
     storage_gb: 50
-    max_file_mb: 100
     version_history_days: 90
     whatsapp_included: 1000
-    inherits: pro
-    extra_features: [advanced_roles, audit_log, custom_domain, public_api,
-                     approvals, sso_google, mfa_required_owner]
-    branding_required: false
+    extra_features: [advanced_roles, audit_log, custom_domain, public_api, approvals,
+                     sso_google, mfa_required_owner]   # audit, domaine et API en V2
+    payment_fee_bps: 100
   terrain:
+    inherits: equipe
     price_monthly: 59900
     price_yearly: 599000
-    responses_per_month: 100000
+    responses: { per_month: 100000 }
     members: 15
-    enumerators_included: 10
-    enumerator_extra_monthly: 3000
-    fee_bps: 100
+    enumerators: 30
+    enumerator_extra_monthly: 2000
     storage_gb: 100
-    max_file_mb: 100
-    version_history_days: 90
-    whatsapp_included: 1000
-    inherits: business
-    extra_features: [field_app, quality_control, kiosk_mode, live_map]
-    branding_required: false
-  enterprise:
-    price_monthly_from: 250000
-    fee_bps: 50
-    custom: true
+    extra_features: [quality_advanced, assignments_quotas, live_map, kiosk_mode]   # V2
+    payment_fee_bps: 100
+  institution:
+    # `inherits: terrain` is added to the reference values: an Institution licence includes at least
+    # everything Terrain includes, and its owners need two-factor authentication (S-03). See ADR 0005.
     inherits: terrain
-    branding_required: false
+    price_monthly_from: 250000
+    contract: annual
+    payment_fee_bps: 50
+    custom: true
 
 addons:
-  whatsapp_utility_1000: { price: 9000 }
-  whatsapp_marketing_500: { price: 12000 }
-  sms_100: { price: 9500 }
-  ai_credits_1000: { price: 5000 }
+  enumerator_monthly: { price: 2000 }
+  ai_credits_1000: { price: 5000 }          # V2
+  whatsapp_utility_1000: { price: 9000 }    # V2
+  whatsapp_marketing_500: { price: 12000 }  # V2
+  sms_100: { price: 9500 }                  # V2
   storage_10gb_monthly: { price: 2500 }
 
-services:
-  studio_simple: { price: 35000, upfront_pct: 100 }
-  studio_complete: { price: 120000, upfront_pct: 100 }
-  terrain_turnkey_from: { price: 400000, upfront_pct: 50 }
+studies:                                     # Arha Services (analyses, mises en place) et Arha Études (enquêtes)
+  questionnaire_review: { price: 25000, upfront_pct: 100, brand: services }
+  thesis_analysis: { price: 35000, upfront_pct: 100, brand: services }
+  advanced_analysis: { price: 75000, upfront_pct: 100, brand: services }
+  payment_form_setup: { price: 75000, upfront_pct: 100, brand: services }
+  turnkey_survey_from: { price: 450000, upfront_pct: 50, brand: etudes }

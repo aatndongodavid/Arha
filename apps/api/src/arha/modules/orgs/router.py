@@ -8,6 +8,7 @@ from arha.core.context import Ctx, authenticated, require_permission
 from arha.core.errors import AppError, NotFound
 from arha.core.features import org_features, plan_limit
 from arha.core.ids import uuid7
+from arha.core.plans import get_plans
 from arha.core.storage import sniff, storage
 from arha.db.session import set_org
 from arha.modules.identity import service as identity
@@ -19,7 +20,7 @@ from arha.modules.trust import service as trust
 from arha.settings import get_settings
 
 router = APIRouter(prefix="/v1", tags=["organizations"])
-LIMIT_KEYS = ("responses_per_month", "members", "storage_gb", "max_file_mb", "version_history_days")
+LIMIT_KEYS = ("members", "reviewers", "enumerators", "storage_gb", "max_file_mb", "version_history_days")
 
 
 def _org_out(org: Organization, role: str) -> s.OrgOut:
@@ -27,7 +28,11 @@ def _org_out(org: Organization, role: str) -> s.OrgOut:
                     currency=org.currency, is_nonprofit=org.is_nonprofit, viewer_can_export=org.viewer_can_export,
                     verified=org.verified_at is not None, suspended=org.suspended_at is not None,
                     referral_code=org.referral_code, role=role, features=sorted(org_features(org)),
-                    limits={k: plan_limit(org, k) for k in LIMIT_KEYS}, created_at=org.created_at)
+                    limits={**{k: plan_limit(org, k) for k in LIMIT_KEYS},
+                            "responses": get_plans().responses_limit(org.plan_code)[0]},
+                    responses_period=get_plans().responses_limit(org.plan_code)[1],
+                    exports=sorted(get_plans().exports_of(org.plan_code)),
+                    payment_fee_bps=get_plans().payment_fee_bps(org.plan_code), created_at=org.created_at)
 
 
 @router.post("/orgs", response_model=s.OrgOut, status_code=201)

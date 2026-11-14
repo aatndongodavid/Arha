@@ -35,7 +35,7 @@ async def test_F_PAY_02_end_to_end_payment_ticket_receipt(anon) -> None:  # type
     user, org, form = await _paid_form()
     code = form["short_code"]
     sub = (await submit(anon, code, {"name": "Awa", "email": "awa@exemple.cm", "tickets": {"std": 2}})).json()
-    assert sub["payment_required"] and sub["amount"] == 10000 and sub["platform_fee"] == 300  # 3 % discovery
+    assert sub["payment_required"] and sub["amount"] == 10000 and sub["platform_fee"] == 300  # 3 % Découverte
     pay = await _pay(anon, code, sub["id"], "pay-key-0001")
     assert pay.status_code == 201 and pay.json()["status"] == "pending"
     pid = pay.json()["id"]

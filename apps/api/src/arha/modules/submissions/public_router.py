@@ -88,7 +88,7 @@ async def get_public_form(code: str, ctx: Ctx = Depends(public_route)) -> dict[s
         "branding_url": f"{st.arha_site_url}/?ref={org.referral_code}",
         "payments": {"currency": payments.get("currency", org.currency),
                      "fee_bearer": payments.get("feeBearer", "org"),
-                     "platform_fee_bps": plans.plans[org.plan_code].fee_bps,
+                     "platform_fee_bps": plans.payment_fee_bps(org.plan_code),
                      "provider_fee_bps": _provider_fee_bps(_provider_for(schema))},
         "tickets": tickets,
     }

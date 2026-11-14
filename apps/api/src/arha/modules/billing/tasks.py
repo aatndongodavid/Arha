@@ -41,6 +41,31 @@ async def subscription_paid(org_id: str, payment_id: str) -> None:
                 (f"{invoice.number}.pdf", render_invoice(invoice, org, locale), "application/pdf")]), db=db, org_id=oid)
 
 
+@job("billing.pass_paid")
+async def pass_paid(org_id: str, payment_id: str) -> None:
+    from arha.modules.billing.documents import render_invoice
+    from arha.modules.billing.service import activate_pass
+    from arha.modules.orgs.service import get_org, owners_emails
+    from arha.modules.payments.models import Payment
+    from arha.modules.trust import service as trust
+
+    oid = uuid.UUID(org_id)
+    async with app_tx(org_id=oid) as db:
+        payment = await db.get(Payment, uuid.UUID(payment_id))
+        org = await get_org(db, oid)
+        if payment is None:
+            return
+        invoice = await activate_pass(db, org, payment)
+        if invoice is None:
+            return
+        await trust.audit(db, "billing.pass_activated", org_id=oid, actor_id=None, metadata={"invoice": invoice.number})
+        for email, locale in await owners_emails(db):
+            subject, body = mail.render("invoice", locale, number=invoice.number,
+                                        amount=fmt(invoice.amount, invoice.currency, locale))
+            await mail.send(mail.Mail(to=email, subject=subject, text=body, template="invoice", attachments=[
+                (f"{invoice.number}.pdf", render_invoice(invoice, org, locale), "application/pdf")]), db=db, org_id=oid)
+
+
 @job("billing.quota_alert")
 async def quota_alert(org_id: str, used: int, limit: int) -> None:
     from arha.modules.orgs.service import get_org, owners_emails
@@ -95,10 +120,34 @@ async def renewal_cycle() -> dict[str, int]:
             newer = (await db.execute(select(Subscription).where(Subscription.status == "active",
                                                                  Subscription.id != sid))).first()
             if newer is None:
-                org.plan_code = "discovery"
+                org.plan_code = "decouverte"
                 await trust.audit(db, "billing.downgraded", org_id=oid, actor_id=None, metadata={"from": sub.plan_code})
                 downgraded += 1
-    return {"reminded": reminded, "downgraded": downgraded}
+    passes_expired = await expire_passes()
+    return {"reminded": reminded, "downgraded": downgraded, "passes_expired": passes_expired}
+
+
+async def expire_passes() -> int:
+    """F-FAC-06: the Pass Mémoire ends after its duration and is never renewed. No data is deleted."""
+    from arha.modules.billing.models import StudentPass
+    from arha.modules.orgs.service import get_org
+    from arha.modules.trust import service as trust
+
+    async with platform_tx() as db:
+        rows = (await db.execute(text(
+            "select id, organization_id from student_passes where status = 'active' and ends_at <= :t"),
+            {"t": clock.now()})).all()
+    for pid, oid in rows:
+        async with app_tx(org_id=oid) as db:
+            student_pass = await db.get(StudentPass, pid, with_for_update=True)
+            org = await get_org(db, oid)
+            if student_pass is None or student_pass.status != "active":
+                continue
+            student_pass.status = "expired"
+            if org.plan_code == "pass_memoire":
+                org.plan_code = "decouverte"
+            await trust.audit(db, "billing.pass_expired", org_id=oid, actor_id=None)
+    return len(rows)
 
 
 @worker_app.periodic(cron="15 6 * * *")

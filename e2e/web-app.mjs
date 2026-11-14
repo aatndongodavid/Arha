@@ -98,7 +98,7 @@ await page.screenshot({ path: `${shots}/web-5-responses.png` });
 const [dl] = await Promise.all([page.waitForEvent("download"), page.getByRole("button", { name: "CSV", exact: true }).click()]);
 assert((await dl.suggestedFilename()).endsWith(".csv"), "CSV export downloads");
 await page.getByRole("button", { name: "SPSS" }).click();
-await page.getByText("n'est pas incluse dans votre offre").waitFor();
+await page.getByText("Le format sav n'est pas inclus dans votre offre.").waitFor();
 assert(true, "SPSS export refused on the Discovery plan with a clear message");
 await page.goto(`${formUrl}/results`);
 await page.getByText("Réponses envoyées").waitFor();

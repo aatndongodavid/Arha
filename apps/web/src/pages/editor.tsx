@@ -173,7 +173,7 @@ export function Editor() {
   const previewMeta = {
     title, schema, version_id: "preview", code: "_preview", status: "open", tickets: {},
     organization: { name: org?.name ?? "", verified: org?.verified ?? false, slug: org?.slug ?? "" },
-    branding_required: !!org && org.plan_code === "discovery", branding_url: "#",
+    branding_required: !!org && org.plan_code === "decouverte", branding_url: "#",
     payments: { currency: schema.settings?.payments?.currency ?? "XAF", fee_bearer: schema.settings?.payments?.feeBearer ?? "org" },
   };
   const formsOrigin = new URL(f.public_url).origin;

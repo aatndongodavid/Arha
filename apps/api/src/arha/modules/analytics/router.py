@@ -7,7 +7,7 @@ from fastapi import APIRouter, Depends, Query, Response
 
 from arha.core.context import Ctx, require_permission
 from arha.core.errors import AppError
-from arha.core.features import require_feature
+from arha.core.features import require_export, require_feature
 from arha.modules.analytics import exports, service
 from arha.modules.forms import service as forms
 from arha.modules.trust import service as trust
@@ -41,11 +41,8 @@ async def summary(form_id: uuid.UUID, ctx: Ctx = Depends(require_permission("ana
 async def export(form_id: uuid.UUID, format: Literal["csv", "xlsx", "sav", "dta", "dictionary"] = "csv",
                  lang: Literal["fr", "en"] | None = None,
                  ctx: Ctx = Depends(require_permission("responses:export"))) -> Response:
-    """F-REP-04. CSV is in every plan, Excel, SPSS and Stata need `stats_exports` (Pro and above)."""
-    if format == "csv":
-        require_feature(ctx.org, "csv_export")
-    elif format != "dictionary":
-        require_feature(ctx.org, "stats_exports")
+    """F-REP-04. Each format must be listed in the plan's `exports` (the dictionary is the `codebook` format)."""
+    require_export(ctx.org, "codebook" if format == "dictionary" else format)
     locale = lang or ctx.locale
     form, schema = await _schema(ctx, form_id)
     cols = exports.build_columns(schema, locale)

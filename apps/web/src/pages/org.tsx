@@ -47,7 +47,7 @@ export function Payments() {
       {s ? (
         <div className="mb-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           <Stat label={t("payments.collected")} value={money(s.collected, org?.currency)} />
-          <Stat label={t("payments.fees")} value={money(s.platform_fees, org?.currency)} hint={t("payments.fees.hint", { rate: ((org?.plan_code === "discovery" ? 3 : org?.plan_code === "pro" ? 1.5 : 1)).toString().replace(".", ",") })} />
+          <Stat label={t("payments.fees")} value={money(s.platform_fees, org?.currency)} hint={t("payments.fees.hint", { rate: ((org?.payment_fee_bps ?? 0) / 100).toString().replace(".", ",") })} />
           <Stat label={t("payments.success")} value={s.success_rate == null ? "-" : `${Math.round(s.success_rate * 100)} %`} hint={t("payments.success.hint", { ok: s.succeeded, ko: s.failed + s.expired })} />
           <Stat label={t("payments.pending")} value={num(s.pending)} />
         </div>
@@ -133,17 +133,55 @@ export function Billing() {
   const [buying, setBuying] = useState<string | null>(null);
   if (!billing.data || !plans.data) return <Spinner />;
   const b = billing.data;
+  const grid = plans.data.plans;
   const pct = b.usage.limit ? Math.min(100, Math.round((b.usage.responses / b.usage.limit) * 100)) : 0;
   const isOwner = org?.role === "owner";
+  const close = () => {
+    setBuying(null);
+    void qc.invalidateQueries({ queryKey: ["billing", orgId] });
+    void qc.invalidateQueries({ queryKey: ["org", orgId] });
+  };
+  const features = (code: string) => {
+    const p = grid[code];
+    return (
+      <ul className="my-4 grid gap-1.5 text-sm text-ink/80">
+        <li>{t(p.responses_period === "total" ? "billing.f.responses_total" : "billing.f.responses", { n: num(p.responses) })}</li>
+        <li>{t("billing.f.enumerators", { n: p.enumerators ?? 0 })}</li>
+        <li>{t(p.reviewers == null ? "billing.f.reviewers_unlimited" : "billing.f.reviewers", { n: p.reviewers ?? 0 })}</li>
+        <li>{t("billing.f.fee", { rate: (p.payment_fee_bps / 100).toString().replace(".", ",") })}</li>
+        <li>{t(`billing.f.${code}`)}</li>
+      </ul>
+    );
+  };
   return (
     <>
       <PageTitle title={t("billing.title")} subtitle={t("billing.current", { plan: t(`plan.${b.plan}`) })} />
       <Card className="mb-6">
-        <div className="mb-2 flex items-baseline justify-between"><p className="font-medium">{t("billing.usage")}</p><p className="text-sm text-grey">{t("billing.usage.count", { used: num(b.usage.responses), limit: num(b.usage.limit ?? 0) })}</p></div>
+        <div className="mb-2 flex items-baseline justify-between">
+          <p className="font-medium">{t(b.usage.period === "total" ? "billing.usage.total" : "billing.usage")}</p>
+          <p className="text-sm text-grey">{t("billing.usage.count", { used: num(b.usage.responses), limit: num(b.usage.limit ?? 0) })}</p>
+        </div>
         <div className="h-2.5 rounded-full bg-beige" role="progressbar" aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100} aria-label={t("billing.usage")}><div className={`h-2.5 rounded-full ${pct >= 100 ? "bg-red" : pct >= 80 ? "bg-orange" : "bg-green"}`} style={{ width: `${pct}%` }} /></div>
         {b.usage.quota_exceeded_at ? <p className="mt-3 text-sm font-medium text-red">{t("billing.grace")}</p> : pct >= 80 ? <p className="mt-3 text-sm text-orange-dark">{t("billing.near")}</p> : null}
         {b.subscription ? <p className="mt-3 text-sm text-grey">{t("billing.renews", { date: date(b.subscription.period_end, false) })}</p> : null}
+        {b.pass ? <p className="mt-3 text-sm text-grey">{t("billing.pass.until", { date: date(b.pass.ends_at, false), institution: b.pass.institution })}</p> : null}
       </Card>
+
+      {!b.subscription ? (
+        <Card className="mb-8 !border-orange">
+          <div className="flex flex-wrap items-start justify-between gap-4">
+            <div className="max-w-2xl">
+              <p className="text-xs uppercase tracking-widest text-orange">{t("billing.pass.kicker")}</p>
+              <p className="serif mt-1 text-3xl">{t("plan.pass_memoire")}</p>
+              <p className="mt-1"><span className="serif text-3xl">{money(grid.pass_memoire.price_once)}</span> <span className="text-sm text-grey">{t("billing.pass.once", { months: Math.round(grid.pass_memoire.duration_days / 30) })}</span></p>
+              {features("pass_memoire")}
+              <p className="text-sm text-grey">{t("billing.pass.no_renewal")}</p>
+            </div>
+            {isOwner ? <Button onClick={() => setBuying("pass")}>{b.plan === "pass_memoire" ? t("billing.pass.extend") : t("billing.pass.buy")}</Button> : null}
+          </div>
+        </Card>
+      ) : null}
+
       <div className="mb-4 flex items-center justify-between">
         <h2 className="text-2xl">{t("billing.plans")}</h2>
         <div className="flex rounded-lg border border-sand bg-white p-0.5" role="group" aria-label={t("billing.period")}>
@@ -152,25 +190,20 @@ export function Billing() {
       </div>
       {b.pioneer_seats_left > 0 ? <Notice>{t("billing.pioneer", { seats: b.pioneer_seats_left, pct: plans.data.pioneer.discount_bps / 100, months: plans.data.pioneer.months })}</Notice> : null}
       <div className="grid gap-4 md:grid-cols-3">
-        {["pro", "business", "terrain"].map((code) => {
-          const p = plans.data.plans[code];
+        {["pro", "equipe", "terrain"].map((code) => {
+          const p = grid[code];
           const price = period === "monthly" ? p.price_monthly : p.price_yearly;
           return (
             <Card key={code} className={b.plan === code ? "!border-orange" : ""}>
               <p className="serif text-2xl">{t(`plan.${code}`)}</p>
               <p className="mt-2"><span className="serif text-3xl">{money(price)}</span> <span className="text-sm text-grey">{t(`billing.per.${period}`)}</span></p>
-              <ul className="my-4 grid gap-1.5 text-sm text-ink/80">
-                <li>{t("billing.f.responses", { n: num(p.responses_per_month) })}</li>
-                <li>{t("billing.f.members", { n: p.members })}</li>
-                <li>{t("billing.f.fee", { rate: (p.fee_bps / 100).toString().replace(".", ",") })}</li>
-                <li>{t(`billing.f.${code}`)}</li>
-              </ul>
+              {features(code)}
               {b.plan === code ? <Badge tone="green">{t("billing.active")}</Badge> : isOwner ? <Button className="w-full" onClick={() => setBuying(code)}>{t("billing.choose")}</Button> : null}
             </Card>
           );
         })}
       </div>
-      <p className="mt-3 text-sm text-grey">{t("billing.enterprise", { price: money(plans.data.plans.enterprise.price_monthly_from) })}</p>
+      <p className="mt-3 text-sm text-grey">{t("billing.institution", { price: money(grid.institution.price_monthly_from) })}</p>
       {b.invoices.length ? (
         <div className="mt-8"><h2 className="mb-3 text-2xl">{t("billing.invoices")}</h2>
           <Table head={[t("billing.invoice.number"), t("payments.date"), t("payments.amount"), ""]}>
@@ -180,19 +213,79 @@ export function Billing() {
             ))}
           </Table></div>
       ) : null}
-      {buying ? <Subscribe orgId={orgId} plan={buying} period={period} onClose={() => { setBuying(null); void qc.invalidateQueries({ queryKey: ["billing", orgId] }); void qc.invalidateQueries({ queryKey: ["org", orgId] }); }} /> : null}
+      {buying === "pass" ? <BuyPass orgId={orgId} amount={grid.pass_memoire.price_once} onClose={close} />
+        : buying ? <Subscribe orgId={orgId} plan={buying} period={period} onClose={close} /> : null}
     </>
+  );
+}
+
+/** Polls a payment of an Arha sale until it settles. */
+function usePaymentWatch() {
+  const [state, setState] = useState<"idle" | "starting" | "waiting" | "done" | "failed">("idle");
+  const timer = useRef<number>(undefined);
+  useEffect(() => () => clearTimeout(timer.current), []);
+  const watch = (paymentId: string, onFail: () => void) => {
+    setState("waiting");
+    const poll = async () => {
+      const p = await api<any>(`/public/payments/${paymentId}`).catch(() => null);
+      if (p?.status === "succeeded") return setState("done");
+      if (p?.status === "failed" || p?.status === "expired") { onFail(); return setState("failed"); }
+      timer.current = window.setTimeout(poll, 3000);
+    };
+    void poll();
+  };
+  return { state, setState, watch };
+}
+
+function BuyPass({ orgId, amount, onClose }: { orgId: string; amount: number; onClose: () => void }) {
+  const [institution, setInstitution] = useState("");
+  const [level, setLevel] = useState("master");
+  const [msisdn, setMsisdn] = useState("");
+  const [error, setError] = useState("");
+  const key = useRef(crypto.randomUUID());
+  const { state, setState, watch } = usePaymentWatch();
+  const start = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+    setState("starting");
+    try {
+      const r = await api<any>(`/orgs/${orgId}/billing/pass`, { json: { institution, level, msisdn: msisdn.replace(/\s/g, "") }, key: key.current });
+      if (r.payment.status === "failed") { key.current = crypto.randomUUID(); return setState("failed"); }
+      watch(r.payment.id, () => { key.current = crypto.randomUUID(); });
+    } catch (err) {
+      setError(errorText(err));
+      setState("idle");
+    }
+  };
+  return (
+    <Modal open onClose={onClose} title={t("billing.pass.title")}>
+      {error ? <Notice tone="error">{error}</Notice> : null}
+      {state === "done" ? <Notice tone="success">{t("billing.pass.done")}</Notice> : state === "waiting" ? (
+        <Notice>{t("billing.subscribe.waiting", { amount: money(amount) })}</Notice>
+      ) : (
+        <form onSubmit={start}>
+          {state === "failed" ? <Notice tone="error">{t("billing.subscribe.failed")}</Notice> : null}
+          <Field label={t("billing.pass.institution")}>{(id) => <Input id={id} required minLength={2} maxLength={200} value={institution} onChange={(e) => setInstitution(e.target.value)} />}</Field>
+          <Field label={t("billing.pass.level")}>{(id) => (
+            <Select id={id} value={level} onChange={(e) => setLevel(e.target.value)}>
+              {["licence", "master", "doctorat", "autre"].map((l) => <option key={l} value={l}>{t(`level.${l}`)}</option>)}
+            </Select>
+          )}</Field>
+          <Field label={t("billing.subscribe.phone")} hint={t("billing.subscribe.hint")}>{(id) => <Input id={id} type="tel" inputMode="tel" placeholder="6 77 12 34 56" required value={msisdn} onChange={(e) => setMsisdn(e.target.value)} />}</Field>
+          <Button type="submit" className="w-full" disabled={state === "starting" || msisdn.length < 8 || institution.trim().length < 2}>{t("billing.pass.pay", { amount: money(amount) })}</Button>
+        </form>
+      )}
+      <div className="mt-4 text-right"><Button variant="ghost" onClick={onClose}>{t("common.close")}</Button></div>
+    </Modal>
   );
 }
 
 function Subscribe({ orgId, plan, period, onClose }: { orgId: string; plan: string; period: string; onClose: () => void }) {
   const [msisdn, setMsisdn] = useState("");
-  const [state, setState] = useState<"idle" | "starting" | "waiting" | "done" | "failed">("idle");
   const [info, setInfo] = useState<any>(null);
   const [error, setError] = useState("");
   const key = useRef(crypto.randomUUID());
-  const timer = useRef<number>(undefined);
-  useEffect(() => () => clearTimeout(timer.current), []);
+  const { state, setState, watch } = usePaymentWatch();
   const start = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
@@ -201,14 +294,7 @@ function Subscribe({ orgId, plan, period, onClose }: { orgId: string; plan: stri
       const r = await api<any>(`/orgs/${orgId}/billing/subscribe`, { json: { plan, period, msisdn: msisdn.replace(/\s/g, "") }, key: key.current });
       setInfo(r);
       if (r.payment.status === "failed") { key.current = crypto.randomUUID(); return setState("failed"); }
-      setState("waiting");
-      const poll = async () => {
-        const p = await api<any>(`/public/payments/${r.payment.id}`).catch(() => null);
-        if (p?.status === "succeeded") return setState("done");
-        if (p?.status === "failed" || p?.status === "expired") { key.current = crypto.randomUUID(); return setState("failed"); }
-        timer.current = window.setTimeout(poll, 3000);
-      };
-      void poll();
+      watch(r.payment.id, () => { key.current = crypto.randomUUID(); });
     } catch (err) {
       setError(errorText(err));
       setState("idle");

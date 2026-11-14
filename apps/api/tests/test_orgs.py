@@ -31,7 +31,7 @@ async def test_F_ORG_01_invitation_and_membership(owner_engine) -> None:  # type
 
 async def test_F_ORG_01_member_limit_from_plan() -> None:
     owner = await signup()
-    org = await create_org(owner)  # discovery plan: 1 member
+    org = await create_org(owner)  # Découverte plan: 1 member
     r = await owner.post(f"/v1/orgs/{org}/invitations", json={"email": "x@exemple.cm", "role": "viewer"})
     assert r.status_code == 402 and r.json()["code"] == "member_limit_reached"
 
