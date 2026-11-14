@@ -90,12 +90,12 @@ async def test_F_AUT_02_totp_enable_and_login() -> None:
         assert r.status_code == 401  # backup codes are single use
 
 
-async def test_S_03_mfa_required_for_business_owner(owner_engine) -> None:  # type: ignore[no-untyped-def]
+async def test_S_03_mfa_required_for_equipe_owner(owner_engine) -> None:  # type: ignore[no-untyped-def]
     from tests.conftest import set_plan
 
     user = await signup()
     org = await create_org(user)
-    await set_plan(owner_engine, org, "business")
+    await set_plan(owner_engine, org, "equipe")
     r = await user.get(f"/v1/orgs/{org}")
     assert r.status_code == 403 and r.json()["code"] == "mfa_required"
 

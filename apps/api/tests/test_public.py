@@ -103,14 +103,14 @@ async def test_F_FAC_03_quota_alert_grace_then_refusal(anon, owner_engine) -> No
     from arha.modules.messaging import service as mail
 
     user, org, form = await _form()
-    async with owner_engine.begin() as conn:  # 799 responses already counted this month (limit 1000)
+    async with owner_engine.begin() as conn:  # 399 responses already counted this month (Découverte limit: 500)
         await conn.execute(text("insert into usage_counters (organization_id, metric, period, value) values "
-                                "(:o, 'responses', to_char(now() at time zone 'Africa/Douala', 'YYYY-MM'), 799)"),
+                                "(:o, 'responses', to_char(now() at time zone 'Africa/Douala', 'YYYY-MM'), 399)"),
                            {"o": org})
     assert (await submit(anon, form["short_code"], {"name": "A"})).status_code == 201
     assert any(m.template == "quota_alert" for m in mail.OUTBOX)
     async with owner_engine.begin() as conn:
-        await conn.execute(text("update usage_counters set value = 1000 where organization_id = :o"), {"o": org})
+        await conn.execute(text("update usage_counters set value = 500 where organization_id = :o"), {"o": org})
     assert (await submit(anon, form["short_code"], {"name": "B"})).status_code == 201  # grace period
     async with owner_engine.begin() as conn:
         await conn.execute(text("update organizations set quota_exceeded_at = now() - interval '73 hours' "

@@ -209,7 +209,7 @@ async def metrics(ctx: Ctx = Depends(platform_admin)) -> dict[str, Any]:
             "group by organization_id having count(*) >= 10) x"), {"d": now - timedelta(days=30)})).scalar_one()
         total_orgs = (await db.execute(text("select count(*) from organizations"))).scalar_one()
         new_orgs_60 = (await db.execute(text(
-            "select count(*), count(*) filter (where plan_code <> 'discovery') from organizations "
+            "select count(*), count(*) filter (where plan_code <> 'decouverte') from organizations "
             "where created_at >= :d"), {"d": now - timedelta(days=60)})).one()
         churned = (await db.execute(text(
             "select count(distinct organization_id) from subscriptions where status = 'expired' "

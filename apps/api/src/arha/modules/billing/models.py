@@ -49,3 +49,22 @@ class UsageCounter(Base):
     period: Mapped[str] = mapped_column(primary_key=True)
     value: Mapped[int] = mapped_column(default=0)
     alerted_at: Mapped[TS | None]
+
+
+class StudentPass(Base):
+    """Pass Mémoire (F-FAC-06): one payment, 120 days, never renewed automatically (E-04)."""
+
+    __tablename__ = "student_passes"
+    id: Mapped[UUIDPK]
+    organization_id: Mapped[OrgId]
+    user_id: Mapped[uuid.UUID]
+    institution: Mapped[str]
+    level: Mapped[str]
+    amount: Mapped[Money]
+    currency: Mapped[str]
+    ambassador_code: Mapped[str | None]
+    status: Mapped[str] = mapped_column(default="pending_payment")
+    starts_at: Mapped[TS | None]
+    ends_at: Mapped[TS | None]
+    payment_id: Mapped[uuid.UUID | None]
+    created_at: Mapped[TSNow]

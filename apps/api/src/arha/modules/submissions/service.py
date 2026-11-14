@@ -67,7 +67,7 @@ def fee_breakdown(org: Any, amount: int, fee_bearer: str, provider: str) -> dict
     """Arha commission (fee_bps, rounded up) and estimated aggregator fee (master prompt 9.5)."""
     from arha.core.plans import get_countries
 
-    fee_bps = get_plans().plans[org.plan_code].fee_bps
+    fee_bps = get_plans().payment_fee_bps(org.plan_code)
     platform_fee = -(-amount * fee_bps // 10_000) if amount else 0
     provider_bps = get_countries().providers[provider].estimated_fee_bps if provider in get_countries(
     ).providers else 0

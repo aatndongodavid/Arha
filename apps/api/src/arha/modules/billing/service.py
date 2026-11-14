@@ -1,4 +1,4 @@
-"""Plans, subscriptions, invoices and usage quotas (F-FAC-01..05)."""
+"""Plans, subscriptions, Pass Mémoire, invoices and usage quotas (F-FAC-01..06, cahier des charges v1.2)."""
 
 from __future__ import annotations
 
@@ -12,7 +12,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from arha.core import clock, jobs
 from arha.core.errors import AppError
 from arha.core.plans import get_plans
-from arha.modules.billing.models import Invoice, Subscription, UsageCounter
+from arha.modules.billing.models import Invoice, StudentPass, Subscription, UsageCounter
 
 
 def period_of(at: datetime | None = None) -> str:
@@ -22,6 +22,12 @@ def period_of(at: datetime | None = None) -> str:
 def _period_start(period: str) -> datetime:
     y, m = map(int, period.split("-"))
     return datetime(y, m, 1, tzinfo=clock.DOUALA)
+
+
+def response_period(org: Any) -> str:
+    """Monthly plans count per calendar month; the Pass Mémoire counts a total over the pass."""
+    _, kind = get_plans().responses_limit(org.plan_code)
+    return "total" if kind == "total" else period_of()
 
 
 async def usage(db: AsyncSession, metric: str = "responses", period: str | None = None) -> int:
@@ -40,9 +46,9 @@ async def admit_response(db: AsyncSession, org: Any) -> bool:
     then they are refused with a clear message (F-FAC-03).
     """
     plans = get_plans()
-    limit = plans.limit(org.plan_code, "responses_per_month")
-    period = period_of()
-    if org.quota_exceeded_at is not None and org.quota_exceeded_at < _period_start(period):
+    limit, kind = plans.responses_limit(org.plan_code)
+    period = response_period(org)
+    if kind == "month" and org.quota_exceeded_at is not None and org.quota_exceeded_at < _period_start(period):
         org.quota_exceeded_at = None  # new period
     grace = timedelta(hours=plans.quota_policy.grace_hours)
     if limit is not None and org.quota_exceeded_at is not None and clock.now() - org.quota_exceeded_at > grace:
@@ -85,7 +91,11 @@ async def list_invoices(db: AsyncSession) -> list[Invoice]:
 
 
 def plan_price(org: Any, plan_code: str, period: str, *, pioneer_available: bool) -> tuple[int, int, bool]:
-    """Return (amount, discount_bps, pioneer). Discounts are not cumulative (section 11)."""
+    """Return (amount, discount_bps, pioneer).
+
+    E-02: the only discounts are the yearly commitment, the Pioneer offer on its listed plans and the
+    Supervisor programme (granted separately, never as a price reduction here).
+    """
     plans = get_plans()
     plan = plans.plans.get(plan_code)
     if plan is None:
@@ -93,15 +103,10 @@ def plan_price(org: Any, plan_code: str, period: str, *, pioneer_available: bool
     if plan.custom or not plan.price_monthly:
         raise AppError("plan_not_purchasable", 422)
     base = plan.price_monthly if period == "monthly" else plans.yearly_price(plan_code)
-    discounts: list[tuple[int, bool]] = []
-    if pioneer_available:
-        discounts.append((plans.pioneer.discount_bps, True))
-    np = plans.nonprofit_discount
-    if org.is_nonprofit and org.verified_at is not None and plan_code == np.plan:
-        discounts.append((np.discount_bps, False))
-    bps, pioneer = max(discounts) if discounts else (0, False)
-    amount = base - (base * bps // 10_000)
-    return amount, bps, pioneer
+    if pioneer_available and plan_code in plans.pioneer.plans:
+        bps = plans.pioneer.discount_bps
+        return base - (base * bps // 10_000), bps, True
+    return base, 0, False
 
 
 async def pioneer_seats_left(db: AsyncSession) -> int:
@@ -147,15 +152,66 @@ async def activate(db: AsyncSession, org: Any, payment: Any) -> Invoice | None:
         current.status = "canceled"
     org.plan_code = sub.plan_code
     org.quota_exceeded_at = None
+    return await issue_invoice(db, payment, [{
+        "plan": sub.plan_code, "period": sub.billing_period, "amount": sub.amount, "discount_bps": sub.discount_bps,
+        "pioneer": sub.pioneer, "from": sub.period_start.isoformat(), "to": sub.period_end.isoformat()}])
+
+
+async def issue_invoice(db: AsyncSession, payment: Any, lines: list[dict[str, Any]], kind: str = "subscription"
+                        ) -> Invoice:
+    """F-FAC-04: one numbered invoice per payment received by Arha."""
     seq = (await db.execute(text("select nextval('invoice_number_seq')"))).scalar_one()
     number = f"ARHA-{clock.now().astimezone(clock.DOUALA).year}-{int(seq):05d}"
-    invoice = Invoice(number=number, amount=payment.amount, currency=payment.currency, payment_id=payment.id,
-                      lines=[{"plan": sub.plan_code, "period": sub.billing_period, "amount": sub.amount,
-                              "discount_bps": sub.discount_bps, "pioneer": sub.pioneer,
-                              "from": sub.period_start.isoformat(), "to": sub.period_end.isoformat()}])
+    invoice = Invoice(number=number, kind=kind, amount=payment.amount, currency=payment.currency,
+                      payment_id=payment.id, lines=lines)
     db.add(invoice)
     await db.flush()
     return invoice
+
+
+# ------------------------------------------------------------------ Pass Mémoire (F-FAC-06)
+
+
+async def current_pass(db: AsyncSession) -> StudentPass | None:
+    stmt = select(StudentPass).where(StudentPass.status == "active").order_by(StudentPass.ends_at.desc()).limit(1)
+    return (await db.execute(stmt)).scalar_one_or_none()
+
+
+async def create_pass(db: AsyncSession, org: Any, *, user_id: uuid.UUID, institution: str, level: str,
+                      ambassador_code: str | None) -> StudentPass:
+    """The student declares an institution and a level. Paid upfront (E-04), never renewed automatically."""
+    if await active_subscription(db) is not None:
+        raise AppError("pass_not_needed", 409)
+    plan = get_plans().plans["pass_memoire"]
+    assert plan.price_once is not None
+    student_pass = StudentPass(user_id=user_id, institution=institution, level=level, amount=plan.price_once,
+                               currency=org.currency, ambassador_code=ambassador_code)
+    db.add(student_pass)
+    await db.flush()
+    return student_pass
+
+
+async def activate_pass(db: AsyncSession, org: Any, payment: Any) -> Invoice | None:
+    stmt = select(StudentPass).where(StudentPass.payment_id == payment.id).with_for_update()
+    student_pass = (await db.execute(stmt)).scalar_one_or_none()
+    if student_pass is None or student_pass.status == "active":
+        return None
+    days = get_plans().plans["pass_memoire"].duration_days
+    assert days is not None
+    now = clock.now()
+    current = await current_pass(db)
+    start = current.ends_at if current and current.ends_at and current.ends_at > now else now
+    student_pass.starts_at, student_pass.ends_at, student_pass.status = start, start + timedelta(days=days), "active"
+    if current is not None and current.id != student_pass.id:
+        current.status = "expired"
+    else:
+        # A new pass starts a new total quota.
+        await db.execute(text("delete from usage_counters where organization_id = app_org() and period = 'total'"))
+    org.plan_code = "pass_memoire"
+    org.quota_exceeded_at = None
+    return await issue_invoice(db, payment, [{
+        "plan": "pass_memoire", "period": "once", "amount": student_pass.amount,
+        "from": student_pass.starts_at.isoformat(), "to": student_pass.ends_at.isoformat()}], kind="pass")
 
 
 def _add_months(at: datetime, months: int) -> datetime:

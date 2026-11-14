@@ -38,6 +38,9 @@ class OrgOut(BaseModel):
     role: str
     features: list[str]
     limits: dict[str, int | None]
+    responses_period: str
+    exports: list[str]
+    payment_fee_bps: int
     created_at: datetime
 
 

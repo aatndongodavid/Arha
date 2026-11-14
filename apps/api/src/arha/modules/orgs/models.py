@@ -13,7 +13,7 @@ class Organization(Base):
     id: Mapped[UUIDPK]
     name: Mapped[str]
     slug: Mapped[str]
-    plan_code: Mapped[str] = mapped_column(default="discovery")
+    plan_code: Mapped[str] = mapped_column(default="decouverte")
     country: Mapped[str] = mapped_column(default="CM")
     currency: Mapped[str] = mapped_column(default="XAF")
     data_region: Mapped[str] = mapped_column(default="eu-1")

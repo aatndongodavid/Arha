@@ -50,11 +50,11 @@ async def test_F_REP_04_spss_and_stata_keep_labels(owner_engine, tmp_path: Path)
 
 
 async def test_F_REP_04_stat_exports_need_pro_plan(owner_engine) -> None:  # type: ignore[no-untyped-def]
-    user, org, form = await _with_responses(owner_engine, plan="discovery")
+    user, org, form = await _with_responses(owner_engine, plan="decouverte")
     base = f"/v1/orgs/{org}/forms/{form['id']}/export"
     assert (await user.get(f"{base}?format=csv")).status_code == 200
     r = await user.get(f"{base}?format=sav")
-    assert r.status_code == 402 and r.json()["code"] == "feature_not_in_plan"
+    assert r.status_code == 402 and r.json()["code"] == "export_not_in_plan"
 
 
 async def test_F_ANA_01_summary_and_F_ANA_02_funnel(owner_engine) -> None:  # type: ignore[no-untyped-def]
@@ -133,7 +133,7 @@ async def test_F_FAC_01_subscription_by_mobile_money_invoice_and_downgrade(anon,
     assert r.status_code == 201, r.text
     body = r.json()
     assert body["pioneer"] is True and body["amount"] == 7920  # 9 900 minus the 20 % Pioneer discount
-    assert (await user.get(f"/v1/orgs/{org}")).json()["plan_code"] == "discovery"  # not active before payment
+    assert (await user.get(f"/v1/orgs/{org}")).json()["plan_code"] == "decouverte"  # not active before payment
     ref = next(iter(FAKE.charges))
     assert FAKE.charges[ref].connected_account_id is None
     payload = FAKE.approve(ref)
@@ -153,7 +153,7 @@ async def test_F_FAC_01_subscription_by_mobile_money_invoice_and_downgrade(anon,
     async with owner_engine.begin() as conn:  # 8 days unpaid: back to Discovery, nothing deleted
         await conn.execute(text("update subscriptions set period_end = now() - interval '8 days'"))
     assert (await renewal_cycle())["downgraded"] == 1
-    assert (await user.get(f"/v1/orgs/{org}")).json()["plan_code"] == "discovery"
+    assert (await user.get(f"/v1/orgs/{org}")).json()["plan_code"] == "decouverte"
     async with owner_engine.begin() as conn:
         assert (await conn.execute(text("select count(*) from invoices"))).scalar_one() == 1
 
@@ -168,7 +168,7 @@ async def test_F_FAC_05_prices_come_from_configuration(tmp_path: Path) -> None:
     raw["plans"]["pro"]["price_monthly"] = 12500
     (tmp_path / "plans.yaml").write_text(yaml.safe_dump(raw))
     assert load_plans(tmp_path / "plans.yaml").plans["pro"].price_monthly == 12500
-    del raw["plans"]["discovery"]
+    del raw["plans"]["decouverte"]
     (tmp_path / "bad.yaml").write_text(yaml.safe_dump(raw))
     with pytest.raises(ValueError):
         load_plans(tmp_path / "bad.yaml")

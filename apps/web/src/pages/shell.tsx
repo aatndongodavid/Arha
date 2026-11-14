@@ -23,7 +23,6 @@ export function Home() {
   const navigate = useNavigate();
   const qc = useQueryClient();
   const [name, setName] = useState("");
-  const [nonprofit, setNonprofit] = useState(false);
   const [error, setError] = useState("");
   useEffect(() => {
     const last = localStorage.getItem("arha_org");
@@ -34,7 +33,7 @@ export function Home() {
   const create = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const org = await api<{ id: string }>("/orgs", { json: { name, is_nonprofit: nonprofit } });
+      const org = await api<{ id: string }>("/orgs", { json: { name } });
       await qc.invalidateQueries({ queryKey: ["me"] });
       await navigate({ to: "/o/$org", params: { org: org.id } });
     } catch (err) {
@@ -51,10 +50,7 @@ export function Home() {
         <Field label={t("onboarding.name")} hint={t("onboarding.name.hint")}>
           {(id) => <Input id={id} value={name} onChange={(e) => setName(e.target.value)} minLength={2} maxLength={120} required autoFocus />}
         </Field>
-        <label className="mb-6 flex items-center gap-3 text-sm">
-          <input type="checkbox" className="h-5 w-5 accent-orange" checked={nonprofit} onChange={(e) => setNonprofit(e.target.checked)} />
-          {t("onboarding.nonprofit")}
-        </label>
+        <div className="mb-6" />
         <Button type="submit" className="w-full" disabled={name.trim().length < 2}>{t("onboarding.submit")}</Button>
       </form>
     </div>
