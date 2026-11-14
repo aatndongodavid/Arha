@@ -1,0 +1,80 @@
+# Production stack (master prompt 16.1). Secrets come from infra/secrets/*.enc.env decrypted by SOPS at deploy time
+# into /run/arha/env (tmpfs). Images are pinned by commit tag: ARHA_TAG.
+x-app: &app
+  image: ghcr.io/${ARHA_IMAGE_OWNER}/arha-api:${ARHA_TAG}
+  env_file: /run/arha/env
+  restart: unless-stopped
+  read_only: true
+  tmpfs: [/tmp]
+  security_opt: ["no-new-privileges:true"]
+  cap_drop: [ALL]
+  depends_on:
+    postgres: { condition: service_healthy }
+    valkey: { condition: service_started }
+  networks: [internal]
+
+services:
+  caddy:
+    image: ghcr.io/${ARHA_IMAGE_OWNER}/arha-static:${ARHA_TAG}
+    env_file: /run/arha/env
+    restart: unless-stopped
+    ports: ["80:80", "443:443", "443:443/udp"]
+    volumes: [caddy_data:/data, caddy_config:/config]
+    cap_drop: [ALL]
+    cap_add: [NET_BIND_SERVICE]
+    depends_on: [api]
+    networks: [internal, public]
+  api:
+    <<: *app
+    volumes: [files:/var/lib/arha/files]
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://localhost:8000/healthz').status == 200 else 1)"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+  worker:
+    <<: *app
+    command: ["procrastinate", "--app=arha.workers.app.worker_app", "worker", "--concurrency=4"]
+    volumes: [files:/var/lib/arha/files]
+  migrate:
+    <<: *app
+    restart: "no"
+    profiles: [migrate]
+    command: ["alembic", "upgrade", "head"]
+  postgres:
+    image: postgres:16-alpine
+    env_file: /run/arha/env
+    restart: unless-stopped
+    command: ["postgres", "-c", "archive_mode=on", "-c", "archive_timeout=900", "-c", "wal_level=replica"]
+    volumes:
+      - /var/lib/arha/postgres:/var/lib/postgresql/data   # on the LUKS encrypted volume (S-07)
+      - ./postgres/init.sql:/docker-entrypoint-initdb.d/00-init.sql:ro
+      - ./postgres/extensions.sh:/docker-entrypoint-initdb.d/10-extensions.sh:ro
+    healthcheck: { test: ["CMD-SHELL", "pg_isready -U postgres"], interval: 10s, timeout: 5s, retries: 6 }
+    networks: [internal]
+  valkey:
+    image: valkey/valkey:8-alpine
+    restart: unless-stopped
+    command: ["valkey-server", "--save", "", "--maxmemory", "256mb", "--maxmemory-policy", "allkeys-lru"]
+    networks: [internal]
+  clamav:
+    image: clamav/clamav:stable
+    restart: unless-stopped
+    networks: [internal]
+  node-exporter:
+    image: prom/node-exporter:latest
+    restart: unless-stopped
+    networks: [internal]
+  postgres-exporter:
+    image: quay.io/prometheuscommunity/postgres-exporter:latest
+    env_file: /run/arha/env
+    restart: unless-stopped
+    networks: [internal]
+
+networks:
+  internal: { internal: true }
+  public: {}
+volumes:
+  caddy_data:
+  caddy_config:
+  files:

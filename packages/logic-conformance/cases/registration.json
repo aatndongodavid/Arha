@@ -1,0 +1,2404 @@
+[
+ {
+  "name": "nested_any_all_show_require",
+  "base": "registration",
+  "answers": {
+   "q_role": "parent",
+   "q_age": 17,
+   "q_guardian": "Mme X"
+  },
+  "expect": {
+   "visible": [
+    "h1",
+    "q_role",
+    "q_age",
+    "q_guardian",
+    "q_children",
+    "q_email",
+    "q_comment"
+   ],
+   "required": [
+    "q_role",
+    "q_children",
+    "q_email"
+   ],
+   "path": [
+    "p1",
+    "p2",
+    "p3"
+   ]
+  }
+ },
+ {
+  "name": "nested_condition_false_hides",
+  "base": "registration",
+  "answers": {
+   "q_role": "parent",
+   "q_age": 17
+  },
+  "expect": {
+   "visible": [
+    "h1",
+    "q_role",
+    "q_age",
+    "q_guardian",
+    "q_email",
+    "q_comment"
+   ],
+   "required": [
+    "q_role",
+    "q_email"
+   ]
+  }
+ },
+ {
+  "name": "nested_adult_parent",
+  "base": "registration",
+  "answers": {
+   "q_role": "parent",
+   "q_age": 18,
+   "q_children": 2,
+   "q_email": "a@b.cm"
+  },
+  "expect": {
+   "errors": [],
+   "required": [
+    "q_role",
+    "q_children",
+    "q_email"
+   ]
+  }
+ },
+ {
+  "name": "required_errors",
+  "base": "registration",
+  "answers": {},
+  "expect": {
+   "errors": [
+    {
+     "field": "q_role",
+     "code": "required"
+    },
+    {
+     "field": "q_email",
+     "code": "required"
+    }
+   ]
+  }
+ },
+ {
+  "name": "teacher_jumps_to_p3",
+  "base": "registration",
+  "answers": {
+   "q_role": "teacher"
+  },
+  "expect": {
+   "path": [
+    "p1",
+    "p3"
+   ],
+   "visible": [
+    "h1",
+    "q_role",
+    "q_age",
+    "q_guardian",
+    "q_comment"
+   ],
+   "required": [
+    "q_role"
+   ],
+   "errors": [],
+   "nextPage": {
+    "p1": "p3",
+    "p2": "p3",
+    "p3": null
+   }
+  }
+ },
+ {
+  "name": "invalid_choice",
+  "base": "registration",
+  "answers": {
+   "q_role": "admin",
+   "q_email": "x@y.cm"
+  },
+  "expect": {
+   "errors": [
+    {
+     "field": "q_role",
+     "code": "invalid_choice"
+    }
+   ]
+  }
+ },
+ {
+  "name": "age_not_integer",
+  "base": "registration",
+  "answers": {
+   "q_role": "student",
+   "q_age": 17.5,
+   "q_email": "x@y.cm"
+  },
+  "expect": {
+   "errors": [
+    {
+     "field": "q_age",
+     "code": "invalid_number"
+    }
+   ]
+  }
+ },
+ {
+  "name": "age_above_max",
+  "base": "registration",
+  "answers": {
+   "q_role": "student",
+   "q_age": 121,
+   "q_email": "x@y.cm"
+  },
+  "expect": {
+   "errors": [
+    {
+     "field": "q_age",
+     "code": "above_max"
+    }
+   ]
+  }
+ },
+ {
+  "name": "gen_registration_000",
+  "base": "registration",
+  "answers": {},
+  "expect": {
+   "visible": [
+    "h1",
+    "q_role",
+    "q_age",
+    "q_guardian",
+    "q_email",
+    "q_comment"
+   ],
+   "required": [
+    "q_role",
+    "q_email"
+   ],
+   "variables": {},
+   "path": [
+    "p1",
+    "p2",
+    "p3"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": "p2",
+    "p2": "p3",
+    "p3": null
+   },
+   "errors": [
+    {
+     "field": "q_role",
+     "code": "required"
+    },
+    {
+     "field": "q_email",
+     "code": "required"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_registration_001",
+  "base": "registration",
+  "answers": {
+   "q_role": "parent"
+  },
+  "expect": {
+   "visible": [
+    "h1",
+    "q_role",
+    "q_age",
+    "q_guardian",
+    "q_email",
+    "q_comment"
+   ],
+   "required": [
+    "q_role",
+    "q_email"
+   ],
+   "variables": {},
+   "path": [
+    "p1",
+    "p2",
+    "p3"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": "p2",
+    "p2": "p3",
+    "p3": null
+   },
+   "errors": [
+    {
+     "field": "q_email",
+     "code": "required"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_registration_002",
+  "base": "registration",
+  "answers": {
+   "q_comment": -4
+  },
+  "expect": {
+   "visible": [
+    "h1",
+    "q_role",
+    "q_age",
+    "q_guardian",
+    "q_email",
+    "q_comment"
+   ],
+   "required": [
+    "q_role",
+    "q_email"
+   ],
+   "variables": {},
+   "path": [
+    "p1",
+    "p2",
+    "p3"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": "p2",
+    "p2": "p3",
+    "p3": null
+   },
+   "errors": [
+    {
+     "field": "q_role",
+     "code": "required"
+    },
+    {
+     "field": "q_email",
+     "code": "required"
+    },
+    {
+     "field": "q_comment",
+     "code": "invalid_type"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_registration_003",
+  "base": "registration",
+  "answers": {
+   "q_children": null
+  },
+  "expect": {
+   "visible": [
+    "h1",
+    "q_role",
+    "q_age",
+    "q_guardian",
+    "q_email",
+    "q_comment"
+   ],
+   "required": [
+    "q_role",
+    "q_email"
+   ],
+   "variables": {},
+   "path": [
+    "p1",
+    "p2",
+    "p3"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": "p2",
+    "p2": "p3",
+    "p3": null
+   },
+   "errors": [
+    {
+     "field": "q_role",
+     "code": "required"
+    },
+    {
+     "field": "q_email",
+     "code": "required"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_registration_004",
+  "base": "registration",
+  "answers": {
+   "q_age": null
+  },
+  "expect": {
+   "visible": [
+    "h1",
+    "q_role",
+    "q_age",
+    "q_guardian",
+    "q_email",
+    "q_comment"
+   ],
+   "required": [
+    "q_role",
+    "q_email"
+   ],
+   "variables": {},
+   "path": [
+    "p1",
+    "p2",
+    "p3"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": "p2",
+    "p2": "p3",
+    "p3": null
+   },
+   "errors": [
+    {
+     "field": "q_role",
+     "code": "required"
+    },
+    {
+     "field": "q_email",
+     "code": "required"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_registration_005",
+  "base": "registration",
+  "answers": {
+   "q_age": 9
+  },
+  "expect": {
+   "visible": [
+    "h1",
+    "q_role",
+    "q_age",
+    "q_guardian",
+    "q_email",
+    "q_comment"
+   ],
+   "required": [
+    "q_role",
+    "q_email"
+   ],
+   "variables": {},
+   "path": [
+    "p1",
+    "p2",
+    "p3"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": "p2",
+    "p2": "p3",
+    "p3": null
+   },
+   "errors": [
+    {
+     "field": "q_role",
+     "code": "required"
+    },
+    {
+     "field": "q_email",
+     "code": "required"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_registration_006",
+  "base": "registration",
+  "answers": {
+   "q_age": 0.1
+  },
+  "expect": {
+   "visible": [
+    "h1",
+    "q_role",
+    "q_age",
+    "q_guardian",
+    "q_email",
+    "q_comment"
+   ],
+   "required": [
+    "q_role",
+    "q_email"
+   ],
+   "variables": {},
+   "path": [
+    "p1",
+    "p2",
+    "p3"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": "p2",
+    "p2": "p3",
+    "p3": null
+   },
+   "errors": [
+    {
+     "field": "q_role",
+     "code": "required"
+    },
+    {
+     "field": "q_age",
+     "code": "invalid_number"
+    },
+    {
+     "field": "q_email",
+     "code": "required"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_registration_007",
+  "base": "registration",
+  "answers": {
+   "q_guardian": null
+  },
+  "expect": {
+   "visible": [
+    "h1",
+    "q_role",
+    "q_age",
+    "q_guardian",
+    "q_email",
+    "q_comment"
+   ],
+   "required": [
+    "q_role",
+    "q_email"
+   ],
+   "variables": {},
+   "path": [
+    "p1",
+    "p2",
+    "p3"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": "p2",
+    "p2": "p3",
+    "p3": null
+   },
+   "errors": [
+    {
+     "field": "q_role",
+     "code": "required"
+    },
+    {
+     "field": "q_email",
+     "code": "required"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_registration_008",
+  "base": "registration",
+  "answers": {
+   "q_email": null
+  },
+  "expect": {
+   "visible": [
+    "h1",
+    "q_role",
+    "q_age",
+    "q_guardian",
+    "q_email",
+    "q_comment"
+   ],
+   "required": [
+    "q_role",
+    "q_email"
+   ],
+   "variables": {},
+   "path": [
+    "p1",
+    "p2",
+    "p3"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": "p2",
+    "p2": "p3",
+    "p3": null
+   },
+   "errors": [
+    {
+     "field": "q_role",
+     "code": "required"
+    },
+    {
+     "field": "q_email",
+     "code": "required"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_registration_009",
+  "base": "registration",
+  "answers": {
+   "q_comment": null
+  },
+  "expect": {
+   "visible": [
+    "h1",
+    "q_role",
+    "q_age",
+    "q_guardian",
+    "q_email",
+    "q_comment"
+   ],
+   "required": [
+    "q_role",
+    "q_email"
+   ],
+   "variables": {},
+   "path": [
+    "p1",
+    "p2",
+    "p3"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": "p2",
+    "p2": "p3",
+    "p3": null
+   },
+   "errors": [
+    {
+     "field": "q_role",
+     "code": "required"
+    },
+    {
+     "field": "q_email",
+     "code": "required"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_registration_010",
+  "base": "registration",
+  "answers": {
+   "q_age": false
+  },
+  "expect": {
+   "visible": [
+    "h1",
+    "q_role",
+    "q_age",
+    "q_guardian",
+    "q_email",
+    "q_comment"
+   ],
+   "required": [
+    "q_role",
+    "q_email"
+   ],
+   "variables": {},
+   "path": [
+    "p1",
+    "p2",
+    "p3"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": "p2",
+    "p2": "p3",
+    "p3": null
+   },
+   "errors": [
+    {
+     "field": "q_role",
+     "code": "required"
+    },
+    {
+     "field": "q_age",
+     "code": "invalid_number"
+    },
+    {
+     "field": "q_email",
+     "code": "required"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_registration_011",
+  "base": "registration",
+  "answers": {
+   "q_age": true
+  },
+  "expect": {
+   "visible": [
+    "h1",
+    "q_role",
+    "q_age",
+    "q_guardian",
+    "q_email",
+    "q_comment"
+   ],
+   "required": [
+    "q_role",
+    "q_email"
+   ],
+   "variables": {},
+   "path": [
+    "p1",
+    "p2",
+    "p3"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": "p2",
+    "p2": "p3",
+    "p3": null
+   },
+   "errors": [
+    {
+     "field": "q_role",
+     "code": "required"
+    },
+    {
+     "field": "q_age",
+     "code": "invalid_number"
+    },
+    {
+     "field": "q_email",
+     "code": "required"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_registration_012",
+  "base": "registration",
+  "answers": {
+   "q_comment": false
+  },
+  "expect": {
+   "visible": [
+    "h1",
+    "q_role",
+    "q_age",
+    "q_guardian",
+    "q_email",
+    "q_comment"
+   ],
+   "required": [
+    "q_role",
+    "q_email"
+   ],
+   "variables": {},
+   "path": [
+    "p1",
+    "p2",
+    "p3"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": "p2",
+    "p2": "p3",
+    "p3": null
+   },
+   "errors": [
+    {
+     "field": "q_role",
+     "code": "required"
+    },
+    {
+     "field": "q_email",
+     "code": "required"
+    },
+    {
+     "field": "q_comment",
+     "code": "invalid_type"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_registration_013",
+  "base": "registration",
+  "answers": {
+   "q_children": null,
+   "q_role": "parent"
+  },
+  "expect": {
+   "visible": [
+    "h1",
+    "q_role",
+    "q_age",
+    "q_guardian",
+    "q_email",
+    "q_comment"
+   ],
+   "required": [
+    "q_role",
+    "q_email"
+   ],
+   "variables": {},
+   "path": [
+    "p1",
+    "p2",
+    "p3"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": "p2",
+    "p2": "p3",
+    "p3": null
+   },
+   "errors": [
+    {
+     "field": "q_email",
+     "code": "required"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_registration_014",
+  "base": "registration",
+  "answers": {
+   "q_comment": 1000.0,
+   "q_guardian": 6,
+   "q_children": null,
+   "q_role": "3"
+  },
+  "expect": {
+   "visible": [
+    "h1",
+    "q_role",
+    "q_age",
+    "q_guardian",
+    "q_email",
+    "q_comment"
+   ],
+   "required": [
+    "q_role",
+    "q_email"
+   ],
+   "variables": {},
+   "path": [
+    "p1",
+    "p2",
+    "p3"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": "p2",
+    "p2": "p3",
+    "p3": null
+   },
+   "errors": [
+    {
+     "field": "q_role",
+     "code": "invalid_choice"
+    },
+    {
+     "field": "q_guardian",
+     "code": "invalid_type"
+    },
+    {
+     "field": "q_email",
+     "code": "required"
+    },
+    {
+     "field": "q_comment",
+     "code": "invalid_type"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_registration_015",
+  "base": "registration",
+  "answers": {
+   "q_comment": null,
+   "q_guardian": 6,
+   "q_children": null,
+   "q_role": "3"
+  },
+  "expect": {
+   "visible": [
+    "h1",
+    "q_role",
+    "q_age",
+    "q_guardian",
+    "q_email",
+    "q_comment"
+   ],
+   "required": [
+    "q_role",
+    "q_email"
+   ],
+   "variables": {},
+   "path": [
+    "p1",
+    "p2",
+    "p3"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": "p2",
+    "p2": "p3",
+    "p3": null
+   },
+   "errors": [
+    {
+     "field": "q_role",
+     "code": "invalid_choice"
+    },
+    {
+     "field": "q_guardian",
+     "code": "invalid_type"
+    },
+    {
+     "field": "q_email",
+     "code": "required"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_registration_016",
+  "base": "registration",
+  "answers": {
+   "q_comment": null,
+   "q_guardian": null,
+   "q_children": null,
+   "q_role": "3"
+  },
+  "expect": {
+   "visible": [
+    "h1",
+    "q_role",
+    "q_age",
+    "q_guardian",
+    "q_email",
+    "q_comment"
+   ],
+   "required": [
+    "q_role",
+    "q_email"
+   ],
+   "variables": {},
+   "path": [
+    "p1",
+    "p2",
+    "p3"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": "p2",
+    "p2": "p3",
+    "p3": null
+   },
+   "errors": [
+    {
+     "field": "q_role",
+     "code": "invalid_choice"
+    },
+    {
+     "field": "q_email",
+     "code": "required"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_registration_017",
+  "base": "registration",
+  "answers": {
+   "q_comment": null,
+   "q_guardian": null,
+   "q_children": null,
+   "q_email": null
+  },
+  "expect": {
+   "visible": [
+    "h1",
+    "q_role",
+    "q_age",
+    "q_guardian",
+    "q_email",
+    "q_comment"
+   ],
+   "required": [
+    "q_role",
+    "q_email"
+   ],
+   "variables": {},
+   "path": [
+    "p1",
+    "p2",
+    "p3"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": "p2",
+    "p2": "p3",
+    "p3": null
+   },
+   "errors": [
+    {
+     "field": "q_role",
+     "code": "required"
+    },
+    {
+     "field": "q_email",
+     "code": "required"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_registration_018",
+  "base": "registration",
+  "answers": {
+   "q_children": null,
+   "q_guardian": null
+  },
+  "expect": {
+   "visible": [
+    "h1",
+    "q_role",
+    "q_age",
+    "q_guardian",
+    "q_email",
+    "q_comment"
+   ],
+   "required": [
+    "q_role",
+    "q_email"
+   ],
+   "variables": {},
+   "path": [
+    "p1",
+    "p2",
+    "p3"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": "p2",
+    "p2": "p3",
+    "p3": null
+   },
+   "errors": [
+    {
+     "field": "q_role",
+     "code": "required"
+    },
+    {
+     "field": "q_email",
+     "code": "required"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_registration_019",
+  "base": "registration",
+  "answers": {
+   "q_email": true,
+   "q_comment": 2.5
+  },
+  "expect": {
+   "visible": [
+    "h1",
+    "q_role",
+    "q_age",
+    "q_guardian",
+    "q_email",
+    "q_comment"
+   ],
+   "required": [
+    "q_role",
+    "q_email"
+   ],
+   "variables": {},
+   "path": [
+    "p1",
+    "p2",
+    "p3"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": "p2",
+    "p2": "p3",
+    "p3": null
+   },
+   "errors": [
+    {
+     "field": "q_role",
+     "code": "required"
+    },
+    {
+     "field": "q_email",
+     "code": "invalid_email"
+    },
+    {
+     "field": "q_comment",
+     "code": "invalid_type"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_registration_020",
+  "base": "registration",
+  "answers": {
+   "q_email": true,
+   "q_comment": false
+  },
+  "expect": {
+   "visible": [
+    "h1",
+    "q_role",
+    "q_age",
+    "q_guardian",
+    "q_email",
+    "q_comment"
+   ],
+   "required": [
+    "q_role",
+    "q_email"
+   ],
+   "variables": {},
+   "path": [
+    "p1",
+    "p2",
+    "p3"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": "p2",
+    "p2": "p3",
+    "p3": null
+   },
+   "errors": [
+    {
+     "field": "q_role",
+     "code": "required"
+    },
+    {
+     "field": "q_email",
+     "code": "invalid_email"
+    },
+    {
+     "field": "q_comment",
+     "code": "invalid_type"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_registration_021",
+  "base": "registration",
+  "answers": {
+   "q_email": false,
+   "q_comment": false
+  },
+  "expect": {
+   "visible": [
+    "h1",
+    "q_role",
+    "q_age",
+    "q_guardian",
+    "q_email",
+    "q_comment"
+   ],
+   "required": [
+    "q_role",
+    "q_email"
+   ],
+   "variables": {},
+   "path": [
+    "p1",
+    "p2",
+    "p3"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": "p2",
+    "p2": "p3",
+    "p3": null
+   },
+   "errors": [
+    {
+     "field": "q_role",
+     "code": "required"
+    },
+    {
+     "field": "q_email",
+     "code": "invalid_email"
+    },
+    {
+     "field": "q_comment",
+     "code": "invalid_type"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_registration_022",
+  "base": "registration",
+  "answers": {
+   "q_guardian": "x",
+   "q_children": 2.5,
+   "q_role": 5,
+   "q_comment": false,
+   "q_email": 5,
+   "q_age": null
+  },
+  "expect": {
+   "visible": [
+    "h1",
+    "q_role",
+    "q_age",
+    "q_guardian",
+    "q_email",
+    "q_comment"
+   ],
+   "required": [
+    "q_role",
+    "q_email"
+   ],
+   "variables": {},
+   "path": [
+    "p1",
+    "p2",
+    "p3"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": "p2",
+    "p2": "p3",
+    "p3": null
+   },
+   "errors": [
+    {
+     "field": "q_role",
+     "code": "invalid_choice"
+    },
+    {
+     "field": "q_email",
+     "code": "invalid_email"
+    },
+    {
+     "field": "q_comment",
+     "code": "invalid_type"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_registration_023",
+  "base": "registration",
+  "answers": {
+   "q_age": 0.1,
+   "q_role": 5,
+   "q_comment": false,
+   "q_children": 2.5,
+   "q_email": 5
+  },
+  "expect": {
+   "visible": [
+    "h1",
+    "q_role",
+    "q_age",
+    "q_guardian",
+    "q_email",
+    "q_comment"
+   ],
+   "required": [
+    "q_role",
+    "q_email"
+   ],
+   "variables": {},
+   "path": [
+    "p1",
+    "p2",
+    "p3"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": "p2",
+    "p2": "p3",
+    "p3": null
+   },
+   "errors": [
+    {
+     "field": "q_role",
+     "code": "invalid_choice"
+    },
+    {
+     "field": "q_age",
+     "code": "invalid_number"
+    },
+    {
+     "field": "q_email",
+     "code": "invalid_email"
+    },
+    {
+     "field": "q_comment",
+     "code": "invalid_type"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_registration_024",
+  "base": "registration",
+  "answers": {
+   "q_age": 0.1,
+   "q_role": 5,
+   "q_comment": false,
+   "q_children": 0.1,
+   "q_email": 5
+  },
+  "expect": {
+   "visible": [
+    "h1",
+    "q_role",
+    "q_age",
+    "q_guardian",
+    "q_email",
+    "q_comment"
+   ],
+   "required": [
+    "q_role",
+    "q_email"
+   ],
+   "variables": {},
+   "path": [
+    "p1",
+    "p2",
+    "p3"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": "p2",
+    "p2": "p3",
+    "p3": null
+   },
+   "errors": [
+    {
+     "field": "q_role",
+     "code": "invalid_choice"
+    },
+    {
+     "field": "q_age",
+     "code": "invalid_number"
+    },
+    {
+     "field": "q_email",
+     "code": "invalid_email"
+    },
+    {
+     "field": "q_comment",
+     "code": "invalid_type"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_registration_025",
+  "base": "registration",
+  "answers": {
+   "q_age": 0.1,
+   "q_role": 5,
+   "q_comment": false,
+   "q_children": 5,
+   "q_email": 5
+  },
+  "expect": {
+   "visible": [
+    "h1",
+    "q_role",
+    "q_age",
+    "q_guardian",
+    "q_email",
+    "q_comment"
+   ],
+   "required": [
+    "q_role",
+    "q_email"
+   ],
+   "variables": {},
+   "path": [
+    "p1",
+    "p2",
+    "p3"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": "p2",
+    "p2": "p3",
+    "p3": null
+   },
+   "errors": [
+    {
+     "field": "q_role",
+     "code": "invalid_choice"
+    },
+    {
+     "field": "q_age",
+     "code": "invalid_number"
+    },
+    {
+     "field": "q_email",
+     "code": "invalid_email"
+    },
+    {
+     "field": "q_comment",
+     "code": "invalid_type"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_registration_026",
+  "base": "registration",
+  "answers": {
+   "q_age": 0.1,
+   "q_role": 5,
+   "q_comment": false,
+   "q_children": -0.5,
+   "q_email": 5
+  },
+  "expect": {
+   "visible": [
+    "h1",
+    "q_role",
+    "q_age",
+    "q_guardian",
+    "q_email",
+    "q_comment"
+   ],
+   "required": [
+    "q_role",
+    "q_email"
+   ],
+   "variables": {},
+   "path": [
+    "p1",
+    "p2",
+    "p3"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": "p2",
+    "p2": "p3",
+    "p3": null
+   },
+   "errors": [
+    {
+     "field": "q_role",
+     "code": "invalid_choice"
+    },
+    {
+     "field": "q_age",
+     "code": "invalid_number"
+    },
+    {
+     "field": "q_email",
+     "code": "invalid_email"
+    },
+    {
+     "field": "q_comment",
+     "code": "invalid_type"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_registration_027",
+  "base": "registration",
+  "answers": {
+   "q_age": 0.1,
+   "q_role": 5,
+   "q_comment": false,
+   "q_children": -0.5,
+   "q_email": -0.5
+  },
+  "expect": {
+   "visible": [
+    "h1",
+    "q_role",
+    "q_age",
+    "q_guardian",
+    "q_email",
+    "q_comment"
+   ],
+   "required": [
+    "q_role",
+    "q_email"
+   ],
+   "variables": {},
+   "path": [
+    "p1",
+    "p2",
+    "p3"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": "p2",
+    "p2": "p3",
+    "p3": null
+   },
+   "errors": [
+    {
+     "field": "q_role",
+     "code": "invalid_choice"
+    },
+    {
+     "field": "q_age",
+     "code": "invalid_number"
+    },
+    {
+     "field": "q_email",
+     "code": "invalid_email"
+    },
+    {
+     "field": "q_comment",
+     "code": "invalid_type"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_registration_028",
+  "base": "registration",
+  "answers": {
+   "q_age": 0.1,
+   "q_role": 5,
+   "q_comment": false,
+   "q_children": -0.5,
+   "q_email": false
+  },
+  "expect": {
+   "visible": [
+    "h1",
+    "q_role",
+    "q_age",
+    "q_guardian",
+    "q_email",
+    "q_comment"
+   ],
+   "required": [
+    "q_role",
+    "q_email"
+   ],
+   "variables": {},
+   "path": [
+    "p1",
+    "p2",
+    "p3"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": "p2",
+    "p2": "p3",
+    "p3": null
+   },
+   "errors": [
+    {
+     "field": "q_role",
+     "code": "invalid_choice"
+    },
+    {
+     "field": "q_age",
+     "code": "invalid_number"
+    },
+    {
+     "field": "q_email",
+     "code": "invalid_email"
+    },
+    {
+     "field": "q_comment",
+     "code": "invalid_type"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_registration_029",
+  "base": "registration",
+  "answers": {
+   "q_children": "2026-01-01",
+   "q_age": 1000.0,
+   "q_guardian": -5
+  },
+  "expect": {
+   "visible": [
+    "h1",
+    "q_role",
+    "q_age",
+    "q_guardian",
+    "q_email",
+    "q_comment"
+   ],
+   "required": [
+    "q_role",
+    "q_email"
+   ],
+   "variables": {},
+   "path": [
+    "p1",
+    "p2",
+    "p3"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": "p2",
+    "p2": "p3",
+    "p3": null
+   },
+   "errors": [
+    {
+     "field": "q_role",
+     "code": "required"
+    },
+    {
+     "field": "q_age",
+     "code": "above_max"
+    },
+    {
+     "field": "q_guardian",
+     "code": "invalid_type"
+    },
+    {
+     "field": "q_email",
+     "code": "required"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_registration_030",
+  "base": "registration",
+  "answers": {
+   "q_children": "2026-01-01",
+   "q_age": 4,
+   "q_guardian": -5
+  },
+  "expect": {
+   "visible": [
+    "h1",
+    "q_role",
+    "q_age",
+    "q_guardian",
+    "q_email",
+    "q_comment"
+   ],
+   "required": [
+    "q_role",
+    "q_email"
+   ],
+   "variables": {},
+   "path": [
+    "p1",
+    "p2",
+    "p3"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": "p2",
+    "p2": "p3",
+    "p3": null
+   },
+   "errors": [
+    {
+     "field": "q_role",
+     "code": "required"
+    },
+    {
+     "field": "q_guardian",
+     "code": "invalid_type"
+    },
+    {
+     "field": "q_email",
+     "code": "required"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_registration_031",
+  "base": "registration",
+  "answers": {
+   "q_children": "2026-01-01",
+   "q_age": "2026-01-01",
+   "q_guardian": -5
+  },
+  "expect": {
+   "visible": [
+    "h1",
+    "q_role",
+    "q_age",
+    "q_guardian",
+    "q_email",
+    "q_comment"
+   ],
+   "required": [
+    "q_role",
+    "q_email"
+   ],
+   "variables": {},
+   "path": [
+    "p1",
+    "p2",
+    "p3"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": "p2",
+    "p2": "p3",
+    "p3": null
+   },
+   "errors": [
+    {
+     "field": "q_role",
+     "code": "required"
+    },
+    {
+     "field": "q_age",
+     "code": "invalid_number"
+    },
+    {
+     "field": "q_guardian",
+     "code": "invalid_type"
+    },
+    {
+     "field": "q_email",
+     "code": "required"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_registration_032",
+  "base": "registration",
+  "answers": {
+   "q_children": -5,
+   "q_age": "2026-01-01",
+   "q_guardian": -5
+  },
+  "expect": {
+   "visible": [
+    "h1",
+    "q_role",
+    "q_age",
+    "q_guardian",
+    "q_email",
+    "q_comment"
+   ],
+   "required": [
+    "q_role",
+    "q_email"
+   ],
+   "variables": {},
+   "path": [
+    "p1",
+    "p2",
+    "p3"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": "p2",
+    "p2": "p3",
+    "p3": null
+   },
+   "errors": [
+    {
+     "field": "q_role",
+     "code": "required"
+    },
+    {
+     "field": "q_age",
+     "code": "invalid_number"
+    },
+    {
+     "field": "q_guardian",
+     "code": "invalid_type"
+    },
+    {
+     "field": "q_email",
+     "code": "required"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_registration_033",
+  "base": "registration",
+  "answers": {
+   "q_children": -5,
+   "q_age": 7,
+   "q_guardian": -5
+  },
+  "expect": {
+   "visible": [
+    "h1",
+    "q_role",
+    "q_age",
+    "q_guardian",
+    "q_email",
+    "q_comment"
+   ],
+   "required": [
+    "q_role",
+    "q_email"
+   ],
+   "variables": {},
+   "path": [
+    "p1",
+    "p2",
+    "p3"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": "p2",
+    "p2": "p3",
+    "p3": null
+   },
+   "errors": [
+    {
+     "field": "q_role",
+     "code": "required"
+    },
+    {
+     "field": "q_guardian",
+     "code": "invalid_type"
+    },
+    {
+     "field": "q_email",
+     "code": "required"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_registration_034",
+  "base": "registration",
+  "answers": {
+   "q_children": -5,
+   "q_age": -5,
+   "q_guardian": -5
+  },
+  "expect": {
+   "visible": [
+    "h1",
+    "q_role",
+    "q_age",
+    "q_guardian",
+    "q_email",
+    "q_comment"
+   ],
+   "required": [
+    "q_role",
+    "q_email"
+   ],
+   "variables": {},
+   "path": [
+    "p1",
+    "p2",
+    "p3"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": "p2",
+    "p2": "p3",
+    "p3": null
+   },
+   "errors": [
+    {
+     "field": "q_role",
+     "code": "required"
+    },
+    {
+     "field": "q_age",
+     "code": "below_min"
+    },
+    {
+     "field": "q_guardian",
+     "code": "invalid_type"
+    },
+    {
+     "field": "q_email",
+     "code": "required"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_registration_035",
+  "base": "registration",
+  "answers": {
+   "q_children": -5,
+   "q_email": -5,
+   "q_guardian": -5
+  },
+  "expect": {
+   "visible": [
+    "h1",
+    "q_role",
+    "q_age",
+    "q_guardian",
+    "q_email",
+    "q_comment"
+   ],
+   "required": [
+    "q_role",
+    "q_email"
+   ],
+   "variables": {},
+   "path": [
+    "p1",
+    "p2",
+    "p3"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": "p2",
+    "p2": "p3",
+    "p3": null
+   },
+   "errors": [
+    {
+     "field": "q_role",
+     "code": "required"
+    },
+    {
+     "field": "q_guardian",
+     "code": "invalid_type"
+    },
+    {
+     "field": "q_email",
+     "code": "invalid_email"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_registration_036",
+  "base": "registration",
+  "answers": {
+   "q_comment": 18,
+   "q_age": null,
+   "q_email": 0.5,
+   "q_children": 0.1,
+   "q_role": true,
+   "q_guardian": "x"
+  },
+  "expect": {
+   "visible": [
+    "h1",
+    "q_role",
+    "q_age",
+    "q_guardian",
+    "q_email",
+    "q_comment"
+   ],
+   "required": [
+    "q_role",
+    "q_email"
+   ],
+   "variables": {},
+   "path": [
+    "p1",
+    "p2",
+    "p3"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": "p2",
+    "p2": "p3",
+    "p3": null
+   },
+   "errors": [
+    {
+     "field": "q_role",
+     "code": "invalid_choice"
+    },
+    {
+     "field": "q_email",
+     "code": "invalid_email"
+    },
+    {
+     "field": "q_comment",
+     "code": "invalid_type"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_registration_037",
+  "base": "registration",
+  "answers": {
+   "q_comment": 18,
+   "q_age": null,
+   "q_email": 0.5,
+   "q_children": 0.1,
+   "q_role": true,
+   "q_guardian": 18
+  },
+  "expect": {
+   "visible": [
+    "h1",
+    "q_role",
+    "q_age",
+    "q_guardian",
+    "q_email",
+    "q_comment"
+   ],
+   "required": [
+    "q_role",
+    "q_email"
+   ],
+   "variables": {},
+   "path": [
+    "p1",
+    "p2",
+    "p3"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": "p2",
+    "p2": "p3",
+    "p3": null
+   },
+   "errors": [
+    {
+     "field": "q_role",
+     "code": "invalid_choice"
+    },
+    {
+     "field": "q_guardian",
+     "code": "invalid_type"
+    },
+    {
+     "field": "q_email",
+     "code": "invalid_email"
+    },
+    {
+     "field": "q_comment",
+     "code": "invalid_type"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_registration_038",
+  "base": "registration",
+  "answers": {
+   "q_comment": 18,
+   "q_age": null,
+   "q_email": 0.5,
+   "q_children": 0.5,
+   "q_role": true,
+   "q_guardian": 18
+  },
+  "expect": {
+   "visible": [
+    "h1",
+    "q_role",
+    "q_age",
+    "q_guardian",
+    "q_email",
+    "q_comment"
+   ],
+   "required": [
+    "q_role",
+    "q_email"
+   ],
+   "variables": {},
+   "path": [
+    "p1",
+    "p2",
+    "p3"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": "p2",
+    "p2": "p3",
+    "p3": null
+   },
+   "errors": [
+    {
+     "field": "q_role",
+     "code": "invalid_choice"
+    },
+    {
+     "field": "q_guardian",
+     "code": "invalid_type"
+    },
+    {
+     "field": "q_email",
+     "code": "invalid_email"
+    },
+    {
+     "field": "q_comment",
+     "code": "invalid_type"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_registration_039",
+  "base": "registration",
+  "answers": {
+   "q_comment": 18,
+   "q_age": null,
+   "q_email": 0.5,
+   "q_children": 18,
+   "q_role": true,
+   "q_guardian": 18
+  },
+  "expect": {
+   "visible": [
+    "h1",
+    "q_role",
+    "q_age",
+    "q_guardian",
+    "q_email",
+    "q_comment"
+   ],
+   "required": [
+    "q_role",
+    "q_email"
+   ],
+   "variables": {},
+   "path": [
+    "p1",
+    "p2",
+    "p3"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": "p2",
+    "p2": "p3",
+    "p3": null
+   },
+   "errors": [
+    {
+     "field": "q_role",
+     "code": "invalid_choice"
+    },
+    {
+     "field": "q_guardian",
+     "code": "invalid_type"
+    },
+    {
+     "field": "q_email",
+     "code": "invalid_email"
+    },
+    {
+     "field": "q_comment",
+     "code": "invalid_type"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_registration_040",
+  "base": "registration",
+  "answers": {
+   "q_children": 18,
+   "q_email": null
+  },
+  "expect": {
+   "visible": [
+    "h1",
+    "q_role",
+    "q_age",
+    "q_guardian",
+    "q_email",
+    "q_comment"
+   ],
+   "required": [
+    "q_role",
+    "q_email"
+   ],
+   "variables": {},
+   "path": [
+    "p1",
+    "p2",
+    "p3"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": "p2",
+    "p2": "p3",
+    "p3": null
+   },
+   "errors": [
+    {
+     "field": "q_role",
+     "code": "required"
+    },
+    {
+     "field": "q_email",
+     "code": "required"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_registration_041",
+  "base": "registration",
+  "answers": {
+   "q_children": 18,
+   "q_email": 18
+  },
+  "expect": {
+   "visible": [
+    "h1",
+    "q_role",
+    "q_age",
+    "q_guardian",
+    "q_email",
+    "q_comment"
+   ],
+   "required": [
+    "q_role",
+    "q_email"
+   ],
+   "variables": {},
+   "path": [
+    "p1",
+    "p2",
+    "p3"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": "p2",
+    "p2": "p3",
+    "p3": null
+   },
+   "errors": [
+    {
+     "field": "q_role",
+     "code": "required"
+    },
+    {
+     "field": "q_email",
+     "code": "invalid_email"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_registration_042",
+  "base": "registration",
+  "answers": {
+   "q_age": 0.1,
+   "q_role": null,
+   "q_children": null
+  },
+  "expect": {
+   "visible": [
+    "h1",
+    "q_role",
+    "q_age",
+    "q_guardian",
+    "q_email",
+    "q_comment"
+   ],
+   "required": [
+    "q_role",
+    "q_email"
+   ],
+   "variables": {},
+   "path": [
+    "p1",
+    "p2",
+    "p3"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": "p2",
+    "p2": "p3",
+    "p3": null
+   },
+   "errors": [
+    {
+     "field": "q_role",
+     "code": "required"
+    },
+    {
+     "field": "q_age",
+     "code": "invalid_number"
+    },
+    {
+     "field": "q_email",
+     "code": "required"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_registration_043",
+  "base": "registration",
+  "answers": {
+   "q_age": 0.1,
+   "q_role": null,
+   "q_children": 0.1
+  },
+  "expect": {
+   "visible": [
+    "h1",
+    "q_role",
+    "q_age",
+    "q_guardian",
+    "q_email",
+    "q_comment"
+   ],
+   "required": [
+    "q_role",
+    "q_email"
+   ],
+   "variables": {},
+   "path": [
+    "p1",
+    "p2",
+    "p3"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": "p2",
+    "p2": "p3",
+    "p3": null
+   },
+   "errors": [
+    {
+     "field": "q_role",
+     "code": "required"
+    },
+    {
+     "field": "q_age",
+     "code": "invalid_number"
+    },
+    {
+     "field": "q_email",
+     "code": "required"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_registration_044",
+  "base": "registration",
+  "answers": {
+   "q_guardian": null,
+   "q_children": 5,
+   "q_age": 11,
+   "q_comment": true,
+   "q_role": "student"
+  },
+  "expect": {
+   "visible": [
+    "h1",
+    "q_role",
+    "q_age",
+    "q_guardian",
+    "q_email",
+    "q_comment"
+   ],
+   "required": [
+    "q_role",
+    "q_email"
+   ],
+   "variables": {},
+   "path": [
+    "p1",
+    "p2",
+    "p3"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": "p2",
+    "p2": "p3",
+    "p3": null
+   },
+   "errors": [
+    {
+     "field": "q_email",
+     "code": "required"
+    },
+    {
+     "field": "q_comment",
+     "code": "invalid_type"
+    }
+   ],
+   "amount": 0
+  }
+ }
+]

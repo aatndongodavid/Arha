@@ -1,0 +1,80 @@
+name: ci
+on:
+  pull_request:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  api:
+    runs-on: ubuntu-24.04
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env: { POSTGRES_PASSWORD: postgres }
+        ports: ["5432:5432"]
+        options: --health-cmd "pg_isready -U postgres" --health-interval 5s --health-retries 10
+      valkey:
+        image: valkey/valkey:8-alpine
+        ports: ["6379:6379"]
+    defaults: { run: { working-directory: apps/api } }
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+      - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2  # v10.3.3
+        with: { enable-cache: true }
+      - name: System libraries for WeasyPrint
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends libpango-1.0-0 libpangoft2-1.0-0 postgresql-client
+      - name: Database roles and extensions
+        env: { PGPASSWORD: postgres }
+        run: |
+          psql -h localhost -U postgres -v ON_ERROR_STOP=1 -f ../../infra/compose/postgres/init.sql
+          for db in arha arha_test; do psql -h localhost -U postgres -d $db -c "CREATE EXTENSION IF NOT EXISTS citext; CREATE EXTENSION IF NOT EXISTS pg_trgm; ALTER SCHEMA public OWNER TO arha_owner;"; done
+      - run: uv sync --frozen
+      - run: uv run ruff check src tests
+      - run: uv run mypy src
+      - name: Migrations
+        env: { DATABASE_MIGRATION_URL: "postgresql+asyncpg://arha_owner:arha_owner@localhost:5432/arha_test" }
+        run: uv run alembic upgrade head
+      - name: Tests with coverage gate on business modules
+        run: |
+          uv run pytest tests --cov --cov-report=term --cov-report=json
+          uv run python ../../.github/scripts/coverage_gate.py coverage.json 85 logic payments billing submissions
+      - run: uv run pip-audit --strict --skip-editable || uv run pip-audit
+
+  web:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+      - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115  # v6.1.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1  # v7.1.0
+        with: { node-version: 22, cache: pnpm }
+      - run: pnpm install --frozen-lockfile
+      - name: Translations complete in French and English
+        run: node packages/i18n/compile.mjs
+      - name: Logic conformance and coverage (TypeScript)
+        run: pnpm --filter @arha/logic-ts test
+      - run: pnpm -r typecheck
+      - name: Build (fails above 60 KB for the public form, F-PUB-01)
+        run: pnpm --filter @arha/forms build && pnpm --filter @arha/web build && pnpm --filter @arha/site build
+      - run: pnpm audit --audit-level high --prod
+
+  security:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        with: { fetch-depth: 0 }
+      - name: Gitleaks on the whole history
+        run: >-
+          docker run --rm -v "$PWD:/repo" ghcr.io/gitleaks/gitleaks:v8.24.3
+          git /repo --config /repo/.gitleaks.toml --redact --no-banner --exit-code 1
+      - name: Semgrep
+        run: >-
+          docker run --rm -v "$PWD:/src" -w /src semgrep/semgrep:1.183.0
+          semgrep scan --error --metrics off
+          --config p/python --config p/typescript --config p/owasp-top-ten
+      - uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25  # v0.36.0
+        with: { scan-type: fs, severity: "HIGH,CRITICAL", exit-code: "1", ignore-unfixed: true }

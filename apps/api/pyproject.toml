@@ -1,0 +1,109 @@
+[project]
+name = "arha-api"
+version = "0.1.0"
+description = "Arha API: forms, Mobile Money payments and analytics"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "alembic>=1.20.1",
+    "argon2-cffi>=25.1.0",
+    "asyncpg>=0.32.0",
+    "authlib>=1.9.5",
+    "babel>=2.18.0",
+    "email-validator>=2.3.0",
+    "fastapi>=0.162.5",
+    "gunicorn>=27.0.1",
+    "httpx>=0.28.1",
+    "nh3>=0.3.7",
+    "phonenumbers>=9.0.43",
+    "polars>=2.1.0",
+    "procrastinate>=3.11.0",
+    "prometheus-client>=0.26.0",
+    "pydantic>=2.14.3",
+    "pydantic-settings>=2.16.3",
+    "pynacl>=1.6.2",
+    "pyotp>=2.10.0",
+    "pyreadstat>=1.3.7",
+    "python-multipart>=0.0.33",
+    "pyyaml>=6.0.3",
+    "redis>=8.1.0",
+    "segno>=1.6.6",
+    "sqlalchemy[asyncio]>=2.1.8",
+    "structlog>=26.1.0",
+    "uuid-utils>=1.2.0",
+    "uvicorn[standard]>=0.54.0",
+    "weasyprint>=70.0",
+    "xlsxwriter>=3.3.1",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/arha"]
+
+[dependency-groups]
+dev = [
+    "datamodel-code-generator>=0.95.0",
+    "hypothesis>=6.170.15",
+    "import-linter>=2.16",
+    "mypy>=2.4.1",
+    "pip-audit>=2.10.1",
+    "pytest>=9.2.0",
+    "pytest-asyncio>=1.5.0",
+    "pytest-cov>=7.1.0",
+    "ruff>=0.17.5",
+    "types-pyyaml>=6.0.12.20261113",
+]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "session"
+asyncio_default_test_loop_scope = "session"
+testpaths = ["tests", "src"]
+python_files = ["test_*.py"]
+addopts = "-p no:cacheprovider"
+pythonpath = ["."]
+markers = ["integration: requires real provider credentials, run manually"]
+filterwarnings = ["ignore::DeprecationWarning"]
+
+[tool.coverage.run]
+concurrency = ["greenlet", "thread"]
+source = ["src/arha"]
+omit = ["src/arha/modules/forms/schema_models.py", "src/arha/modules/payments/adapters/notchpay.py",
+        "src/arha/modules/payments/adapters/campay.py"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py312"
+extend-exclude = ["src/arha/modules/forms/schema_models.py", "alembic"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "S", "ASYNC", "RUF", "SIM", "BLE"]
+ignore = ["S101", "S608", "RUF001", "RUF002", "RUF003", "B008", "S311"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["S105", "S106", "S108", "E501", "RUF059"]
+"src/arha/modules/*/documents.py" = ["E501"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+plugins = ["pydantic.mypy"]
+exclude = ["alembic/", "tests/"]
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = ["arha.modules.forms.schema_models"]
+ignore_errors = true
+
+# Known debt: 17 cross-module model imports remain (see docs/PROGRESS.md). Contract below is the target.
+[tool.importlinter]
+root_package = "arha"
+
+[[tool.importlinter.contracts]]
+name = "A module never imports another module's models (master prompt section 5)"
+type = "forbidden"
+source_modules = ["arha.modules.identity", "arha.modules.forms", "arha.modules.billing", "arha.modules.analytics",
+                  "arha.modules.integrations", "arha.modules.messaging", "arha.modules.orgs"]
+forbidden_modules = ["arha.modules.payments.models"]

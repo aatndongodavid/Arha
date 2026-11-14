@@ -1,0 +1,5 @@
+# Arha security contact (S-18). The porteur must set the contact address and the expiry date before launch.
+Contact: mailto:SECURITY_CONTACT_TO_SET
+Preferred-Languages: fr, en
+Expires: 2027-12-31T23:00:00.000Z
+Policy: Signalez la faille en privé, sans accéder aux données d'autrui. Nous répondons sous 72 heures.

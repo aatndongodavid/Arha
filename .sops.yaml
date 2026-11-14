@@ -1,0 +1,4 @@
+# Secrets are encrypted with age (S-13). Replace the recipient with the porteur's public age key.
+creation_rules:
+  - path_regex: infra/secrets/.*\.enc\.env$
+    age: AGE_PUBLIC_KEY_TO_SET

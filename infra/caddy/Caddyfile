@@ -1,0 +1,96 @@
+# Arha reverse proxy. Hostnames come from the environment (never hard coded).
+{
+	email {$ARHA_ACME_EMAIL}
+	servers {
+		protocols h1 h2 h3
+	}
+}
+
+(security) {
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+		X-Content-Type-Options "nosniff"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		-Server
+	}
+	encode zstd gzip
+}
+
+(api) {
+	@api path /v1/* /healthz
+	handle @api {
+		reverse_proxy api:8000
+	}
+	# /metrics is never routed publicly.
+	respond /metrics 404
+}
+
+# Marketing site
+{$ARHA_SITE_HOST} {
+	import security
+	header Content-Security-Policy "default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://{$ARHA_API_HOST}; frame-ancestors 'none'"
+	root * /srv/site
+	try_files {path} {path}/index.html
+	file_server
+}
+
+# Management application and internal console
+{$ARHA_APP_HOST} {
+	import security
+	import api
+	header Permissions-Policy "camera=(self), microphone=(), geolocation=()"
+	header Content-Security-Policy "default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self'; frame-src https://{$ARHA_FORMS_HOST}; frame-ancestors 'none'"
+	handle {
+		root * /srv/web
+		try_files {path} /index.html
+		file_server
+	}
+}
+
+# Public forms
+{$ARHA_FORMS_HOST} {
+	import security
+	import api
+	header Permissions-Policy "camera=(), microphone=(), geolocation=()"
+	@assets path /assets/* /sw.js /workbox-* /manifest.webmanifest /registerSW.js
+	handle @assets {
+		root * /srv/forms
+		header /assets/* Cache-Control "public, max-age=31536000, immutable"
+		file_server
+	}
+	# Editor preview: only the management application may frame it.
+	handle /_preview {
+		header Content-Security-Policy "default-src 'self'; style-src 'self'; img-src 'self' data: https:; frame-ancestors https://{$ARHA_APP_HOST}"
+		root * /srv/forms
+		rewrite * /index.html
+		file_server
+	}
+	# Form pages are rendered by the API to inject Open Graph tags (F-PUB-06).
+	@code path_regexp code ^/([A-Za-z0-9]{6,16})$
+	handle @code {
+		rewrite * /v1/public/forms/{re.code.1}/page
+		reverse_proxy api:8000
+	}
+	handle {
+		root * /srv/forms
+		try_files {path} /index.html
+		file_server
+	}
+}
+
+# API host for integrations and provider webhooks
+{$ARHA_API_HOST} {
+	import security
+	import api
+	respond 404
+}
+
+# User files on a separate domain (S-10)
+{$ARHA_FILES_HOST} {
+	import security
+	header Content-Security-Policy "default-src 'none'; sandbox"
+	handle /files/* {
+		reverse_proxy api:8000
+	}
+	respond 404
+}

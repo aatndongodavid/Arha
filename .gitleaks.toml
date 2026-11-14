@@ -1,0 +1,8 @@
+# Gitleaks configuration (S-13). Default rules, plus one narrow exception.
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Fictitious password used only by automated tests and end-to-end scripts"
+regexTarget = "match"
+regexes = ['''Correct-Horse-Battery-42''']

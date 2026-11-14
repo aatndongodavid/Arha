@@ -1,0 +1,1735 @@
+[
+ {
+  "name": "validation_all_valid",
+  "base": "validation",
+  "answers": {
+   "q_email": "awa@exemple.cm",
+   "q_phone": "+237690000000",
+   "q_url": "https://arha.africa",
+   "q_rating": 5,
+   "q_nps": 0,
+   "q_scale": 7,
+   "q_date": "2026-12-01",
+   "q_time": "08:30",
+   "q_range": {
+    "start": "2027-01-01",
+    "end": "2027-01-31"
+   },
+   "q_grid": {
+    "r1": "c1",
+    "r2": "c2"
+   },
+   "q_rank": [
+    "b",
+    "a"
+   ],
+   "q_short": "abcd",
+   "q_consent": true,
+   "q_open": 500
+  },
+  "expect": {
+   "errors": [],
+   "amount": 500
+  }
+ },
+ {
+  "name": "validation_all_invalid",
+  "base": "validation",
+  "answers": {
+   "q_email": "awa@",
+   "q_phone": "+23769",
+   "q_url": "ftp://x",
+   "q_rating": 6,
+   "q_nps": 11,
+   "q_scale": 0,
+   "q_date": "2025-12-31",
+   "q_time": "25:00",
+   "q_range": {
+    "start": "2027-02-01",
+    "end": "2027-01-01"
+   },
+   "q_grid": {
+    "r1": "c9"
+   },
+   "q_rank": [
+    "a"
+   ],
+   "q_short": "ab",
+   "q_consent": false,
+   "q_open": 499
+  },
+  "expect": {
+   "errors": [
+    {
+     "field": "q_email",
+     "code": "invalid_email"
+    },
+    {
+     "field": "q_phone",
+     "code": "invalid_phone"
+    },
+    {
+     "field": "q_url",
+     "code": "invalid_url"
+    },
+    {
+     "field": "q_rating",
+     "code": "above_max"
+    },
+    {
+     "field": "q_nps",
+     "code": "above_max"
+    },
+    {
+     "field": "q_scale",
+     "code": "below_min"
+    },
+    {
+     "field": "q_date",
+     "code": "below_min"
+    },
+    {
+     "field": "q_time",
+     "code": "invalid_time"
+    },
+    {
+     "field": "q_range",
+     "code": "invalid_date"
+    },
+    {
+     "field": "q_grid",
+     "code": "invalid_choice"
+    },
+    {
+     "field": "q_rank",
+     "code": "invalid_choice"
+    },
+    {
+     "field": "q_short",
+     "code": "too_short"
+    },
+    {
+     "field": "q_consent",
+     "code": "required"
+    },
+    {
+     "field": "q_open",
+     "code": "below_min"
+    }
+   ],
+   "amount": 499
+  }
+ },
+ {
+  "name": "validation_cm_landline_ok",
+  "base": "validation",
+  "answers": {
+   "q_phone": "+237233000000",
+   "q_consent": true
+  },
+  "expect": {
+   "errors": []
+  }
+ },
+ {
+  "name": "validation_foreign_phone",
+  "base": "validation",
+  "answers": {
+   "q_phone": "+33612345678",
+   "q_consent": true
+  },
+  "expect": {
+   "errors": []
+  }
+ },
+ {
+  "name": "validation_bad_date",
+  "base": "validation",
+  "answers": {
+   "q_date": "2026-02-30",
+   "q_consent": true
+  },
+  "expect": {
+   "errors": [
+    {
+     "field": "q_date",
+     "code": "invalid_date"
+    }
+   ]
+  }
+ },
+ {
+  "name": "gen_validation_000",
+  "base": "validation",
+  "answers": {},
+  "expect": {
+   "visible": [
+    "q_email",
+    "q_phone",
+    "q_url",
+    "q_rating",
+    "q_nps",
+    "q_scale",
+    "q_date",
+    "q_time",
+    "q_range",
+    "q_grid",
+    "q_rank",
+    "q_short",
+    "q_consent",
+    "q_open"
+   ],
+   "required": [
+    "q_consent"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_consent",
+     "code": "required"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_validation_001",
+  "base": "validation",
+  "answers": {
+   "q_email": null
+  },
+  "expect": {
+   "visible": [
+    "q_email",
+    "q_phone",
+    "q_url",
+    "q_rating",
+    "q_nps",
+    "q_scale",
+    "q_date",
+    "q_time",
+    "q_range",
+    "q_grid",
+    "q_rank",
+    "q_short",
+    "q_consent",
+    "q_open"
+   ],
+   "required": [
+    "q_consent"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_consent",
+     "code": "required"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_validation_002",
+  "base": "validation",
+  "answers": {
+   "q_short": -4
+  },
+  "expect": {
+   "visible": [
+    "q_email",
+    "q_phone",
+    "q_url",
+    "q_rating",
+    "q_nps",
+    "q_scale",
+    "q_date",
+    "q_time",
+    "q_range",
+    "q_grid",
+    "q_rank",
+    "q_short",
+    "q_consent",
+    "q_open"
+   ],
+   "required": [
+    "q_consent"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_short",
+     "code": "invalid_type"
+    },
+    {
+     "field": "q_consent",
+     "code": "required"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_validation_003",
+  "base": "validation",
+  "answers": {
+   "q_range": null
+  },
+  "expect": {
+   "visible": [
+    "q_email",
+    "q_phone",
+    "q_url",
+    "q_rating",
+    "q_nps",
+    "q_scale",
+    "q_date",
+    "q_time",
+    "q_range",
+    "q_grid",
+    "q_rank",
+    "q_short",
+    "q_consent",
+    "q_open"
+   ],
+   "required": [
+    "q_consent"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_consent",
+     "code": "required"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_validation_004",
+  "base": "validation",
+  "answers": {
+   "q_rating": null
+  },
+  "expect": {
+   "visible": [
+    "q_email",
+    "q_phone",
+    "q_url",
+    "q_rating",
+    "q_nps",
+    "q_scale",
+    "q_date",
+    "q_time",
+    "q_range",
+    "q_grid",
+    "q_rank",
+    "q_short",
+    "q_consent",
+    "q_open"
+   ],
+   "required": [
+    "q_consent"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_consent",
+     "code": "required"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_validation_005",
+  "base": "validation",
+  "answers": {
+   "q_rating": 9
+  },
+  "expect": {
+   "visible": [
+    "q_email",
+    "q_phone",
+    "q_url",
+    "q_rating",
+    "q_nps",
+    "q_scale",
+    "q_date",
+    "q_time",
+    "q_range",
+    "q_grid",
+    "q_rank",
+    "q_short",
+    "q_consent",
+    "q_open"
+   ],
+   "required": [
+    "q_consent"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_rating",
+     "code": "above_max"
+    },
+    {
+     "field": "q_consent",
+     "code": "required"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_validation_006",
+  "base": "validation",
+  "answers": {
+   "q_url": null
+  },
+  "expect": {
+   "visible": [
+    "q_email",
+    "q_phone",
+    "q_url",
+    "q_rating",
+    "q_nps",
+    "q_scale",
+    "q_date",
+    "q_time",
+    "q_range",
+    "q_grid",
+    "q_rank",
+    "q_short",
+    "q_consent",
+    "q_open"
+   ],
+   "required": [
+    "q_consent"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_consent",
+     "code": "required"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_validation_007",
+  "base": "validation",
+  "answers": {
+   "q_phone": null
+  },
+  "expect": {
+   "visible": [
+    "q_email",
+    "q_phone",
+    "q_url",
+    "q_rating",
+    "q_nps",
+    "q_scale",
+    "q_date",
+    "q_time",
+    "q_range",
+    "q_grid",
+    "q_rank",
+    "q_short",
+    "q_consent",
+    "q_open"
+   ],
+   "required": [
+    "q_consent"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_consent",
+     "code": "required"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_validation_008",
+  "base": "validation",
+  "answers": {
+   "q_url": 0
+  },
+  "expect": {
+   "visible": [
+    "q_email",
+    "q_phone",
+    "q_url",
+    "q_rating",
+    "q_nps",
+    "q_scale",
+    "q_date",
+    "q_time",
+    "q_range",
+    "q_grid",
+    "q_rank",
+    "q_short",
+    "q_consent",
+    "q_open"
+   ],
+   "required": [
+    "q_consent"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_url",
+     "code": "invalid_url"
+    },
+    {
+     "field": "q_consent",
+     "code": "required"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_validation_009",
+  "base": "validation",
+  "answers": {
+   "q_url": 19
+  },
+  "expect": {
+   "visible": [
+    "q_email",
+    "q_phone",
+    "q_url",
+    "q_rating",
+    "q_nps",
+    "q_scale",
+    "q_date",
+    "q_time",
+    "q_range",
+    "q_grid",
+    "q_rank",
+    "q_short",
+    "q_consent",
+    "q_open"
+   ],
+   "required": [
+    "q_consent"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_url",
+     "code": "invalid_url"
+    },
+    {
+     "field": "q_consent",
+     "code": "required"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_validation_010",
+  "base": "validation",
+  "answers": {
+   "q_time": null
+  },
+  "expect": {
+   "visible": [
+    "q_email",
+    "q_phone",
+    "q_url",
+    "q_rating",
+    "q_nps",
+    "q_scale",
+    "q_date",
+    "q_time",
+    "q_range",
+    "q_grid",
+    "q_rank",
+    "q_short",
+    "q_consent",
+    "q_open"
+   ],
+   "required": [
+    "q_consent"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_consent",
+     "code": "required"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_validation_011",
+  "base": "validation",
+  "answers": {
+   "q_range": " "
+  },
+  "expect": {
+   "visible": [
+    "q_email",
+    "q_phone",
+    "q_url",
+    "q_rating",
+    "q_nps",
+    "q_scale",
+    "q_date",
+    "q_time",
+    "q_range",
+    "q_grid",
+    "q_rank",
+    "q_short",
+    "q_consent",
+    "q_open"
+   ],
+   "required": [
+    "q_consent"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_consent",
+     "code": "required"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_validation_012",
+  "base": "validation",
+  "answers": {
+   "q_nps": null
+  },
+  "expect": {
+   "visible": [
+    "q_email",
+    "q_phone",
+    "q_url",
+    "q_rating",
+    "q_nps",
+    "q_scale",
+    "q_date",
+    "q_time",
+    "q_range",
+    "q_grid",
+    "q_rank",
+    "q_short",
+    "q_consent",
+    "q_open"
+   ],
+   "required": [
+    "q_consent"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_consent",
+     "code": "required"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_validation_013",
+  "base": "validation",
+  "answers": {
+   "q_range": true
+  },
+  "expect": {
+   "visible": [
+    "q_email",
+    "q_phone",
+    "q_url",
+    "q_rating",
+    "q_nps",
+    "q_scale",
+    "q_date",
+    "q_time",
+    "q_range",
+    "q_grid",
+    "q_rank",
+    "q_short",
+    "q_consent",
+    "q_open"
+   ],
+   "required": [
+    "q_consent"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_range",
+     "code": "invalid_date"
+    },
+    {
+     "field": "q_consent",
+     "code": "required"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_validation_014",
+  "base": "validation",
+  "answers": {
+   "q_nps": 0.5,
+   "q_range": 21,
+   "q_consent": null,
+   "q_short": null
+  },
+  "expect": {
+   "visible": [
+    "q_email",
+    "q_phone",
+    "q_url",
+    "q_rating",
+    "q_nps",
+    "q_scale",
+    "q_date",
+    "q_time",
+    "q_range",
+    "q_grid",
+    "q_rank",
+    "q_short",
+    "q_consent",
+    "q_open"
+   ],
+   "required": [
+    "q_consent"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_nps",
+     "code": "invalid_number"
+    },
+    {
+     "field": "q_range",
+     "code": "invalid_date"
+    },
+    {
+     "field": "q_consent",
+     "code": "required"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_validation_015",
+  "base": "validation",
+  "answers": {
+   "q_nps": 0.5,
+   "q_range": 21,
+   "q_consent": 21,
+   "q_short": null
+  },
+  "expect": {
+   "visible": [
+    "q_email",
+    "q_phone",
+    "q_url",
+    "q_rating",
+    "q_nps",
+    "q_scale",
+    "q_date",
+    "q_time",
+    "q_range",
+    "q_grid",
+    "q_rank",
+    "q_short",
+    "q_consent",
+    "q_open"
+   ],
+   "required": [
+    "q_consent"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_nps",
+     "code": "invalid_number"
+    },
+    {
+     "field": "q_range",
+     "code": "invalid_date"
+    },
+    {
+     "field": "q_consent",
+     "code": "required"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_validation_016",
+  "base": "validation",
+  "answers": {
+   "q_nps": 0.5,
+   "q_range": 21,
+   "q_consent": 21,
+   "q_short": 0.5
+  },
+  "expect": {
+   "visible": [
+    "q_email",
+    "q_phone",
+    "q_url",
+    "q_rating",
+    "q_nps",
+    "q_scale",
+    "q_date",
+    "q_time",
+    "q_range",
+    "q_grid",
+    "q_rank",
+    "q_short",
+    "q_consent",
+    "q_open"
+   ],
+   "required": [
+    "q_consent"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_nps",
+     "code": "invalid_number"
+    },
+    {
+     "field": "q_range",
+     "code": "invalid_date"
+    },
+    {
+     "field": "q_short",
+     "code": "invalid_type"
+    },
+    {
+     "field": "q_consent",
+     "code": "required"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_validation_017",
+  "base": "validation",
+  "answers": {
+   "q_nps": 1,
+   "q_range": 21,
+   "q_consent": 21,
+   "q_short": 0.5
+  },
+  "expect": {
+   "visible": [
+    "q_email",
+    "q_phone",
+    "q_url",
+    "q_rating",
+    "q_nps",
+    "q_scale",
+    "q_date",
+    "q_time",
+    "q_range",
+    "q_grid",
+    "q_rank",
+    "q_short",
+    "q_consent",
+    "q_open"
+   ],
+   "required": [
+    "q_consent"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_range",
+     "code": "invalid_date"
+    },
+    {
+     "field": "q_short",
+     "code": "invalid_type"
+    },
+    {
+     "field": "q_consent",
+     "code": "required"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_validation_018",
+  "base": "validation",
+  "answers": {
+   "q_nps": 21,
+   "q_range": 21,
+   "q_consent": 21,
+   "q_short": 0.5
+  },
+  "expect": {
+   "visible": [
+    "q_email",
+    "q_phone",
+    "q_url",
+    "q_rating",
+    "q_nps",
+    "q_scale",
+    "q_date",
+    "q_time",
+    "q_range",
+    "q_grid",
+    "q_rank",
+    "q_short",
+    "q_consent",
+    "q_open"
+   ],
+   "required": [
+    "q_consent"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_nps",
+     "code": "above_max"
+    },
+    {
+     "field": "q_range",
+     "code": "invalid_date"
+    },
+    {
+     "field": "q_short",
+     "code": "invalid_type"
+    },
+    {
+     "field": "q_consent",
+     "code": "required"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_validation_019",
+  "base": "validation",
+  "answers": {
+   "q_nps": 21,
+   "q_range": 21,
+   "q_consent": 0.1,
+   "q_short": 0.5
+  },
+  "expect": {
+   "visible": [
+    "q_email",
+    "q_phone",
+    "q_url",
+    "q_rating",
+    "q_nps",
+    "q_scale",
+    "q_date",
+    "q_time",
+    "q_range",
+    "q_grid",
+    "q_rank",
+    "q_short",
+    "q_consent",
+    "q_open"
+   ],
+   "required": [
+    "q_consent"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_nps",
+     "code": "above_max"
+    },
+    {
+     "field": "q_range",
+     "code": "invalid_date"
+    },
+    {
+     "field": "q_short",
+     "code": "invalid_type"
+    },
+    {
+     "field": "q_consent",
+     "code": "required"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_validation_020",
+  "base": "validation",
+  "answers": {
+   "q_nps": 21,
+   "q_range": 21,
+   "q_consent": 0.1,
+   "q_short": 0.1
+  },
+  "expect": {
+   "visible": [
+    "q_email",
+    "q_phone",
+    "q_url",
+    "q_rating",
+    "q_nps",
+    "q_scale",
+    "q_date",
+    "q_time",
+    "q_range",
+    "q_grid",
+    "q_rank",
+    "q_short",
+    "q_consent",
+    "q_open"
+   ],
+   "required": [
+    "q_consent"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_nps",
+     "code": "above_max"
+    },
+    {
+     "field": "q_range",
+     "code": "invalid_date"
+    },
+    {
+     "field": "q_short",
+     "code": "invalid_type"
+    },
+    {
+     "field": "q_consent",
+     "code": "required"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_validation_021",
+  "base": "validation",
+  "answers": {
+   "q_date": -0.5,
+   "q_range": true,
+   "q_phone": true,
+   "q_grid": true
+  },
+  "expect": {
+   "visible": [
+    "q_email",
+    "q_phone",
+    "q_url",
+    "q_rating",
+    "q_nps",
+    "q_scale",
+    "q_date",
+    "q_time",
+    "q_range",
+    "q_grid",
+    "q_rank",
+    "q_short",
+    "q_consent",
+    "q_open"
+   ],
+   "required": [
+    "q_consent"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_phone",
+     "code": "invalid_phone"
+    },
+    {
+     "field": "q_date",
+     "code": "invalid_date"
+    },
+    {
+     "field": "q_range",
+     "code": "invalid_date"
+    },
+    {
+     "field": "q_grid",
+     "code": "invalid_choice"
+    },
+    {
+     "field": "q_consent",
+     "code": "required"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_validation_022",
+  "base": "validation",
+  "answers": {
+   "q_date": -0.5,
+   "q_range": true,
+   "q_phone": true,
+   "q_grid": 0.1
+  },
+  "expect": {
+   "visible": [
+    "q_email",
+    "q_phone",
+    "q_url",
+    "q_rating",
+    "q_nps",
+    "q_scale",
+    "q_date",
+    "q_time",
+    "q_range",
+    "q_grid",
+    "q_rank",
+    "q_short",
+    "q_consent",
+    "q_open"
+   ],
+   "required": [
+    "q_consent"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_phone",
+     "code": "invalid_phone"
+    },
+    {
+     "field": "q_date",
+     "code": "invalid_date"
+    },
+    {
+     "field": "q_range",
+     "code": "invalid_date"
+    },
+    {
+     "field": "q_grid",
+     "code": "invalid_choice"
+    },
+    {
+     "field": "q_consent",
+     "code": "required"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_validation_023",
+  "base": "validation",
+  "answers": {
+   "q_date": 0.1,
+   "q_range": true,
+   "q_phone": true,
+   "q_grid": 0.1
+  },
+  "expect": {
+   "visible": [
+    "q_email",
+    "q_phone",
+    "q_url",
+    "q_rating",
+    "q_nps",
+    "q_scale",
+    "q_date",
+    "q_time",
+    "q_range",
+    "q_grid",
+    "q_rank",
+    "q_short",
+    "q_consent",
+    "q_open"
+   ],
+   "required": [
+    "q_consent"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_phone",
+     "code": "invalid_phone"
+    },
+    {
+     "field": "q_date",
+     "code": "invalid_date"
+    },
+    {
+     "field": "q_range",
+     "code": "invalid_date"
+    },
+    {
+     "field": "q_grid",
+     "code": "invalid_choice"
+    },
+    {
+     "field": "q_consent",
+     "code": "required"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_validation_024",
+  "base": "validation",
+  "answers": {
+   "q_date": 0.1,
+   "q_range": 0.1,
+   "q_phone": true,
+   "q_grid": 0.1
+  },
+  "expect": {
+   "visible": [
+    "q_email",
+    "q_phone",
+    "q_url",
+    "q_rating",
+    "q_nps",
+    "q_scale",
+    "q_date",
+    "q_time",
+    "q_range",
+    "q_grid",
+    "q_rank",
+    "q_short",
+    "q_consent",
+    "q_open"
+   ],
+   "required": [
+    "q_consent"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_phone",
+     "code": "invalid_phone"
+    },
+    {
+     "field": "q_date",
+     "code": "invalid_date"
+    },
+    {
+     "field": "q_range",
+     "code": "invalid_date"
+    },
+    {
+     "field": "q_grid",
+     "code": "invalid_choice"
+    },
+    {
+     "field": "q_consent",
+     "code": "required"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_validation_025",
+  "base": "validation",
+  "answers": {
+   "q_date": 0.1,
+   "q_range": 0.1,
+   "q_phone": 0.1,
+   "q_grid": 0.1
+  },
+  "expect": {
+   "visible": [
+    "q_email",
+    "q_phone",
+    "q_url",
+    "q_rating",
+    "q_nps",
+    "q_scale",
+    "q_date",
+    "q_time",
+    "q_range",
+    "q_grid",
+    "q_rank",
+    "q_short",
+    "q_consent",
+    "q_open"
+   ],
+   "required": [
+    "q_consent"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_phone",
+     "code": "invalid_phone"
+    },
+    {
+     "field": "q_date",
+     "code": "invalid_date"
+    },
+    {
+     "field": "q_range",
+     "code": "invalid_date"
+    },
+    {
+     "field": "q_grid",
+     "code": "invalid_choice"
+    },
+    {
+     "field": "q_consent",
+     "code": "required"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_validation_026",
+  "base": "validation",
+  "answers": {
+   "q_date": 0.1,
+   "q_consent": 0.1,
+   "q_phone": 0.1,
+   "q_grid": 0.1
+  },
+  "expect": {
+   "visible": [
+    "q_email",
+    "q_phone",
+    "q_url",
+    "q_rating",
+    "q_nps",
+    "q_scale",
+    "q_date",
+    "q_time",
+    "q_range",
+    "q_grid",
+    "q_rank",
+    "q_short",
+    "q_consent",
+    "q_open"
+   ],
+   "required": [
+    "q_consent"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_phone",
+     "code": "invalid_phone"
+    },
+    {
+     "field": "q_date",
+     "code": "invalid_date"
+    },
+    {
+     "field": "q_grid",
+     "code": "invalid_choice"
+    },
+    {
+     "field": "q_consent",
+     "code": "required"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_validation_027",
+  "base": "validation",
+  "answers": {
+   "q_range": false,
+   "q_grid": 19,
+   "q_email": true,
+   "q_open": null,
+   "q_scale": null,
+   "q_time": 0
+  },
+  "expect": {
+   "visible": [
+    "q_email",
+    "q_phone",
+    "q_url",
+    "q_rating",
+    "q_nps",
+    "q_scale",
+    "q_date",
+    "q_time",
+    "q_range",
+    "q_grid",
+    "q_rank",
+    "q_short",
+    "q_consent",
+    "q_open"
+   ],
+   "required": [
+    "q_consent"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_email",
+     "code": "invalid_email"
+    },
+    {
+     "field": "q_time",
+     "code": "invalid_time"
+    },
+    {
+     "field": "q_range",
+     "code": "invalid_date"
+    },
+    {
+     "field": "q_grid",
+     "code": "invalid_choice"
+    },
+    {
+     "field": "q_consent",
+     "code": "required"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_validation_028",
+  "base": "validation",
+  "answers": {
+   "q_range": false,
+   "q_grid": 19,
+   "q_email": 19,
+   "q_open": null,
+   "q_scale": null,
+   "q_time": 0
+  },
+  "expect": {
+   "visible": [
+    "q_email",
+    "q_phone",
+    "q_url",
+    "q_rating",
+    "q_nps",
+    "q_scale",
+    "q_date",
+    "q_time",
+    "q_range",
+    "q_grid",
+    "q_rank",
+    "q_short",
+    "q_consent",
+    "q_open"
+   ],
+   "required": [
+    "q_consent"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_email",
+     "code": "invalid_email"
+    },
+    {
+     "field": "q_time",
+     "code": "invalid_time"
+    },
+    {
+     "field": "q_range",
+     "code": "invalid_date"
+    },
+    {
+     "field": "q_grid",
+     "code": "invalid_choice"
+    },
+    {
+     "field": "q_consent",
+     "code": "required"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_validation_029",
+  "base": "validation",
+  "answers": {
+   "q_range": 0,
+   "q_grid": 19,
+   "q_email": 19,
+   "q_open": null,
+   "q_scale": null,
+   "q_time": 0
+  },
+  "expect": {
+   "visible": [
+    "q_email",
+    "q_phone",
+    "q_url",
+    "q_rating",
+    "q_nps",
+    "q_scale",
+    "q_date",
+    "q_time",
+    "q_range",
+    "q_grid",
+    "q_rank",
+    "q_short",
+    "q_consent",
+    "q_open"
+   ],
+   "required": [
+    "q_consent"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_email",
+     "code": "invalid_email"
+    },
+    {
+     "field": "q_time",
+     "code": "invalid_time"
+    },
+    {
+     "field": "q_range",
+     "code": "invalid_date"
+    },
+    {
+     "field": "q_grid",
+     "code": "invalid_choice"
+    },
+    {
+     "field": "q_consent",
+     "code": "required"
+    }
+   ],
+   "amount": 0
+  }
+ }
+]

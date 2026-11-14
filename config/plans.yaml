@@ -1,0 +1,86 @@
+# Arha commercial configuration. Single source of truth for prices, quotas and fees.
+# Source: Cahier des charges Arha v1.0, section 9.2 and master prompt section 11.
+# Any change here takes effect without code change (F-FAC-05).
+currency: XAF
+annual_months_charged: 10
+pioneer: { seats: 30, discount_bps: 2000, months: 12 }
+nonprofit_discount: { plan: pro, discount_bps: 3000, cumulative: false }
+quota_policy: { alert_at_pct: 80, grace_hours: 72 }
+renewal: { remind_days_before: 7, downgrade_after_days_unpaid: 7 }
+ambassador: { reward: one_month_of_plan, paid_after_months_paid: 2 }
+payment_expiry_minutes: 15
+resume_code_days: 30
+
+plans:
+  discovery:
+    price_monthly: 0
+    responses_per_month: 1000
+    members: 1
+    fee_bps: 300
+    storage_gb: 1
+    max_file_mb: 10
+    version_history_days: 7
+    whatsapp_included: 0
+    features: [logic, calculations, tickets, csv_export, email_notifications_owner]
+    branding_required: true
+  pro:
+    price_monthly: 9900
+    price_yearly: 99000
+    responses_per_month: 10000
+    members: 3
+    fee_bps: 150
+    storage_gb: 10
+    max_file_mb: 100
+    version_history_days: 30
+    whatsapp_included: 200
+    features: [logic, calculations, tickets, csv_export, email_notifications_owner,
+               partial_responses, stats_exports, respondent_emails, google_sheets,
+               webhooks, custom_theme, crosstabs]
+    branding_required: false
+  business:
+    price_monthly: 29900
+    price_yearly: 299000
+    responses_per_month: 50000
+    members: 10
+    fee_bps: 100
+    storage_gb: 50
+    max_file_mb: 100
+    version_history_days: 90
+    whatsapp_included: 1000
+    inherits: pro
+    extra_features: [advanced_roles, audit_log, custom_domain, public_api,
+                     approvals, sso_google, mfa_required_owner]
+    branding_required: false
+  terrain:
+    price_monthly: 59900
+    price_yearly: 599000
+    responses_per_month: 100000
+    members: 15
+    enumerators_included: 10
+    enumerator_extra_monthly: 3000
+    fee_bps: 100
+    storage_gb: 100
+    max_file_mb: 100
+    version_history_days: 90
+    whatsapp_included: 1000
+    inherits: business
+    extra_features: [field_app, quality_control, kiosk_mode, live_map]
+    branding_required: false
+  enterprise:
+    price_monthly_from: 250000
+    fee_bps: 50
+    custom: true
+    inherits: terrain
+    branding_required: false
+
+addons:
+  whatsapp_utility_1000: { price: 9000 }
+  whatsapp_marketing_500: { price: 12000 }
+  sms_100: { price: 9500 }
+  ai_credits_1000: { price: 5000 }
+  storage_10gb_monthly: { price: 2500 }
+
+services:
+  studio_simple: { price: 35000, upfront_pct: 100 }
+  studio_complete: { price: 120000, upfront_pct: 100 }
+  terrain_turnkey_from: { price: 400000, upfront_pct: 50 }

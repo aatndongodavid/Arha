@@ -1,0 +1,31 @@
+name: deploy-prod
+# Manual only, with the approval rule of the "production" environment (rule: never deploy without the porteur).
+on:
+  workflow_dispatch:
+    inputs:
+      tag: { description: "Commit SHA of the images to deploy", required: true }
+jobs:
+  deploy:
+    runs-on: ubuntu-24.04
+    environment: production
+    steps:
+      - name: Deploy over SSH with rollback on failed health check
+        uses: appleboy/ssh-action@0ff4204d59e8e51228ff73bce53f80d53301dee2  # v1.2.5
+        with:
+          host: ${{ secrets.PROD_HOST }}
+          username: deploy
+          key: ${{ secrets.PROD_SSH_KEY }}
+          script: |
+            set -e
+            cd /opt/arha
+            PREVIOUS=$(cat /var/lib/arha/current-tag 2>/dev/null || echo "")
+            git fetch --depth 1 origin ${{ inputs.tag }} && git checkout FETCH_HEAD
+            sops -d infra/secrets/prod.enc.env > /run/arha/env
+            export ARHA_IMAGE_OWNER=${{ vars.IMAGE_OWNER }} ARHA_TAG=${{ inputs.tag }}
+            C="docker compose -f infra/compose/docker-compose.prod.yml"
+            $C pull && $C --profile migrate run --rm migrate && $C up -d --remove-orphans
+            for i in $(seq 1 30); do
+              if curl -fsS https://${{ vars.PROD_API_HOST }}/healthz; then echo "${{ inputs.tag }}" > /var/lib/arha/current-tag; exit 0; fi; sleep 4
+            done
+            if [ -n "$PREVIOUS" ]; then ARHA_TAG=$PREVIOUS $C up -d; fi
+            exit 1

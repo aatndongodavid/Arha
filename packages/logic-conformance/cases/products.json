@@ -1,0 +1,1276 @@
+[
+ {
+  "name": "products_non_member",
+  "base": "products",
+  "answers": {
+   "q_member": false,
+   "q_items": {
+    "tshirt": 2,
+    "cap": 1
+   }
+  },
+  "expect": {
+   "amount": 20000,
+   "visible": [
+    "q_member",
+    "q_items",
+    "fee"
+   ]
+  }
+ },
+ {
+  "name": "products_member_no_fee",
+  "base": "products",
+  "answers": {
+   "q_member": true,
+   "q_items": {
+    "tshirt": 1
+   }
+  },
+  "expect": {
+   "amount": 7500,
+   "visible": [
+    "q_member",
+    "q_items"
+   ]
+  }
+ },
+ {
+  "name": "products_unknown_option",
+  "base": "products",
+  "answers": {
+   "q_member": true,
+   "q_items": {
+    "hat": 1
+   }
+  },
+  "expect": {
+   "errors": [
+    {
+     "field": "q_items",
+     "code": "invalid_choice"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "products_negative_qty",
+  "base": "products",
+  "answers": {
+   "q_member": true,
+   "q_items": {
+    "cap": -1
+   }
+  },
+  "expect": {
+   "errors": [
+    {
+     "field": "q_items",
+     "code": "invalid_choice"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_products_000",
+  "base": "products",
+  "answers": {},
+  "expect": {
+   "visible": [
+    "q_member",
+    "q_items",
+    "fee"
+   ],
+   "required": [
+    "q_member"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_member",
+     "code": "required"
+    }
+   ],
+   "amount": 2000
+  }
+ },
+ {
+  "name": "gen_products_001",
+  "base": "products",
+  "answers": {
+   "q_member": false
+  },
+  "expect": {
+   "visible": [
+    "q_member",
+    "q_items",
+    "fee"
+   ],
+   "required": [
+    "q_member"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [],
+   "amount": 2000
+  }
+ },
+ {
+  "name": "gen_products_002",
+  "base": "products",
+  "answers": {
+   "q_items": -4
+  },
+  "expect": {
+   "visible": [
+    "q_member",
+    "q_items",
+    "fee"
+   ],
+   "required": [
+    "q_member"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_member",
+     "code": "required"
+    },
+    {
+     "field": "q_items",
+     "code": "invalid_choice"
+    }
+   ],
+   "amount": 2000
+  }
+ },
+ {
+  "name": "gen_products_003",
+  "base": "products",
+  "answers": {
+   "q_items": ""
+  },
+  "expect": {
+   "visible": [
+    "q_member",
+    "q_items",
+    "fee"
+   ],
+   "required": [
+    "q_member"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_member",
+     "code": "required"
+    }
+   ],
+   "amount": 2000
+  }
+ },
+ {
+  "name": "gen_products_004",
+  "base": "products",
+  "answers": {
+   "q_member": null,
+   "q_items": "10"
+  },
+  "expect": {
+   "visible": [
+    "q_member",
+    "q_items",
+    "fee"
+   ],
+   "required": [
+    "q_member"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_member",
+     "code": "required"
+    },
+    {
+     "field": "q_items",
+     "code": "invalid_choice"
+    }
+   ],
+   "amount": 2000
+  }
+ },
+ {
+  "name": "gen_products_005",
+  "base": "products",
+  "answers": {
+   "q_items": " "
+  },
+  "expect": {
+   "visible": [
+    "q_member",
+    "q_items",
+    "fee"
+   ],
+   "required": [
+    "q_member"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_member",
+     "code": "required"
+    }
+   ],
+   "amount": 2000
+  }
+ },
+ {
+  "name": "gen_products_006",
+  "base": "products",
+  "answers": {
+   "q_member": 0
+  },
+  "expect": {
+   "visible": [
+    "q_member",
+    "q_items",
+    "fee"
+   ],
+   "required": [
+    "q_member"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_member",
+     "code": "invalid_choice"
+    }
+   ],
+   "amount": 2000
+  }
+ },
+ {
+  "name": "gen_products_007",
+  "base": "products",
+  "answers": {
+   "q_member": 24
+  },
+  "expect": {
+   "visible": [
+    "q_member",
+    "q_items",
+    "fee"
+   ],
+   "required": [
+    "q_member"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_member",
+     "code": "invalid_choice"
+    }
+   ],
+   "amount": 2000
+  }
+ },
+ {
+  "name": "gen_products_008",
+  "base": "products",
+  "answers": {
+   "q_member": 0.1
+  },
+  "expect": {
+   "visible": [
+    "q_member",
+    "q_items",
+    "fee"
+   ],
+   "required": [
+    "q_member"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_member",
+     "code": "invalid_choice"
+    }
+   ],
+   "amount": 2000
+  }
+ },
+ {
+  "name": "gen_products_009",
+  "base": "products",
+  "answers": {
+   "q_member": 2.5,
+   "q_items": false
+  },
+  "expect": {
+   "visible": [
+    "q_member",
+    "q_items",
+    "fee"
+   ],
+   "required": [
+    "q_member"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_member",
+     "code": "invalid_choice"
+    },
+    {
+     "field": "q_items",
+     "code": "invalid_choice"
+    }
+   ],
+   "amount": 2000
+  }
+ },
+ {
+  "name": "gen_products_010",
+  "base": "products",
+  "answers": {
+   "q_items": false
+  },
+  "expect": {
+   "visible": [
+    "q_member",
+    "q_items",
+    "fee"
+   ],
+   "required": [
+    "q_member"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_member",
+     "code": "required"
+    },
+    {
+     "field": "q_items",
+     "code": "invalid_choice"
+    }
+   ],
+   "amount": 2000
+  }
+ },
+ {
+  "name": "gen_products_011",
+  "base": "products",
+  "answers": {
+   "q_items": true,
+   "q_member": 2.5
+  },
+  "expect": {
+   "visible": [
+    "q_member",
+    "q_items",
+    "fee"
+   ],
+   "required": [
+    "q_member"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_member",
+     "code": "invalid_choice"
+    },
+    {
+     "field": "q_items",
+     "code": "invalid_choice"
+    }
+   ],
+   "amount": 2000
+  }
+ },
+ {
+  "name": "gen_products_012",
+  "base": "products",
+  "answers": {
+   "q_items": true
+  },
+  "expect": {
+   "visible": [
+    "q_member",
+    "q_items",
+    "fee"
+   ],
+   "required": [
+    "q_member"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_member",
+     "code": "required"
+    },
+    {
+     "field": "q_items",
+     "code": "invalid_choice"
+    }
+   ],
+   "amount": 2000
+  }
+ },
+ {
+  "name": "gen_products_013",
+  "base": "products",
+  "answers": {
+   "q_member": 9.99
+  },
+  "expect": {
+   "visible": [
+    "q_member",
+    "q_items",
+    "fee"
+   ],
+   "required": [
+    "q_member"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_member",
+     "code": "invalid_choice"
+    }
+   ],
+   "amount": 2000
+  }
+ },
+ {
+  "name": "gen_products_014",
+  "base": "products",
+  "answers": {
+   "q_member": 2
+  },
+  "expect": {
+   "visible": [
+    "q_member",
+    "q_items",
+    "fee"
+   ],
+   "required": [
+    "q_member"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_member",
+     "code": "invalid_choice"
+    }
+   ],
+   "amount": 2000
+  }
+ },
+ {
+  "name": "gen_products_015",
+  "base": "products",
+  "answers": {
+   "q_member": null,
+   "q_items": 26
+  },
+  "expect": {
+   "visible": [
+    "q_member",
+    "q_items",
+    "fee"
+   ],
+   "required": [
+    "q_member"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_member",
+     "code": "required"
+    },
+    {
+     "field": "q_items",
+     "code": "invalid_choice"
+    }
+   ],
+   "amount": 2000
+  }
+ },
+ {
+  "name": "gen_products_016",
+  "base": "products",
+  "answers": {
+   "q_member": 0.1,
+   "q_items": 26
+  },
+  "expect": {
+   "visible": [
+    "q_member",
+    "q_items",
+    "fee"
+   ],
+   "required": [
+    "q_member"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_member",
+     "code": "invalid_choice"
+    },
+    {
+     "field": "q_items",
+     "code": "invalid_choice"
+    }
+   ],
+   "amount": 2000
+  }
+ },
+ {
+  "name": "gen_products_017",
+  "base": "products",
+  "answers": {
+   "q_member": null,
+   "q_items": null
+  },
+  "expect": {
+   "visible": [
+    "q_member",
+    "q_items",
+    "fee"
+   ],
+   "required": [
+    "q_member"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_member",
+     "code": "required"
+    }
+   ],
+   "amount": 2000
+  }
+ },
+ {
+  "name": "gen_products_018",
+  "base": "products",
+  "answers": {
+   "q_items": "2026-01-01"
+  },
+  "expect": {
+   "visible": [
+    "q_member",
+    "q_items",
+    "fee"
+   ],
+   "required": [
+    "q_member"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_member",
+     "code": "required"
+    },
+    {
+     "field": "q_items",
+     "code": "invalid_choice"
+    }
+   ],
+   "amount": 2000
+  }
+ },
+ {
+  "name": "gen_products_019",
+  "base": "products",
+  "answers": {
+   "q_items": null
+  },
+  "expect": {
+   "visible": [
+    "q_member",
+    "q_items",
+    "fee"
+   ],
+   "required": [
+    "q_member"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_member",
+     "code": "required"
+    }
+   ],
+   "amount": 2000
+  }
+ },
+ {
+  "name": "gen_products_020",
+  "base": "products",
+  "answers": {
+   "q_items": {
+    "cap": -1
+   },
+   "q_member": null
+  },
+  "expect": {
+   "visible": [
+    "q_member",
+    "q_items",
+    "fee"
+   ],
+   "required": [
+    "q_member"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_member",
+     "code": "required"
+    },
+    {
+     "field": "q_items",
+     "code": "invalid_choice"
+    }
+   ],
+   "amount": 2000
+  }
+ },
+ {
+  "name": "gen_products_021",
+  "base": "products",
+  "answers": {
+   "q_items": {}
+  },
+  "expect": {
+   "visible": [
+    "q_member",
+    "q_items",
+    "fee"
+   ],
+   "required": [
+    "q_member"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_member",
+     "code": "required"
+    }
+   ],
+   "amount": 2000
+  }
+ },
+ {
+  "name": "gen_products_022",
+  "base": "products",
+  "answers": {
+   "q_items": {
+    "cap": 0
+   }
+  },
+  "expect": {
+   "visible": [
+    "q_member",
+    "q_items",
+    "fee"
+   ],
+   "required": [
+    "q_member"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_member",
+     "code": "required"
+    }
+   ],
+   "amount": 2000
+  }
+ },
+ {
+  "name": "gen_products_023",
+  "base": "products",
+  "answers": {
+   "q_items": {
+    "cap": 0,
+    "tshirt": 0
+   }
+  },
+  "expect": {
+   "visible": [
+    "q_member",
+    "q_items",
+    "fee"
+   ],
+   "required": [
+    "q_member"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_member",
+     "code": "required"
+    }
+   ],
+   "amount": 2000
+  }
+ },
+ {
+  "name": "gen_products_024",
+  "base": "products",
+  "answers": {
+   "q_items": true,
+   "q_member": null
+  },
+  "expect": {
+   "visible": [
+    "q_member",
+    "q_items",
+    "fee"
+   ],
+   "required": [
+    "q_member"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_member",
+     "code": "required"
+    },
+    {
+     "field": "q_items",
+     "code": "invalid_choice"
+    }
+   ],
+   "amount": 2000
+  }
+ },
+ {
+  "name": "gen_products_025",
+  "base": "products",
+  "answers": {
+   "q_member": 0.5,
+   "q_items": 27
+  },
+  "expect": {
+   "visible": [
+    "q_member",
+    "q_items",
+    "fee"
+   ],
+   "required": [
+    "q_member"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_member",
+     "code": "invalid_choice"
+    },
+    {
+     "field": "q_items",
+     "code": "invalid_choice"
+    }
+   ],
+   "amount": 2000
+  }
+ },
+ {
+  "name": "gen_products_026",
+  "base": "products",
+  "answers": {
+   "q_member": 0.1,
+   "q_items": 27
+  },
+  "expect": {
+   "visible": [
+    "q_member",
+    "q_items",
+    "fee"
+   ],
+   "required": [
+    "q_member"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_member",
+     "code": "invalid_choice"
+    },
+    {
+     "field": "q_items",
+     "code": "invalid_choice"
+    }
+   ],
+   "amount": 2000
+  }
+ },
+ {
+  "name": "gen_products_027",
+  "base": "products",
+  "answers": {
+   "q_items": 0.5,
+   "q_member": 3
+  },
+  "expect": {
+   "visible": [
+    "q_member",
+    "q_items",
+    "fee"
+   ],
+   "required": [
+    "q_member"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_member",
+     "code": "invalid_choice"
+    },
+    {
+     "field": "q_items",
+     "code": "invalid_choice"
+    }
+   ],
+   "amount": 2000
+  }
+ },
+ {
+  "name": "gen_products_028",
+  "base": "products",
+  "answers": {
+   "q_member": 3
+  },
+  "expect": {
+   "visible": [
+    "q_member",
+    "q_items",
+    "fee"
+   ],
+   "required": [
+    "q_member"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_member",
+     "code": "invalid_choice"
+    }
+   ],
+   "amount": 2000
+  }
+ },
+ {
+  "name": "gen_products_029",
+  "base": "products",
+  "answers": {
+   "q_member": null
+  },
+  "expect": {
+   "visible": [
+    "q_member",
+    "q_items",
+    "fee"
+   ],
+   "required": [
+    "q_member"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_member",
+     "code": "required"
+    }
+   ],
+   "amount": 2000
+  }
+ },
+ {
+  "name": "gen_products_030",
+  "base": "products",
+  "answers": {
+   "q_items": 0.1
+  },
+  "expect": {
+   "visible": [
+    "q_member",
+    "q_items",
+    "fee"
+   ],
+   "required": [
+    "q_member"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_member",
+     "code": "required"
+    },
+    {
+     "field": "q_items",
+     "code": "invalid_choice"
+    }
+   ],
+   "amount": 2000
+  }
+ },
+ {
+  "name": "gen_products_031",
+  "base": "products",
+  "answers": {
+   "q_member": true,
+   "q_items": 20
+  },
+  "expect": {
+   "visible": [
+    "q_member",
+    "q_items"
+   ],
+   "required": [
+    "q_member"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_items",
+     "code": "invalid_choice"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_products_032",
+  "base": "products",
+  "answers": {
+   "q_member": null,
+   "q_items": false
+  },
+  "expect": {
+   "visible": [
+    "q_member",
+    "q_items",
+    "fee"
+   ],
+   "required": [
+    "q_member"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_member",
+     "code": "required"
+    },
+    {
+     "field": "q_items",
+     "code": "invalid_choice"
+    }
+   ],
+   "amount": 2000
+  }
+ },
+ {
+  "name": "gen_products_033",
+  "base": "products",
+  "answers": {
+   "q_member": 2.5
+  },
+  "expect": {
+   "visible": [
+    "q_member",
+    "q_items",
+    "fee"
+   ],
+   "required": [
+    "q_member"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_member",
+     "code": "invalid_choice"
+    }
+   ],
+   "amount": 2000
+  }
+ },
+ {
+  "name": "gen_products_034",
+  "base": "products",
+  "answers": {
+   "q_items": 2
+  },
+  "expect": {
+   "visible": [
+    "q_member",
+    "q_items",
+    "fee"
+   ],
+   "required": [
+    "q_member"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_member",
+     "code": "required"
+    },
+    {
+     "field": "q_items",
+     "code": "invalid_choice"
+    }
+   ],
+   "amount": 2000
+  }
+ }
+]

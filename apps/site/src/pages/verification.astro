@@ -1,0 +1,28 @@
+---
+import Layout from "../components/Layout.astro";
+import { API_URL } from "../config";
+import { texts } from "../i18n";
+// F-PUB-07: the "verified organization" badge of a form links here. The status is read live from the API.
+const messages = { fr: { yes: texts.fr["verify.yes"], no: texts.fr["verify.no"], unknown: texts.fr["verify.unknown"] },
+                   en: { yes: texts.en["verify.yes"], no: texts.en["verify.no"], unknown: texts.en["verify.unknown"] } };
+---
+<Layout locale="fr" title={texts.fr["verify.title"]}>
+  <section class="mx-auto max-w-2xl px-5 py-20">
+    <h1 class="text-4xl">{texts.fr["verify.title"]}</h1>
+    <p id="org" class="serif mt-8 text-3xl"></p>
+    <p id="result" class="mt-3 text-lg" role="status" data-api={API_URL} data-messages={JSON.stringify(messages)}>{texts.fr["verify.loading"]}</p>
+  </section>
+</Layout>
+<script>
+  const el = document.getElementById("result")!;
+  const lang = navigator.language.startsWith("en") ? "en" : "fr";
+  const m = JSON.parse(el.dataset.messages!)[lang];
+  const slug = new URLSearchParams(location.search).get("org") ?? "";
+  fetch(`${el.dataset.api}/v1/public/orgs/${encodeURIComponent(slug)}/verification`)
+    .then((r) => (r.ok ? r.json() : Promise.reject()))
+    .then((d) => {
+      document.getElementById("org")!.textContent = d.name;
+      el.textContent = d.verified ? m.yes : m.no;
+    })
+    .catch(() => { el.textContent = m.unknown; });
+</script>

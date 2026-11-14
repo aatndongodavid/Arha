@@ -1,0 +1,9 @@
+/* Arha design tokens (master prompt 14.1). Single source for every surface. */
+:root {
+  --arha-orange: #C9621B;  --arha-orange-light: #E89A5C;
+  --arha-beige: #F3EBDD;   --arha-sand: #E6D8C0;   --arha-cream: #FCF9F4;
+  --arha-ink: #2A1F17;     --arha-grey: #7A6A5A;   --arha-green: #4E6B4A;
+  --arha-red: #A3271B;     --arha-orange-dark: #A84F12;
+  --arha-serif: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+  --arha-sans: Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
