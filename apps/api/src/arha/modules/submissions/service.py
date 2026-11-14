@@ -157,7 +157,7 @@ def _ending(schema: dict[str, Any]) -> dict[str, Any]:
 
 
 async def _check_files(db: AsyncSession, form_id: uuid.UUID, schema: dict[str, Any], answers: dict[str, Any]) -> None:
-    keys = [k for p in schema.get("pages", []) for b in p.get("blocks", []) if b["type"] == "file_upload"
+    keys = [k for p in schema.get("pages", []) for b in p.get("blocks", []) if b["type"] in ("file_upload", "photo")
             for k in (answers.get(b["id"]) or [])]
     if not keys:
         return

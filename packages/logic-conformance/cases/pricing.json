@@ -134,7 +134,7 @@
   "name": "gen_pricing_002",
   "base": "pricing",
   "answers": {
-   "q_qty": -4
+   "q_qty": 0.1
   },
   "expect": {
    "visible": [
@@ -146,7 +146,7 @@
     "q_qty"
    ],
    "variables": {
-    "total": -20000
+    "total": 500
    },
    "path": [
     "p1"
@@ -158,10 +158,10 @@
    "errors": [
     {
      "field": "q_qty",
-     "code": "below_min"
+     "code": "invalid_number"
     }
    ],
-   "amount": 0
+   "amount": 500
   }
  },
  {
@@ -362,7 +362,7 @@
   "name": "gen_pricing_009",
   "base": "pricing",
   "answers": {
-   "q_qty": 24
+   "q_qty": 1000.0
   },
   "expect": {
    "visible": [
@@ -374,7 +374,7 @@
     "q_qty"
    ],
    "variables": {
-    "total": 108000
+    "total": 4500000
    },
    "path": [
     "p1"
@@ -384,14 +384,16 @@
     "p1": null
    },
    "errors": [],
-   "amount": 108000
+   "amount": 4500000
   }
  },
  {
   "name": "gen_pricing_010",
   "base": "pricing",
   "answers": {
-   "q_qty": 0.1
+   "q_qty": {
+    "missing": 98
+   }
   },
   "expect": {
    "visible": [
@@ -403,7 +405,7 @@
     "q_qty"
    ],
    "variables": {
-    "total": 500
+    "total": 0
    },
    "path": [
     "p1"
@@ -415,17 +417,19 @@
    "errors": [
     {
      "field": "q_qty",
-     "code": "invalid_number"
+     "code": "invalid_missing"
     }
    ],
-   "amount": 500
+   "amount": 0
   }
  },
  {
   "name": "gen_pricing_011",
   "base": "pricing",
   "answers": {
-   "q_qty": 2.5
+   "q_qty": {
+    "missing": 99
+   }
   },
   "expect": {
    "visible": [
@@ -437,7 +441,7 @@
     "q_qty"
    ],
    "variables": {
-    "total": 12500
+    "total": 0
    },
    "path": [
     "p1"
@@ -449,10 +453,10 @@
    "errors": [
     {
      "field": "q_qty",
-     "code": "invalid_number"
+     "code": "invalid_missing"
     }
    ],
-   "amount": 12500
+   "amount": 0
   }
  },
  {
@@ -493,6 +497,42 @@
   "name": "gen_pricing_013",
   "base": "pricing",
   "answers": {
+   "q_qty": {
+    "missing": 97
+   }
+  },
+  "expect": {
+   "visible": [
+    "q_qty",
+    "show_total",
+    "pay"
+   ],
+   "required": [
+    "q_qty"
+   ],
+   "variables": {
+    "total": 0
+   },
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_qty",
+     "code": "invalid_missing"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_pricing_014",
+  "base": "pricing",
+  "answers": {
    "q_qty": 0.5
   },
   "expect": {
@@ -524,75 +564,7 @@
   }
  },
  {
-  "name": "gen_pricing_014",
-  "base": "pricing",
-  "answers": {
-   "q_qty": "2026-01-01"
-  },
-  "expect": {
-   "visible": [
-    "q_qty",
-    "show_total",
-    "pay"
-   ],
-   "required": [
-    "q_qty"
-   ],
-   "variables": {
-    "total": 0
-   },
-   "path": [
-    "p1"
-   ],
-   "ended": false,
-   "nextPage": {
-    "p1": null
-   },
-   "errors": [
-    {
-     "field": "q_qty",
-     "code": "invalid_number"
-    }
-   ],
-   "amount": 0
-  }
- },
- {
   "name": "gen_pricing_015",
-  "base": "pricing",
-  "answers": {
-   "q_qty": -3
-  },
-  "expect": {
-   "visible": [
-    "q_qty",
-    "show_total",
-    "pay"
-   ],
-   "required": [
-    "q_qty"
-   ],
-   "variables": {
-    "total": -15000
-   },
-   "path": [
-    "p1"
-   ],
-   "ended": false,
-   "nextPage": {
-    "p1": null
-   },
-   "errors": [
-    {
-     "field": "q_qty",
-     "code": "below_min"
-    }
-   ],
-   "amount": 0
-  }
- },
- {
-  "name": "gen_pricing_016",
   "base": "pricing",
   "answers": {
    "q_qty": 9.99
@@ -626,10 +598,10 @@
   }
  },
  {
-  "name": "gen_pricing_017",
+  "name": "gen_pricing_016",
   "base": "pricing",
   "answers": {
-   "q_qty": 1000.0
+   "q_qty": 5
   },
   "expect": {
    "visible": [
@@ -641,7 +613,7 @@
     "q_qty"
    ],
    "variables": {
-    "total": 4500000
+    "total": 25000
    },
    "path": [
     "p1"
@@ -651,14 +623,43 @@
     "p1": null
    },
    "errors": [],
-   "amount": 4500000
+   "amount": 25000
+  }
+ },
+ {
+  "name": "gen_pricing_017",
+  "base": "pricing",
+  "answers": {
+   "q_qty": 17
+  },
+  "expect": {
+   "visible": [
+    "q_qty",
+    "show_total",
+    "pay"
+   ],
+   "required": [
+    "q_qty"
+   ],
+   "variables": {
+    "total": 76500
+   },
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [],
+   "amount": 76500
   }
  },
  {
   "name": "gen_pricing_018",
   "base": "pricing",
   "answers": {
-   "q_qty": "a@b.cm"
+   "q_qty": "2026-01-01"
   },
   "expect": {
    "visible": [
@@ -692,7 +693,7 @@
   "name": "gen_pricing_019",
   "base": "pricing",
   "answers": {
-   "q_qty": "2027-03-02"
+   "q_qty": "arha"
   },
   "expect": {
    "visible": [
@@ -726,7 +727,7 @@
   "name": "gen_pricing_020",
   "base": "pricing",
   "answers": {
-   "q_qty": "arha"
+   "q_qty": "a@b.cm"
   },
   "expect": {
    "visible": [
@@ -760,6 +761,69 @@
   "name": "gen_pricing_021",
   "base": "pricing",
   "answers": {
+   "q_qty": 2.5
+  },
+  "expect": {
+   "visible": [
+    "q_qty",
+    "show_total",
+    "pay"
+   ],
+   "required": [
+    "q_qty"
+   ],
+   "variables": {
+    "total": 12500
+   },
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_qty",
+     "code": "invalid_number"
+    }
+   ],
+   "amount": 12500
+  }
+ },
+ {
+  "name": "gen_pricing_022",
+  "base": "pricing",
+  "answers": {
+   "q_qty": 19
+  },
+  "expect": {
+   "visible": [
+    "q_qty",
+    "show_total",
+    "pay"
+   ],
+   "required": [
+    "q_qty"
+   ],
+   "variables": {
+    "total": 85500
+   },
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [],
+   "amount": 85500
+  }
+ },
+ {
+  "name": "gen_pricing_023",
+  "base": "pricing",
+  "answers": {
    "q_qty": "x"
   },
   "expect": {
@@ -791,65 +855,99 @@
   }
  },
  {
-  "name": "gen_pricing_022",
-  "base": "pricing",
-  "answers": {
-   "q_qty": 1
-  },
-  "expect": {
-   "visible": [
-    "q_qty",
-    "show_total",
-    "pay"
-   ],
-   "required": [
-    "q_qty"
-   ],
-   "variables": {
-    "total": 5000
-   },
-   "path": [
-    "p1"
-   ],
-   "ended": false,
-   "nextPage": {
-    "p1": null
-   },
-   "errors": [],
-   "amount": 5000
-  }
- },
- {
-  "name": "gen_pricing_023",
-  "base": "pricing",
-  "answers": {
-   "q_qty": 14
-  },
-  "expect": {
-   "visible": [
-    "q_qty",
-    "show_total",
-    "pay"
-   ],
-   "required": [
-    "q_qty"
-   ],
-   "variables": {
-    "total": 63000
-   },
-   "path": [
-    "p1"
-   ],
-   "ended": false,
-   "nextPage": {
-    "p1": null
-   },
-   "errors": [],
-   "amount": 63000
-  }
- },
- {
   "name": "gen_pricing_024",
+  "base": "pricing",
+  "answers": {
+   "q_qty": 20
+  },
+  "expect": {
+   "visible": [
+    "q_qty",
+    "show_total",
+    "pay"
+   ],
+   "required": [
+    "q_qty"
+   ],
+   "variables": {
+    "total": 90000
+   },
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [],
+   "amount": 90000
+  }
+ },
+ {
+  "name": "gen_pricing_025",
+  "base": "pricing",
+  "answers": {
+   "q_qty": "2027-03-02"
+  },
+  "expect": {
+   "visible": [
+    "q_qty",
+    "show_total",
+    "pay"
+   ],
+   "required": [
+    "q_qty"
+   ],
+   "variables": {
+    "total": 0
+   },
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_qty",
+     "code": "invalid_number"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_pricing_026",
+  "base": "pricing",
+  "answers": {
+   "q_qty": 18
+  },
+  "expect": {
+   "visible": [
+    "q_qty",
+    "show_total",
+    "pay"
+   ],
+   "required": [
+    "q_qty"
+   ],
+   "variables": {
+    "total": 81000
+   },
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [],
+   "amount": 81000
+  }
+ },
+ {
+  "name": "gen_pricing_027",
   "base": "pricing",
   "answers": {
    "q_qty": 29
@@ -878,65 +976,7 @@
   }
  },
  {
-  "name": "gen_pricing_025",
-  "base": "pricing",
-  "answers": {
-   "q_qty": 13
-  },
-  "expect": {
-   "visible": [
-    "q_qty",
-    "show_total",
-    "pay"
-   ],
-   "required": [
-    "q_qty"
-   ],
-   "variables": {
-    "total": 58500
-   },
-   "path": [
-    "p1"
-   ],
-   "ended": false,
-   "nextPage": {
-    "p1": null
-   },
-   "errors": [],
-   "amount": 58500
-  }
- },
- {
-  "name": "gen_pricing_026",
-  "base": "pricing",
-  "answers": {
-   "q_qty": 7
-  },
-  "expect": {
-   "visible": [
-    "q_qty",
-    "show_total",
-    "pay"
-   ],
-   "required": [
-    "q_qty"
-   ],
-   "variables": {
-    "total": 35000
-   },
-   "path": [
-    "p1"
-   ],
-   "ended": false,
-   "nextPage": {
-    "p1": null
-   },
-   "errors": [],
-   "amount": 35000
-  }
- },
- {
-  "name": "gen_pricing_027",
+  "name": "gen_pricing_028",
   "base": "pricing",
   "answers": {
    "q_qty": 15
@@ -965,39 +1005,10 @@
   }
  },
  {
-  "name": "gen_pricing_028",
-  "base": "pricing",
-  "answers": {
-   "q_qty": 9
-  },
-  "expect": {
-   "visible": [
-    "q_qty",
-    "show_total",
-    "pay"
-   ],
-   "required": [
-    "q_qty"
-   ],
-   "variables": {
-    "total": 45000
-   },
-   "path": [
-    "p1"
-   ],
-   "ended": false,
-   "nextPage": {
-    "p1": null
-   },
-   "errors": [],
-   "amount": 45000
-  }
- },
- {
   "name": "gen_pricing_029",
   "base": "pricing",
   "answers": {
-   "q_qty": 25
+   "q_qty": -2
   },
   "expect": {
    "visible": [
@@ -1009,7 +1020,7 @@
     "q_qty"
    ],
    "variables": {
-    "total": 112500
+    "total": -10000
    },
    "path": [
     "p1"
@@ -1018,8 +1029,13 @@
    "nextPage": {
     "p1": null
    },
-   "errors": [],
-   "amount": 112500
+   "errors": [
+    {
+     "field": "q_qty",
+     "code": "below_min"
+    }
+   ],
+   "amount": 0
   }
  }
 ]

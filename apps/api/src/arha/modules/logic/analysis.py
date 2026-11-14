@@ -161,6 +161,11 @@ def analyze(schema: dict[str, Any]) -> list[Issue]:
         if t == "choice_grid" and (not b.get("rows") or not b.get("columns")):
             issues.append(Issue("error", "options_required", bid))
 
+    from arha.modules.logic.variables import check as check_variables
+
+    for v in check_variables(schema):
+        issues.append(Issue("error", v.code, v.target, v.detail))
+
     has_payment = any(b["type"] in PAYMENT_TYPES for b in blocks.values())
     payments = (schema.get("settings") or {}).get("payments") or {}
     if has_payment and not payments.get("enabled"):

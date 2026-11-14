@@ -246,7 +246,7 @@
   "name": "gen_validation_002",
   "base": "validation",
   "answers": {
-   "q_short": -4
+   "q_short": 0.1
   },
   "expect": {
    "visible": [
@@ -379,7 +379,7 @@
   "name": "gen_validation_005",
   "base": "validation",
   "answers": {
-   "q_rating": 9
+   "q_rating": 2.5
   },
   "expect": {
    "visible": [
@@ -412,7 +412,7 @@
    "errors": [
     {
      "field": "q_rating",
-     "code": "above_max"
+     "code": "invalid_number"
     },
     {
      "field": "q_consent",
@@ -512,7 +512,7 @@
   "name": "gen_validation_008",
   "base": "validation",
   "answers": {
-   "q_url": 0
+   "q_url": 1000.0
   },
   "expect": {
    "visible": [
@@ -559,7 +559,183 @@
   "name": "gen_validation_009",
   "base": "validation",
   "answers": {
-   "q_url": 19
+   "q_time": null
+  },
+  "expect": {
+   "visible": [
+    "q_email",
+    "q_phone",
+    "q_url",
+    "q_rating",
+    "q_nps",
+    "q_scale",
+    "q_date",
+    "q_time",
+    "q_range",
+    "q_grid",
+    "q_rank",
+    "q_short",
+    "q_consent",
+    "q_open"
+   ],
+   "required": [
+    "q_consent"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_consent",
+     "code": "required"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_validation_010",
+  "base": "validation",
+  "answers": {
+   "q_range": " "
+  },
+  "expect": {
+   "visible": [
+    "q_email",
+    "q_phone",
+    "q_url",
+    "q_rating",
+    "q_nps",
+    "q_scale",
+    "q_date",
+    "q_time",
+    "q_range",
+    "q_grid",
+    "q_rank",
+    "q_short",
+    "q_consent",
+    "q_open"
+   ],
+   "required": [
+    "q_consent"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_consent",
+     "code": "required"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_validation_011",
+  "base": "validation",
+  "answers": {
+   "q_nps": null
+  },
+  "expect": {
+   "visible": [
+    "q_email",
+    "q_phone",
+    "q_url",
+    "q_rating",
+    "q_nps",
+    "q_scale",
+    "q_date",
+    "q_time",
+    "q_range",
+    "q_grid",
+    "q_rank",
+    "q_short",
+    "q_consent",
+    "q_open"
+   ],
+   "required": [
+    "q_consent"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_consent",
+     "code": "required"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_validation_012",
+  "base": "validation",
+  "answers": {
+   "q_range": 0
+  },
+  "expect": {
+   "visible": [
+    "q_email",
+    "q_phone",
+    "q_url",
+    "q_rating",
+    "q_nps",
+    "q_scale",
+    "q_date",
+    "q_time",
+    "q_range",
+    "q_grid",
+    "q_rank",
+    "q_short",
+    "q_consent",
+    "q_open"
+   ],
+   "required": [
+    "q_consent"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_range",
+     "code": "invalid_date"
+    },
+    {
+     "field": "q_consent",
+     "code": "required"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_validation_013",
+  "base": "validation",
+  "answers": {
+   "q_url": false
   },
   "expect": {
    "visible": [
@@ -603,189 +779,13 @@
   }
  },
  {
-  "name": "gen_validation_010",
-  "base": "validation",
-  "answers": {
-   "q_time": null
-  },
-  "expect": {
-   "visible": [
-    "q_email",
-    "q_phone",
-    "q_url",
-    "q_rating",
-    "q_nps",
-    "q_scale",
-    "q_date",
-    "q_time",
-    "q_range",
-    "q_grid",
-    "q_rank",
-    "q_short",
-    "q_consent",
-    "q_open"
-   ],
-   "required": [
-    "q_consent"
-   ],
-   "variables": {},
-   "path": [
-    "p1"
-   ],
-   "ended": false,
-   "nextPage": {
-    "p1": null
-   },
-   "errors": [
-    {
-     "field": "q_consent",
-     "code": "required"
-    }
-   ],
-   "amount": 0
-  }
- },
- {
-  "name": "gen_validation_011",
-  "base": "validation",
-  "answers": {
-   "q_range": " "
-  },
-  "expect": {
-   "visible": [
-    "q_email",
-    "q_phone",
-    "q_url",
-    "q_rating",
-    "q_nps",
-    "q_scale",
-    "q_date",
-    "q_time",
-    "q_range",
-    "q_grid",
-    "q_rank",
-    "q_short",
-    "q_consent",
-    "q_open"
-   ],
-   "required": [
-    "q_consent"
-   ],
-   "variables": {},
-   "path": [
-    "p1"
-   ],
-   "ended": false,
-   "nextPage": {
-    "p1": null
-   },
-   "errors": [
-    {
-     "field": "q_consent",
-     "code": "required"
-    }
-   ],
-   "amount": 0
-  }
- },
- {
-  "name": "gen_validation_012",
-  "base": "validation",
-  "answers": {
-   "q_nps": null
-  },
-  "expect": {
-   "visible": [
-    "q_email",
-    "q_phone",
-    "q_url",
-    "q_rating",
-    "q_nps",
-    "q_scale",
-    "q_date",
-    "q_time",
-    "q_range",
-    "q_grid",
-    "q_rank",
-    "q_short",
-    "q_consent",
-    "q_open"
-   ],
-   "required": [
-    "q_consent"
-   ],
-   "variables": {},
-   "path": [
-    "p1"
-   ],
-   "ended": false,
-   "nextPage": {
-    "p1": null
-   },
-   "errors": [
-    {
-     "field": "q_consent",
-     "code": "required"
-    }
-   ],
-   "amount": 0
-  }
- },
- {
-  "name": "gen_validation_013",
-  "base": "validation",
-  "answers": {
-   "q_range": true
-  },
-  "expect": {
-   "visible": [
-    "q_email",
-    "q_phone",
-    "q_url",
-    "q_rating",
-    "q_nps",
-    "q_scale",
-    "q_date",
-    "q_time",
-    "q_range",
-    "q_grid",
-    "q_rank",
-    "q_short",
-    "q_consent",
-    "q_open"
-   ],
-   "required": [
-    "q_consent"
-   ],
-   "variables": {},
-   "path": [
-    "p1"
-   ],
-   "ended": false,
-   "nextPage": {
-    "p1": null
-   },
-   "errors": [
-    {
-     "field": "q_range",
-     "code": "invalid_date"
-    },
-    {
-     "field": "q_consent",
-     "code": "required"
-    }
-   ],
-   "amount": 0
-  }
- },
- {
   "name": "gen_validation_014",
   "base": "validation",
   "answers": {
-   "q_nps": 0.5,
-   "q_range": 21,
-   "q_consent": null,
-   "q_short": null
+   "q_email": "arha",
+   "q_phone": null,
+   "q_rating": 24,
+   "q_nps": true
   },
   "expect": {
    "visible": [
@@ -817,12 +817,16 @@
    },
    "errors": [
     {
-     "field": "q_nps",
-     "code": "invalid_number"
+     "field": "q_email",
+     "code": "invalid_email"
     },
     {
-     "field": "q_range",
-     "code": "invalid_date"
+     "field": "q_rating",
+     "code": "above_max"
+    },
+    {
+     "field": "q_nps",
+     "code": "invalid_number"
     },
     {
      "field": "q_consent",
@@ -836,10 +840,10 @@
   "name": "gen_validation_015",
   "base": "validation",
   "answers": {
-   "q_nps": 0.5,
-   "q_range": 21,
-   "q_consent": 21,
-   "q_short": null
+   "q_email": "arha",
+   "q_short": 24,
+   "q_rating": 24,
+   "q_nps": true
   },
   "expect": {
    "visible": [
@@ -871,12 +875,20 @@
    },
    "errors": [
     {
+     "field": "q_email",
+     "code": "invalid_email"
+    },
+    {
+     "field": "q_rating",
+     "code": "above_max"
+    },
+    {
      "field": "q_nps",
      "code": "invalid_number"
     },
     {
-     "field": "q_range",
-     "code": "invalid_date"
+     "field": "q_short",
+     "code": "invalid_type"
     },
     {
      "field": "q_consent",
@@ -890,10 +902,10 @@
   "name": "gen_validation_016",
   "base": "validation",
   "answers": {
-   "q_nps": 0.5,
-   "q_range": 21,
-   "q_consent": 21,
-   "q_short": 0.5
+   "q_rating": 24,
+   "q_short": 24,
+   "q_consent": 24,
+   "q_nps": true
   },
   "expect": {
    "visible": [
@@ -925,12 +937,12 @@
    },
    "errors": [
     {
-     "field": "q_nps",
-     "code": "invalid_number"
+     "field": "q_rating",
+     "code": "above_max"
     },
     {
-     "field": "q_range",
-     "code": "invalid_date"
+     "field": "q_nps",
+     "code": "invalid_number"
     },
     {
      "field": "q_short",
@@ -948,10 +960,8 @@
   "name": "gen_validation_017",
   "base": "validation",
   "answers": {
-   "q_nps": 1,
-   "q_range": 21,
-   "q_consent": 21,
-   "q_short": 0.5
+   "q_nps": true,
+   "q_rating": 24
   },
   "expect": {
    "visible": [
@@ -983,12 +993,12 @@
    },
    "errors": [
     {
-     "field": "q_range",
-     "code": "invalid_date"
+     "field": "q_rating",
+     "code": "above_max"
     },
     {
-     "field": "q_short",
-     "code": "invalid_type"
+     "field": "q_nps",
+     "code": "invalid_number"
     },
     {
      "field": "q_consent",
@@ -1002,10 +1012,8 @@
   "name": "gen_validation_018",
   "base": "validation",
   "answers": {
-   "q_nps": 21,
-   "q_range": 21,
-   "q_consent": 21,
-   "q_short": 0.5
+   "q_nps": 24,
+   "q_rating": 24
   },
   "expect": {
    "visible": [
@@ -1037,16 +1045,12 @@
    },
    "errors": [
     {
-     "field": "q_nps",
+     "field": "q_rating",
      "code": "above_max"
     },
     {
-     "field": "q_range",
-     "code": "invalid_date"
-    },
-    {
-     "field": "q_short",
-     "code": "invalid_type"
+     "field": "q_nps",
+     "code": "above_max"
     },
     {
      "field": "q_consent",
@@ -1060,10 +1064,7 @@
   "name": "gen_validation_019",
   "base": "validation",
   "answers": {
-   "q_nps": 21,
-   "q_range": 21,
-   "q_consent": 0.1,
-   "q_short": 0.5
+   "q_nps": 24
   },
   "expect": {
    "visible": [
@@ -1097,14 +1098,6 @@
     {
      "field": "q_nps",
      "code": "above_max"
-    },
-    {
-     "field": "q_range",
-     "code": "invalid_date"
-    },
-    {
-     "field": "q_short",
-     "code": "invalid_type"
     },
     {
      "field": "q_consent",
@@ -1118,10 +1111,7 @@
   "name": "gen_validation_020",
   "base": "validation",
   "answers": {
-   "q_nps": 21,
-   "q_range": 21,
-   "q_consent": 0.1,
-   "q_short": 0.1
+   "q_scale": "2026-01-01"
   },
   "expect": {
    "visible": [
@@ -1153,16 +1143,8 @@
    },
    "errors": [
     {
-     "field": "q_nps",
-     "code": "above_max"
-    },
-    {
-     "field": "q_range",
-     "code": "invalid_date"
-    },
-    {
-     "field": "q_short",
-     "code": "invalid_type"
+     "field": "q_scale",
+     "code": "invalid_number"
     },
     {
      "field": "q_consent",
@@ -1176,10 +1158,16 @@
   "name": "gen_validation_021",
   "base": "validation",
   "answers": {
-   "q_date": -0.5,
-   "q_range": true,
-   "q_phone": true,
-   "q_grid": true
+   "q_consent": -0.5,
+   "q_scale": false,
+   "q_range": "3",
+   "q_phone": false,
+   "q_grid": 14,
+   "q_email": true,
+   "q_nps": {
+    "missing": 98
+   },
+   "q_url": 19
   },
   "expect": {
    "visible": [
@@ -1211,12 +1199,24 @@
    },
    "errors": [
     {
+     "field": "q_email",
+     "code": "invalid_email"
+    },
+    {
      "field": "q_phone",
      "code": "invalid_phone"
     },
     {
-     "field": "q_date",
-     "code": "invalid_date"
+     "field": "q_url",
+     "code": "invalid_url"
+    },
+    {
+     "field": "q_nps",
+     "code": "invalid_missing"
+    },
+    {
+     "field": "q_scale",
+     "code": "invalid_number"
     },
     {
      "field": "q_range",
@@ -1238,10 +1238,18 @@
   "name": "gen_validation_022",
   "base": "validation",
   "answers": {
-   "q_date": -0.5,
-   "q_range": true,
-   "q_phone": true,
-   "q_grid": 0.1
+   "q_consent": {
+    "missing": 98
+   },
+   "q_scale": false,
+   "q_range": "3",
+   "q_phone": false,
+   "q_grid": 14,
+   "q_email": true,
+   "q_nps": {
+    "missing": 98
+   },
+   "q_url": 19
   },
   "expect": {
    "visible": [
@@ -1273,12 +1281,24 @@
    },
    "errors": [
     {
+     "field": "q_email",
+     "code": "invalid_email"
+    },
+    {
      "field": "q_phone",
      "code": "invalid_phone"
     },
     {
-     "field": "q_date",
-     "code": "invalid_date"
+     "field": "q_url",
+     "code": "invalid_url"
+    },
+    {
+     "field": "q_nps",
+     "code": "invalid_missing"
+    },
+    {
+     "field": "q_scale",
+     "code": "invalid_number"
     },
     {
      "field": "q_range",
@@ -1300,10 +1320,18 @@
   "name": "gen_validation_023",
   "base": "validation",
   "answers": {
-   "q_date": 0.1,
-   "q_range": true,
-   "q_phone": true,
-   "q_grid": 0.1
+   "q_consent": {
+    "missing": 98
+   },
+   "q_scale": false,
+   "q_range": "3",
+   "q_phone": false,
+   "q_grid": 14,
+   "q_email": true,
+   "q_nps": {
+    "missing": 98
+   },
+   "q_url": 14
   },
   "expect": {
    "visible": [
@@ -1335,12 +1363,24 @@
    },
    "errors": [
     {
+     "field": "q_email",
+     "code": "invalid_email"
+    },
+    {
      "field": "q_phone",
      "code": "invalid_phone"
     },
     {
-     "field": "q_date",
-     "code": "invalid_date"
+     "field": "q_url",
+     "code": "invalid_url"
+    },
+    {
+     "field": "q_nps",
+     "code": "invalid_missing"
+    },
+    {
+     "field": "q_scale",
+     "code": "invalid_number"
     },
     {
      "field": "q_range",
@@ -1362,10 +1402,18 @@
   "name": "gen_validation_024",
   "base": "validation",
   "answers": {
-   "q_date": 0.1,
-   "q_range": 0.1,
-   "q_phone": true,
-   "q_grid": 0.1
+   "q_consent": {
+    "missing": 98
+   },
+   "q_scale": false,
+   "q_range": 14,
+   "q_phone": false,
+   "q_grid": 14,
+   "q_email": true,
+   "q_nps": {
+    "missing": 98
+   },
+   "q_url": 14
   },
   "expect": {
    "visible": [
@@ -1397,12 +1445,24 @@
    },
    "errors": [
     {
+     "field": "q_email",
+     "code": "invalid_email"
+    },
+    {
      "field": "q_phone",
      "code": "invalid_phone"
     },
     {
-     "field": "q_date",
-     "code": "invalid_date"
+     "field": "q_url",
+     "code": "invalid_url"
+    },
+    {
+     "field": "q_nps",
+     "code": "invalid_missing"
+    },
+    {
+     "field": "q_scale",
+     "code": "invalid_number"
     },
     {
      "field": "q_range",
@@ -1424,10 +1484,20 @@
   "name": "gen_validation_025",
   "base": "validation",
   "answers": {
-   "q_date": 0.1,
-   "q_range": 0.1,
-   "q_phone": 0.1,
-   "q_grid": 0.1
+   "q_consent": {
+    "missing": 98
+   },
+   "q_scale": false,
+   "q_range": {
+    "missing": 98
+   },
+   "q_phone": false,
+   "q_grid": 14,
+   "q_email": true,
+   "q_nps": {
+    "missing": 98
+   },
+   "q_url": 14
   },
   "expect": {
    "visible": [
@@ -1459,16 +1529,28 @@
    },
    "errors": [
     {
+     "field": "q_email",
+     "code": "invalid_email"
+    },
+    {
      "field": "q_phone",
      "code": "invalid_phone"
     },
     {
-     "field": "q_date",
-     "code": "invalid_date"
+     "field": "q_url",
+     "code": "invalid_url"
+    },
+    {
+     "field": "q_nps",
+     "code": "invalid_missing"
+    },
+    {
+     "field": "q_scale",
+     "code": "invalid_number"
     },
     {
      "field": "q_range",
-     "code": "invalid_date"
+     "code": "invalid_missing"
     },
     {
      "field": "q_grid",
@@ -1486,10 +1568,20 @@
   "name": "gen_validation_026",
   "base": "validation",
   "answers": {
-   "q_date": 0.1,
-   "q_consent": 0.1,
-   "q_phone": 0.1,
-   "q_grid": 0.1
+   "q_consent": {
+    "missing": 98
+   },
+   "q_scale": false,
+   "q_range": {
+    "missing": 98
+   },
+   "q_phone": false,
+   "q_grid": 14,
+   "q_email": false,
+   "q_nps": {
+    "missing": 98
+   },
+   "q_url": 14
   },
   "expect": {
    "visible": [
@@ -1521,12 +1613,28 @@
    },
    "errors": [
     {
+     "field": "q_email",
+     "code": "invalid_email"
+    },
+    {
      "field": "q_phone",
      "code": "invalid_phone"
     },
     {
-     "field": "q_date",
-     "code": "invalid_date"
+     "field": "q_url",
+     "code": "invalid_url"
+    },
+    {
+     "field": "q_nps",
+     "code": "invalid_missing"
+    },
+    {
+     "field": "q_scale",
+     "code": "invalid_number"
+    },
+    {
+     "field": "q_range",
+     "code": "invalid_missing"
     },
     {
      "field": "q_grid",
@@ -1544,12 +1652,16 @@
   "name": "gen_validation_027",
   "base": "validation",
   "answers": {
-   "q_range": false,
-   "q_grid": 19,
-   "q_email": true,
-   "q_open": null,
-   "q_scale": null,
-   "q_time": 0
+   "q_nps": {
+    "missing": 98
+   },
+   "q_phone": false,
+   "q_scale": false,
+   "q_email": false,
+   "q_consent": {
+    "missing": 98
+   },
+   "q_rank": null
   },
   "expect": {
    "visible": [
@@ -1585,16 +1697,16 @@
      "code": "invalid_email"
     },
     {
-     "field": "q_time",
-     "code": "invalid_time"
+     "field": "q_phone",
+     "code": "invalid_phone"
     },
     {
-     "field": "q_range",
-     "code": "invalid_date"
+     "field": "q_nps",
+     "code": "invalid_missing"
     },
     {
-     "field": "q_grid",
-     "code": "invalid_choice"
+     "field": "q_scale",
+     "code": "invalid_number"
     },
     {
      "field": "q_consent",
@@ -1608,12 +1720,10 @@
   "name": "gen_validation_028",
   "base": "validation",
   "answers": {
-   "q_range": false,
-   "q_grid": 19,
-   "q_email": 19,
-   "q_open": null,
-   "q_scale": null,
-   "q_time": 0
+   "q_consent": null,
+   "q_range": {
+    "missing": 98
+   }
   },
   "expect": {
    "visible": [
@@ -1645,20 +1755,8 @@
    },
    "errors": [
     {
-     "field": "q_email",
-     "code": "invalid_email"
-    },
-    {
-     "field": "q_time",
-     "code": "invalid_time"
-    },
-    {
      "field": "q_range",
-     "code": "invalid_date"
-    },
-    {
-     "field": "q_grid",
-     "code": "invalid_choice"
+     "code": "invalid_missing"
     },
     {
      "field": "q_consent",
@@ -1672,12 +1770,10 @@
   "name": "gen_validation_029",
   "base": "validation",
   "answers": {
-   "q_range": 0,
-   "q_grid": 19,
-   "q_email": 19,
-   "q_open": null,
-   "q_scale": null,
-   "q_time": 0
+   "q_email": 9.99,
+   "q_scale": "x",
+   "q_range": 1,
+   "q_url": true
   },
   "expect": {
    "visible": [
@@ -1713,16 +1809,16 @@
      "code": "invalid_email"
     },
     {
-     "field": "q_time",
-     "code": "invalid_time"
+     "field": "q_url",
+     "code": "invalid_url"
+    },
+    {
+     "field": "q_scale",
+     "code": "invalid_number"
     },
     {
      "field": "q_range",
      "code": "invalid_date"
-    },
-    {
-     "field": "q_grid",
-     "code": "invalid_choice"
     },
     {
      "field": "q_consent",

@@ -208,6 +208,7 @@ export interface Block {
     | "yes_no"
     | "ranking"
     | "choice_grid"
+    | "likert_matrix"
     | "rating"
     | "linear_scale"
     | "nps"
@@ -216,6 +217,9 @@ export interface Block {
     | "date_range"
     | "file_upload"
     | "signature"
+    | "geopoint"
+    | "photo"
+    | "barcode"
     | "payment_fixed"
     | "payment_computed"
     | "payment_open"
@@ -228,6 +232,10 @@ export interface Block {
     | "hidden"
     | "computed_display"
     | "consent";
+  /**
+   * Variable name in exports: unique, 32 characters at most, letters, digits and underscores, starts with a letter (SPSS, Stata and R).
+   */
+  varName?: string;
   label?: I18NText;
   help?: I18NText;
   placeholder?: I18NText;
@@ -235,10 +243,6 @@ export interface Block {
   validation?: Validation;
   sensitive?: boolean;
   identifying?: boolean;
-  /**
-   * Export variable name (SPSS, Stata).
-   */
-  variableName?: string;
   /**
    * @maxItems 200
    */
@@ -409,6 +413,25 @@ export interface Block {
   content?: I18NText1;
   imageKey?: string | null;
   alt?: I18NText;
+  /**
+   * Declared missing values offered to the respondent, for example 98 (does not know) and 99 (refusal).
+   *
+   * @maxItems 5
+   */
+  missingCodes?:
+    | []
+    | [MissingCode]
+    | [MissingCode, MissingCode]
+    | [MissingCode, MissingCode, MissingCode]
+    | [MissingCode, MissingCode, MissingCode, MissingCode]
+    | [MissingCode, MissingCode, MissingCode, MissingCode, MissingCode];
+  /**
+   * geopoint: capture options.
+   */
+  capture?: {
+    highAccuracy?: boolean;
+    maxAgeSeconds?: number;
+  };
 }
 /**
  * This interface was referenced by `ArhaForm`'s JSON-Schema
@@ -436,7 +459,7 @@ export interface Option {
   id: Id;
   label: I18NText;
   /**
-   * Numeric code used in SPSS and Stata exports.
+   * Stable numeric code of the choice, used in SPSS, Stata and R exports. Never renumbered.
    */
   code?: number;
   /**
@@ -452,6 +475,14 @@ export interface Option {
 export interface I18NText1 {
   fr?: string;
   en?: string;
+}
+/**
+ * This interface was referenced by `ArhaForm`'s JSON-Schema
+ * via the `definition` "MissingCode".
+ */
+export interface MissingCode {
+  code: number;
+  label: I18NText;
 }
 /**
  * This interface was referenced by `ArhaForm`'s JSON-Schema

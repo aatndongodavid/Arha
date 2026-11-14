@@ -6,6 +6,11 @@
   d'export par offre ; Pionnier limité aux offres listées ; remise associative retirée.
 - Achat du Pass Mémoire par Mobile Money sur le compte marchand d'Arha, activation de 120 jours, expiration
   sans renouvellement, facture numérotée.
+- Noms de variables (`varName`) générés, uniques sans tenir compte de la casse, compatibles SPSS, Stata et R,
+  modifiables dans l'éditeur ; codes de modalités stables, jamais renumérotés ; valeurs manquantes déclarées
+  (98 « Ne sait pas », 99 « Refus de répondre ») ; contrôle bloquant à la publication.
+- Nouveaux blocs : matrice de Likert, point GPS, photo, code-barres, dans l'éditeur, le formulaire public et les
+  deux moteurs de logique. Suite de conformité portée à 369 cas.
 
 ## 0.1.0 · 13 novembre 2026 · MVP
 

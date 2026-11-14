@@ -314,6 +314,51 @@ HAND: list[tuple[str, str, dict[str, Any], dict[str, Any], dict[str, str] | None
      {"errors": [{"field": "q_date", "code": "invalid_date"}]}, None),
 ]
 
+COLLECTE = form(pages=[{"id": "p1", "blocks": [
+    {"id": "q_age", "type": "number", "label": t("Age"), "required": True, "validation": {"min": 0, "max": 120},
+     "missingCodes": [{"code": 98, "label": t("NSP")}, {"code": 99, "label": t("Refus")}]},
+    {"id": "q_sat", "type": "likert_matrix", "label": t("Satisfaction"), "required": True,
+     "rows": opts("r1", "r2", "r3"), "columns": opts("c1", "c2", "c3", "c4", "c5")},
+    {"id": "q_lik", "type": "likert_matrix", "label": t("Optionnel"), "rows": opts("a1", "a2"),
+     "columns": opts("k1", "k2")},
+    {"id": "q_geo", "type": "geopoint", "label": t("Position")},
+    {"id": "q_bar", "type": "barcode", "label": t("Code")},
+    {"id": "q_pic", "type": "photo", "label": t("Photo")},
+    {"id": "q_sex", "type": "single_choice", "label": t("Sexe"), "options": opts("h", "f"),
+     "missingCodes": [{"code": 99, "label": t("Refus")}]},
+]}])
+BASES["collecte"] = COLLECTE
+FULL_LIKERT = {"r1": "c1", "r2": "c3", "r3": "c5"}
+HAND += [
+    ("collecte_valid", "collecte", {"q_age": 34, "q_sat": FULL_LIKERT, "q_geo": {"lat": 4.0511, "lon": 9.7679,
+     "accuracy": 15}, "q_bar": "MEN-0042", "q_pic": ["k/f/1"], "q_sex": "f"}, {"errors": []}, None),
+    ("missing_declared_counts_as_answered", "collecte", {"q_age": {"missing": 98}, "q_sat": FULL_LIKERT},
+     {"errors": []}, None),
+    ("missing_undeclared_is_refused", "collecte", {"q_age": {"missing": 97}, "q_sat": FULL_LIKERT},
+     {"errors": [{"field": "q_age", "code": "invalid_missing"}]}, None),
+    ("missing_on_choice", "collecte", {"q_age": 40, "q_sat": FULL_LIKERT, "q_sex": {"missing": 99}},
+     {"errors": []}, None),
+    ("missing_on_question_without_codes", "collecte", {"q_age": 40, "q_sat": FULL_LIKERT, "q_bar": {"missing": 99}},
+     {"errors": [{"field": "q_bar", "code": "invalid_missing"}]}, None),
+    ("likert_required_incomplete", "collecte", {"q_age": 40, "q_sat": {"r1": "c1", "r2": "c2"}},
+     {"errors": [{"field": "q_sat", "code": "incomplete"}]}, None),
+    ("likert_optional_partial_ok", "collecte", {"q_age": 40, "q_sat": FULL_LIKERT, "q_lik": {"a1": "k2"}},
+     {"errors": []}, None),
+    ("likert_unknown_column", "collecte", {"q_age": 40, "q_sat": {"r1": "c9", "r2": "c1", "r3": "c1"}},
+     {"errors": [{"field": "q_sat", "code": "invalid_choice"}]}, None),
+    ("geopoint_out_of_range", "collecte", {"q_age": 40, "q_sat": FULL_LIKERT, "q_geo": {"lat": 91, "lon": 0}},
+     {"errors": [{"field": "q_geo", "code": "invalid_geopoint"}]}, None),
+    ("geopoint_text_coordinates", "collecte", {"q_age": 40, "q_sat": FULL_LIKERT, "q_geo": {"lat": "4", "lon": "9"}},
+     {"errors": [{"field": "q_geo", "code": "invalid_geopoint"}]}, None),
+    ("geopoint_negative_accuracy", "collecte",
+     {"q_age": 40, "q_sat": FULL_LIKERT, "q_geo": {"lat": -4.5, "lon": -179.9, "accuracy": -1}},
+     {"errors": [{"field": "q_geo", "code": "invalid_geopoint"}]}, None),
+    ("barcode_too_long", "collecte", {"q_age": 40, "q_sat": FULL_LIKERT, "q_bar": "x" * 201},
+     {"errors": [{"field": "q_bar", "code": "too_long"}]}, None),
+    ("photo_two_files", "collecte", {"q_age": 40, "q_sat": FULL_LIKERT, "q_pic": ["a", "b"]},
+     {"errors": [{"field": "q_pic", "code": "too_many"}]}, None),
+]
+
 HIDDEN_FORM = form(pages=[{"id": "p1", "blocks": [
     {"id": "src", "type": "hidden", "param": "source"},
     {"id": "q_x", "type": "short_text", "label": t("X")},
@@ -331,6 +376,7 @@ HAND.append(("hidden_param_absent", "hidden", {}, {"visible": ["src", "q_x"]}, {
 # ------------------------------------------------------------------ generated cases
 
 SCALARS = st.one_of(st.none(), st.booleans(), st.integers(-5, 30), st.sampled_from([0.1, 0.5, 2.5, 9.99, 1e3, -0.5]),
+                    st.sampled_from([{"missing": 98}, {"missing": 99}, {"missing": 97}]),
                     st.sampled_from(["", " ", "3", "10", "arha", "x", "2027-03-02", "2026-01-01", "a@b.cm"]))
 
 
@@ -347,6 +393,14 @@ def answers_for(schema: dict[str, Any]) -> st.SearchStrategy[dict[str, Any]]:
             elif tp in ("product_choice", "ticket_choice"):
                 fields[b["id"]] = st.one_of(st.dictionaries(st.sampled_from(ids), st.integers(-1, 12), max_size=3),
                                             SCALARS)
+            elif tp == "likert_matrix":
+                rows = [r["id"] for r in b.get("rows") or []]
+                cols = [c["id"] for c in b.get("columns") or []] + ["zz"]
+                fields[b["id"]] = st.one_of(st.dictionaries(st.sampled_from(rows), st.sampled_from(cols), max_size=3),
+                                            SCALARS)
+            elif tp == "geopoint":
+                fields[b["id"]] = st.one_of(st.fixed_dictionaries({"lat": st.integers(-100, 100),
+                                                                   "lon": st.integers(-200, 200)}), SCALARS)
             elif tp == "yes_no":
                 fields[b["id"]] = st.one_of(st.booleans(), SCALARS)
             elif tp in ("heading", "computed_display", "payment_fixed", "payment_computed"):
@@ -365,7 +419,7 @@ def generate() -> list[dict[str, Any]]:
         cases.append(case)
 
     per_base = {"registration": 45, "pricing": 30, "products": 35, "ending": 20, "math": 45, "operators": 45,
-                "setvar": 25, "validation": 30, "hidden": 10}
+                "setvar": 25, "validation": 30, "hidden": 10, "collecte": 30}
     for base, count in per_base.items():
         collected: list[dict[str, Any]] = []
         seen: set[str] = set()
