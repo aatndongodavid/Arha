@@ -1,5 +1,7 @@
 # Arha · État d'avancement
 
+> **14 novembre 2026 : le cahier des charges passe en v1.2.** Le MVP ci-dessous suit la v1.0. Les écarts à combler sont listés dans `docs/ecarts-v1.2.md`.
+
 Dernière mise à jour : 13 novembre 2026, fin de la session de réalisation du MVP.
 Branche : `claude/arha-mvp`. Rien n'est déployé. Aucun paiement réel n'a été effectué.
 

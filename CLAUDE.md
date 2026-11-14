@@ -1,6 +1,6 @@
 # ARHA · MASTER PROMPT DE RÉALISATION
 
-Version 1.0 · 13 novembre 2026 · Document compagnon du « Cahier des charges Arha v1.0 »
+Version 1.2 · 13 novembre 2026 · Document compagnon du « Cahier des charges Arha v1.2 ». Cette version fusionne les versions 1.0 et 1.1 et les remplace.
 
 
 ## 0. Mode d'emploi de ce prompt
@@ -32,15 +32,23 @@ Tes principes de travail :
 
 ## 2. Le produit en bref
 
-**Arha** est une plateforme SaaS de formulaires qui collecte des réponses, encaisse des paiements Mobile Money (Orange Money, MTN MoMo) et analyse les données. Elle est conçue au Cameroun pour l'Afrique.
+**Arha** est une plateforme SaaS de formulaires intelligents : l'infrastructure de collecte de données et de paiements du monde mobile. Un formulaire Arha collecte des réponses et encaisse des paiements par Mobile Money, en ligne comme hors connexion. Le produit tourne autour d'un seul objet, le formulaire, et de deux moteurs livrés dès la version 1 :
 
-- **Promesse :** « Collecter. Encaisser. Comprendre. »
-- **Phrase de vente :** « Encaissez vos inscriptions sans capture d'écran. »
-- **Segment de départ :** organisateurs d'événements et de formations, écoles et centres de formation privés, associations, à Douala et Yaoundé. Second segment à partir de mai 2027 : cabinets d'études et entreprises qui collectent sur le terrain (offre Terrain).
+- **Moteur Collecte :** questionnaires, mode enquêteur hors ligne, contrôle qualité, exports SPSS, Stata, R et Excel avec dictionnaire, tableaux croisés.
+- **Moteur Encaissement :** champ de paiement Mobile Money par compte connecté, reçus numérotés, billets à code QR, scan hors ligne, rapprochement, tableau des encaissements.
+
+Les deux moteurs partagent l'éditeur, le formulaire public, les rôles, la facturation et la sécurité. Aucune fonctionnalité propre à un moteur ne doit dupliquer une brique commune. Arha est conçue au Cameroun, bâtie pour l'Afrique et pensée pour le monde.
+
+- **Signature :** « Concevoir. Collecter. Encaisser. Comprendre. »
+- **Phrase de vente :** « Un formulaire qui collecte, encaisse et comprend, même sans réseau. » Déclinaisons : « Du questionnaire à l'analyse, sans ressaisie » (Collecte) et « Fini les captures d'écran » (Encaissement).
+- **Segments de départ :** moteur Collecte : étudiants en mémoire et en thèse (volume, viralité), enseignants-chercheurs et laboratoires (prescription), cabinets d'études (revenu récurrent). Moteur Encaissement : organisateurs de colloques et d'événements, écoles et instituts privés (frais de dossier), associations et ordres professionnels (cotisations).
+- **Fonctionnalités phares :** export statistique propre (SPSS, Stata, R, Excel) avec noms de variables, libellés, codes de modalités et dictionnaire ; inscription payée par Mobile Money dans le formulaire avec reçu et billet vérifiables.
 - **Répondant type :** téléphone Android d'entrée de gamme, 2 Go de mémoire, réseau 3G instable, lien ouvert depuis WhatsApp.
+- **Enquêteur type :** étudiant ou agent de terrain, plusieurs jours sans réseau, des dizaines d'entretiens sur un seul téléphone.
 - **Langues :** français et anglais dès la version 1, dans toutes les surfaces.
 - **Monnaie :** franc CFA (XAF) par défaut. Montants en entiers. Modèle prêt pour XOF, NGN, GHS, KES.
-- **Calendrier :** début le 1er décembre 2026, bêta privée le 16 février 2027, lancement public le 2 mars 2027.
+- **Paiement :** dès la version 1, Arha encaisse ses propres ventes (abonnements, Pass Mémoire, Arha Services, Arha Études) sur son compte marchand, et les formulaires des clients encaissent sur les comptes connectés des organisations.
+- **Calendrier :** début le 1er décembre 2026, bêta privée le 1er mars 2027, lancement public le 16 mars 2027.
 
 Surfaces (domaines lus dans la configuration, jamais codés en dur) :
 
@@ -49,6 +57,7 @@ Surfaces (domaines lus dans la configuration, jamais codés en dur) :
 | Site vitrine | `arha.africa` | `apps/site` (Astro) |
 | Application de gestion | `app.arha.africa` | `apps/web` (React) |
 | Formulaire public | `f.arha.africa/{code}` | `apps/forms` (Preact) |
+| Mode enquêteur | `f.arha.africa/terrain` | `apps/forms`, application installable hors ligne |
 | Contrôle des billets | `app.arha.africa/scan` | `apps/web`, route hors ligne |
 | Console interne | `admin.arha.africa` | `apps/web`, espace protégé |
 | API | `api.arha.africa/v1` | `apps/api` (FastAPI) |
@@ -59,7 +68,7 @@ Surfaces (domaines lus dans la configuration, jamais codés en dur) :
 
 Ces règles priment sur toute autre instruction. Si une demande les contredit, tu refuses et tu expliques pourquoi.
 
-1. **Arha ne détient jamais l'argent d'un tiers.** Les paiements des répondants sont réglés sur le compte connecté de l'organisation chez l'agrégateur. La commission d'Arha est prélevée par l'agrégateur (frais de plateforme). Aucun flux ne crédite un compte d'Arha pour reverser ensuite. Base légale : règlement 04/18/CEMAC/UMAC/COBAC.
+1. **Arha ne détient jamais l'argent d'un tiers.** Cette règle vaut dès la version 1 pour le moteur Encaissement. Les paiements des répondants sont réglés sur le compte connecté de l'organisation chez l'agrégateur. La commission d'Arha est prélevée par l'agrégateur (frais de plateforme). Aucun flux ne crédite un compte d'Arha pour reverser ensuite. Base légale : règlement 04/18/CEMAC/UMAC/COBAC.
 2. **Le serveur recalcule toujours.** Le serveur recalcule la logique, la visibilité des champs, les validations et les montants. Il ignore tout montant envoyé par le navigateur.
 3. **Le code personnel Mobile Money n'est jamais saisi dans Arha.** Aucun champ, aucun journal, aucune variable ne doit le contenir.
 4. **Isolation stricte des organisations.** Chaque table métier porte `organization_id`. La sécurité au niveau des lignes (RLS) de PostgreSQL est activée et forcée. Le rôle applicatif n'a pas `BYPASSRLS`.
@@ -72,6 +81,10 @@ Ces règles priment sur toute autre instruction. Si une demande les contredit, t
 11. **Anti-hameçonnage.** La publication d'un formulaire qui demande un code PIN, un mot de passe, un code secret Mobile Money ou un numéro de carte complet est bloquée.
 12. **Rédaction des textes d'interface.** Aucun emoji. Aucun tiret long. Des phrases simples : sujet, verbe, complément. Vouvoiement en français.
 13. **Pas de récompenses aux répondants.** Cette fonctionnalité est exclue du produit.
+14. **Intégrité académique.** Aucune fonctionnalité d'Arha ne rédige un mémoire, une thèse ou un article à la place de l'utilisateur. L'IA d'Arha conçoit, contrôle, code et décrit. Elle n'écrit pas de discussion ni de conclusion à présenter comme un travail personnel.
+15. **Les données de terrain ne se perdent jamais.** Toute réponse collectée hors ligne est persistée et chiffrée localement avant d'être affichée comme enregistrée.
+16. **Un produit, deux moteurs.** Les moteurs Collecte et Encaissement réutilisent les mêmes briques : éditeur, schéma, formulaire public, rôles, facturation, journaux, sécurité. Une fonctionnalité qui duplique une brique commune est refusée.
+17. **Mesures de rang international dès le premier jour.** La console interne calcule chaque semaine la croissance du revenu récurrent, la rétention nette du revenu, le volume encaissé et le taux de réussite des paiements. Ces mesures sont reproductibles depuis la base de données, sans tableur intermédiaire.
 
 
 ## 4. Stack imposée
@@ -126,13 +139,13 @@ arha/
         modules/
           identity/  orgs/  forms/  logic/  submissions/  payments/
           billing/   analytics/  integrations/  messaging/  intelligence/
-          trust/     field/
+          trust/     field/       studies/
           # chaque module : models.py, schemas.py, service.py, router.py,
           # permissions.py, tasks.py, adapters/ (si fournisseur), tests/
         workers/                 # point d'entrée Procrastinate
       tests/                     # tests transverses : isolation, architecture, sécurité
     web/                         # application de gestion React
-    forms/                       # formulaire public Preact + application terrain (V2)
+    forms/                       # formulaire public Preact + application terrain installable + scan des billets
     site/                        # site vitrine Astro
   packages/
     schema/                      # form.schema.json + génération des types
@@ -170,7 +183,7 @@ users(id, email citext unique, email_verified_at, password_hash, totp_secret_enc
 sessions(id, user_id, token_hash, ip_hash, user_agent, created_at, last_seen_at, revoked_at)
 organizations(id, name, slug unique, plan_code, country char(2), currency char(3),
       data_region text default 'eu-1', verified_at, suspended_at, created_at)
-memberships(organization_id, user_id, role check in ('owner','admin','editor','viewer'),
+memberships(organization_id, user_id, role check in ('owner','admin','editor','viewer','enumerator'),
       invited_by, created_at, primary key(organization_id, user_id))
 folders(id, organization_id, name, parent_id)
 forms(id, organization_id, folder_id, title, draft_schema jsonb, status
@@ -180,8 +193,17 @@ form_versions(id, organization_id, form_id, number, schema jsonb, schema_hash,
       published_by, published_at, unique(form_id, number))
 submissions(id uuid primary key, organization_id, form_id, form_version_id,
       answers jsonb, computed jsonb, status check in ('new','in_progress','done','rejected'),
-      is_partial bool, last_field_id, payment_status, locale, source, consent_version,
-      resume_code_hash, started_at, submitted_at, anonymized_at)
+      is_partial bool, last_field_id, collected_by, channel check in ('web','field','kiosk','whatsapp'),
+      started_at, ended_at, duration_s int, geo jsonb, device_hash, quality_flags text[],
+      quality_score smallint, payment_status, locale, source, consent_version,
+      resume_code_hash, submitted_at, synced_at, anonymized_at)
+field_assignments(id, organization_id, form_id, enumerator_id, zone, quota, active, created_at)
+enumerator_devices(id, organization_id, enumerator_id, device_hash, activated_at, last_sync_at, revoked_at)
+review_links(id, organization_id, form_id, token_hash, expires_at, created_by)
+review_comments(id, organization_id, form_id, block_id, author_id, review_link_id, body, created_at, resolved_at)
+study_orders(id, organization_id, kind check in ('questionnaire','analysis','advanced_analysis','turnkey'),
+      analyst_id, price, status, due_at, payment_id, deliverable_keys text[], created_at)
+student_passes(id, organization_id, user_id, institution, level, starts_at, ends_at, payment_id)
 payment_accounts(id, organization_id, provider, provider_account_id, status, created_at)
 payments(id, organization_id, submission_id, provider, provider_ref, amount bigint,
       currency, platform_fee bigint, provider_fee bigint, fee_bearer check in ('org','payer'),
@@ -250,9 +272,11 @@ Structure :
 }
 ```
 
-Types de blocs (V1) : `short_text`, `long_text`, `email`, `phone`, `url`, `number`, `single_choice`, `multi_choice`, `dropdown`, `yes_no`, `ranking`, `choice_grid`, `rating`, `linear_scale`, `nps`, `date`, `time`, `date_range`, `file_upload`, `signature`, `payment_fixed`, `payment_computed`, `payment_open`, `product_choice`, `ticket_choice`, `heading`, `rich_text`, `image`, `divider`, `hidden`, `computed_display`, `consent`.
+Types de blocs (V1) : `short_text`, `long_text`, `email`, `phone`, `url`, `number`, `single_choice`, `multi_choice`, `dropdown`, `yes_no`, `ranking`, `choice_grid`, `likert_matrix`, `rating`, `linear_scale`, `nps`, `date`, `time`, `date_range`, `file_upload`, `signature`, `geopoint`, `photo`, `barcode`, `heading`, `rich_text`, `image`, `divider`, `hidden`, `computed_display`, `consent`.
 
-Chaque bloc de saisie porte : `id` stable, `type`, `label` (par langue), `help` (par langue), `required`, `validation` (selon type), `sensitive` (bool, V2), `identifying` (bool, exclu de l'IA et anonymisé).
+Types de blocs du moteur Encaissement (version 1) : `payment_fixed`, `payment_computed`, `payment_open`, `product_choice`, `ticket_choice`.
+
+Chaque bloc de saisie porte : `id` stable, `varName` (nom de variable unique, 32 caractères maximum, lettres, chiffres et soulignés, commence par une lettre, compatible SPSS, Stata et R), `type`, `label` (par langue), `help` (par langue), `required`, `validation` (selon type), `choices` avec un `code` numérique stable par modalité, `missingCodes` (par exemple 98 « ne sait pas », 99 « refus »), `sensitive` (bool, V2), `identifying` (bool, exclu de l'IA et des exports anonymes).
 
 Règle de logique :
 
@@ -302,7 +326,26 @@ Arithmétique : entiers et décimaux en `Decimal` côté Python et en nombres en
 - Détection à la publication : boucles de saut, champs inaccessibles, références à des champs supprimés, formules invalides. Une erreur bloque la publication. Un avertissement s'affiche sans bloquer.
 
 
+## 8 bis. Exports statistiques et analyse (fonctionnalité phare)
+
+1. **Variables.** Une question simple donne une variable. Une question à choix multiples donne une variable binaire par modalité (`q5_1`, `q5_2`, ...) avec le libellé de la modalité. Une matrice de Likert donne une variable par ligne. Les métadonnées d'entretien (`_start`, `_end`, `_duration_s`, `_lat`, `_lon`, `_enumerator`, `_quality`, `_form_version`) sont ajoutées en fin de fichier.
+2. **SPSS (.sav) et Stata (.dta)** : écriture avec pyreadstat. Libellés de variables, libellés de valeurs, valeurs manquantes déclarées, mesures (nominale, ordinale, échelle) déduites du type de question.
+3. **R** : fichier CSV en UTF-8 et script `import.R` qui applique les facteurs, les niveaux ordonnés et les libellés.
+4. **Excel et CSV** : deux options, codes ou libellés.
+5. **Dictionnaire des variables** : Excel et PDF. Pour chaque variable : nom, question, type, modalités et codes, valeurs manquantes, version du questionnaire.
+6. **Export anonyme** : retire toutes les variables `identifying` et les métadonnées de localisation.
+7. **Statistiques V1** : effectifs, pourcentages, moyenne, médiane, écart-type, minimum, maximum, valeurs manquantes. Tableaux croisés avec pourcentages en ligne et en colonne, test du khi-deux, avertissement si plus de 20 % des effectifs théoriques sont inférieurs à 5.
+8. **Jeu de référence** : `apps/api/tests/fixtures/reference_survey/` contient un questionnaire, 500 réponses et les résultats attendus calculés dans SPSS. Les tests comparent chaque statistique et chaque export à ces résultats.
+
 ## 9. Encaissement
+
+### 9.0 Périmètre
+
+Version 1, ventes d'Arha : abonnements, Pass Mémoire, commandes Arha Services et Arha Études, encaissés sur le compte marchand Notch Pay d'Arha.
+
+Version 1, moteur Encaissement : champ de paiement dans les formulaires, comptes connectés (service Sync de Notch Pay), frais de plateforme, reçus, billets signés, scan hors ligne, remboursements, rapprochement, tableau des encaissements (F-PAY-01 à 12). Adaptateur Campay de secours derrière la même interface.
+
+Version 2 : paiement par carte bancaire (F-PAY-13). Version 3 : cotisations récurrentes (F-PAY-14) et adaptateur CinetPay pour la zone XOF.
 
 ### 9.1 Interface fournisseur
 
@@ -333,7 +376,7 @@ Le choix du fournisseur se fait par pays et par organisation dans `config/countr
 created -> pending -> succeeded
                    -> failed
                    -> expired (aucune confirmation après 15 minutes)
-succeeded -> refunded (V2)
+succeeded -> refunded
 ```
 
 Toute transition est écrite dans `payments.raw_events` et dans `audit_events`. Une transition interdite lève une erreur et une alerte.
@@ -365,7 +408,7 @@ Toute transition est écrite dans `payments.raw_events` et dans `audit_events`. 
 Tâche quotidienne à 03:00 Africa/Douala : `list_transactions` sur 48 heures glissantes, comparaison avec `payments`, alerte console pour tout écart (montant, statut, transaction inconnue).
 
 
-## 10. Hors ligne et synchronisation (formulaire public)
+## 10. Hors ligne et synchronisation (formulaire public et mode enquêteur)
 
 1. Workbox met en cache l'application, la version publiée du formulaire, le thème et les traductions (stratégie stale-while-revalidate pour le schéma, cache-first pour les ressources versionnées).
 2. L'identifiant UUIDv7 de la réponse est créé au premier champ modifié.
@@ -375,6 +418,8 @@ Tâche quotidienne à 03:00 Africa/Douala : `list_transactions` sur 48 heures gl
 6. Le paiement exige le réseau. Hors ligne, la réponse est enregistrée avec `payment_status = pending_payment` et la page propose de payer au retour du réseau.
 7. Reprendre plus tard : code de 6 caractères (alphabet sans caractères ambigus), haché en base, valable 30 jours, limité à 5 essais par heure et par adresse IP.
 8. Budget : moins de 60 Ko compressés de JS et CSS. Pas de bibliothèque de dates lourde. Pas de framework CSS complet chargé côté public : CSS généré et purgé.
+9. **Mode enquêteur** (`/terrain`, même application Preact, chargement différé) : activation par code à usage unique valable 72 heures, téléchargement des questionnaires assignés, collecte illimitée hors ligne, file IndexedDB chiffrée (AES-GCM via WebCrypto, clé dérivée du code personnel par PBKDF2 avec 310 000 itérations), métadonnées d'entretien automatiques, synchronisation par lots idempotents qui reprend où elle s'est arrêtée, demande de stockage persistant (`navigator.storage.persist()`), alerte si aucune synchronisation depuis 48 heures.
+10. **Contrôle qualité V1** : durée inférieure au seuil (par défaut 30 % de la durée médiane), réponses identiques sur une matrice, doublon de réponse (empreinte des réponses), heure de collecte anormale. Chaque règle produit un `quality_flag`. Le score de qualité va de 0 à 100.
 
 
 ## 11. Configuration commerciale (`config/plans.yaml`)
@@ -384,81 +429,104 @@ Ce fichier est la seule source des règles commerciales. Valeurs de référence 
 ```yaml
 currency: XAF
 annual_months_charged: 10          # engagement annuel : 2 mois offerts
-pioneer: { seats: 30, discount_bps: 2000, months: 12 }
-nonprofit_discount: { plan: pro, discount_bps: 3000, cumulative: false }
+pioneer: { seats: 30, discount_bps: 2000, months: 12, plans: [pro, equipe, terrain] }
+supervisor_program: { min_students: 5, grants_plan: pro, duration: academic_year }
 quota_policy: { alert_at_pct: 80, grace_hours: 72 }
 renewal: { remind_days_before: 7, downgrade_after_days_unpaid: 7 }
-ambassador: { reward: one_month_of_plan, paid_after_months_paid: 2 }
+ambassador: { subscription_reward: one_month_of_plan, paid_after_months_paid: 2, pass_reward: 1000 }
 
 plans:
-  discovery:
-    price_monthly: 0
-    responses_per_month: 1000
+  decouverte:
+    price: 0
+    responses: { per_month: 500 }
     members: 1
-    fee_bps: 300
+    reviewers: 1
+    enumerators: 1
     storage_gb: 1
     max_file_mb: 10
     version_history_days: 7
-    whatsapp_included: 0
-    features: [logic, calculations, tickets, csv_export, email_notifications_owner]
+    exports: [csv, xlsx]
+    features: [logic, calculations, descriptive_stats, field_mode, email_notifications_owner,
+               payments, tickets, payment_dashboard]
     branding_required: true
+    payment_fee_bps: 300                # moteur Encaissement, dès la V1
+  pass_memoire:
+    price_once: 5000
+    duration_days: 120
+    auto_renew: false
+    responses: { total: 3000 }
+    members: 1
+    reviewers: 2
+    enumerators: 3
+    storage_gb: 2
+    max_file_mb: 25
+    version_history_days: 30
+    exports: [csv, xlsx, sav, dta, r, codebook]
+    features: [logic, calculations, descriptive_stats, crosstabs, field_mode, quality_basic,
+               partial_responses, respondent_emails, payments, tickets, payment_dashboard]
+    branding_required: false
+    payment_fee_bps: 300
   pro:
     price_monthly: 9900
     price_yearly: 99000
-    responses_per_month: 10000
+    responses: { per_month: 10000 }
     members: 3
-    fee_bps: 150
+    reviewers: unlimited
+    enumerators: 3
     storage_gb: 10
     max_file_mb: 100
     version_history_days: 30
-    whatsapp_included: 200
-    features: [logic, calculations, tickets, partial_responses, stats_exports,
-               respondent_emails, google_sheets, webhooks, custom_theme, crosstabs]
+    whatsapp_included: 200              # V2
+    exports: [csv, xlsx, sav, dta, r, codebook]
+    features: [logic, calculations, descriptive_stats, crosstabs, field_mode, quality_basic,
+               partial_responses, respondent_emails, google_sheets, webhooks, custom_theme,
+               payments, tickets, payment_dashboard]
     branding_required: false
-  business:
+    payment_fee_bps: 150
+  equipe:
+    inherits: pro
     price_monthly: 29900
     price_yearly: 299000
-    responses_per_month: 50000
+    responses: { per_month: 50000 }
     members: 10
-    fee_bps: 100
+    enumerators: 10
     storage_gb: 50
-    max_file_mb: 100
     version_history_days: 90
     whatsapp_included: 1000
-    inherits: pro
-    extra_features: [advanced_roles, audit_log, custom_domain, public_api,
-                     approvals, sso_google, mfa_required_owner]
-    branding_required: false
+    extra_features: [advanced_roles, audit_log, custom_domain, public_api, approvals,
+                     sso_google, mfa_required_owner]   # audit, domaine et API en V2
+    payment_fee_bps: 100
   terrain:
+    inherits: equipe
     price_monthly: 59900
     price_yearly: 599000
-    responses_per_month: 100000
+    responses: { per_month: 100000 }
     members: 15
-    enumerators_included: 10
-    enumerator_extra_monthly: 3000
-    fee_bps: 100
+    enumerators: 30
+    enumerator_extra_monthly: 2000
     storage_gb: 100
-    max_file_mb: 100
-    version_history_days: 90
-    whatsapp_included: 1000
-    inherits: business
-    extra_features: [field_app, quality_control, kiosk_mode, live_map]
-  enterprise:
+    extra_features: [quality_advanced, assignments_quotas, live_map, kiosk_mode]   # V2
+    payment_fee_bps: 100
+  institution:
     price_monthly_from: 250000
-    fee_bps: 50
+    contract: annual
+    payment_fee_bps: 50
     custom: true
 
 addons:
-  whatsapp_utility_1000: { price: 9000 }
-  whatsapp_marketing_500: { price: 12000 }
-  sms_100: { price: 9500 }
-  ai_credits_1000: { price: 5000 }
+  enumerator_monthly: { price: 2000 }
+  ai_credits_1000: { price: 5000 }          # V2
+  whatsapp_utility_1000: { price: 9000 }    # V2
+  whatsapp_marketing_500: { price: 12000 }  # V2
+  sms_100: { price: 9500 }                  # V2
   storage_10gb_monthly: { price: 2500 }
 
-services:
-  studio_simple: { price: 35000, upfront_pct: 100 }
-  studio_complete: { price: 120000, upfront_pct: 100 }
-  terrain_turnkey_from: { price: 400000, upfront_pct: 50 }
+studies:                                     # Arha Services (analyses, mises en place) et Arha Études (enquêtes)
+  questionnaire_review: { price: 25000, upfront_pct: 100, brand: services }
+  thesis_analysis: { price: 35000, upfront_pct: 100, brand: services }
+  advanced_analysis: { price: 75000, upfront_pct: 100, brand: services }
+  payment_form_setup: { price: 75000, upfront_pct: 100, brand: services }
+  turnkey_survey_from: { price: 450000, upfront_pct: 50, brand: etudes }
 ```
 
 Le chargement valide ce fichier avec un modèle Pydantic strict. Une valeur manquante ou incohérente empêche le démarrage. Les fonctionnalités sont vérifiées par `require_feature("crosstabs")` côté serveur et masquées côté client.
@@ -470,7 +538,7 @@ Applique ces points dès la première ligne. Chaque point a un test automatisé 
 
 - **S-01 Mots de passe :** Argon2id (paramètres argon2-cffi recommandés, réévalués chaque année), 10 caractères minimum, refus des mots de passe compromis via l'API Pwned Passwords en k-anonymat (préfixe SHA-1 de 5 caractères), message neutre en cas d'échec.
 - **S-02 Sessions :** jeton aléatoire 256 bits, seul son haché est stocké. Cookie `__Host-arha_session`, `HttpOnly`, `Secure`, `SameSite=Lax`, `Path=/`. Rotation à la connexion et à l'élévation de privilège. Expiration à 14 jours d'inactivité. CSRF : jeton synchronisé dans un en-tête `X-CSRF-Token` pour toute méthode non sûre.
-- **S-03 Double authentification :** TOTP RFC 6238, 10 codes de secours hachés. Obligatoire pour les propriétaires Business, Terrain, Entreprise et pour toute la console interne.
+- **S-03 Double authentification :** TOTP RFC 6238, 10 codes de secours hachés. Obligatoire pour les propriétaires Équipe, Terrain, Institution, pour les superviseurs d'enquêteurs et pour toute la console interne.
 - **S-04 Autorisation :** chaque route déclare `Depends(require_permission("forms:edit"))` ou figure dans une liste blanche publique. Un test parcourt toutes les routes et échoue si une route n'a ni permission ni entrée en liste blanche.
 - **S-05 Isolation :** test transverse qui crée deux organisations et tente chaque route de l'organisation A avec la session de B. Toute réponse autre que 403 ou 404 fait échouer la CI.
 - **S-06 Transport :** TLS 1.3, HSTS `max-age=31536000; includeSubDomains; preload`.
@@ -530,9 +598,11 @@ Titres en Cormorant Garamond, texte en Inter (application) et police système (f
 | Unitaires Python | pytest, Hypothesis | Couverture d'au moins 85 % sur `logic`, `payments`, `billing`, `submissions` |
 | Unitaires TS | Vitest | Couverture d'au moins 85 % sur `logic-ts` et le moteur de rendu |
 | Conformité logique | cas JSON partagés | 100 % des cas passent en TS et en Python |
+| Exports statistiques | jeu de référence SPSS | Statistiques et fichiers identiques aux résultats attendus |
+| Hors ligne | Playwright en mode avion | 500 réponses synchronisées, aucun doublon, aucune perte |
 | Isolation | tests transverses | Aucune fuite entre organisations |
 | Permissions | test de parcours des routes | Aucune route sans permission ni liste blanche |
-| Bout en bout | Playwright | Parcours critiques : inscription, création, publication, réponse, paiement simulé, billet, scan, export |
+| Bout en bout | Playwright | Parcours critiques : inscription, création, relecture, publication, réponse en ligne, collecte en mode avion par un enquêteur, synchronisation, export SPSS, achat d'un Pass Mémoire |
 | Taille | script de build | Formulaire public sous 60 Ko compressés |
 | Performance | Lighthouse CI | Performance et accessibilité au moins 90 sur le formulaire public |
 | Charge | k6 | 50 envois par seconde pendant 5 minutes, p95 sous 300 ms côté API |
@@ -593,43 +663,44 @@ Chaque phase liste ses objectifs, ses livrables, les exigences couvertes (identi
 - Tests transverses d'isolation et de permissions en place dès cette phase.
 - **Sortie :** parcours Playwright inscription, création d'organisation, invitation, changement de rôle ; test d'isolation et test de permissions verts.
 
-### Phase 2 · Éditeur et versions (S1 et S2)
-- F-EDI-01 à 10. Éditeur par blocs, commandes `/`, glisser-déposer, annuler et rétablir, aperçu mobile, thèmes, traductions, modèles, fermeture, page de fin, publication immuable, historique.
-- **Sortie :** création d'un formulaire de 30 blocs avec deux langues, publication, restauration d'une version ; aucune perte de saisie après rechargement brutal.
+### Phase 2 · Éditeur, versions et relecture (S1 et S2)
+- F-EDI-01 à 12. Éditeur par blocs, commandes `/`, glisser-déposer, annuler et rétablir, aperçu mobile, thèmes, traductions, modèles méthodologiques (questionnaire de mémoire, enquête ménage, satisfaction, étude de marché, évaluation de formation, Likert, consentement éclairé), fermeture, page de fin, publication immuable, historique, noms de variables et codes de modalités, liens de relecture et commentaires de l'encadreur.
+- **Sortie :** création d'un questionnaire de 40 blocs en deux langues, relecture commentée par un relecteur sans compte payant, publication, restauration d'une version ; aucune perte de saisie après rechargement brutal ; noms de variables valides pour SPSS, Stata et R.
 
 ### Phase 3 · Logique, formulaire public, hors ligne (S2, 22 décembre au 4 janvier 2027)
-- F-LOG-01 à 05, F-PUB-01 à 09. Moteurs TS et Python, suite de 300 cas, détection à la publication, rendu Preact, sauvegarde locale, file d'envoi, reprise par code, balises Open Graph, badge, signalement, mention « Créé avec Arha ».
+- F-LOG-01 à 05, F-PUB-01 à 10. Moteurs TS et Python, suite de 300 cas, détection à la publication, rendu Preact, sauvegarde locale, file d'envoi, reprise par code, consentement éclairé, balises Open Graph, badge, signalement, mention « Créé avec Arha ».
 - **Sortie :** 100 % des cas de conformité ; formulaire public sous 60 Ko ; Lighthouse au moins 90 en 3G lente ; test Playwright hors ligne (coupure, saisie, retour du réseau, envoi unique).
 
-### Phase 4 · Encaissement et billets (S3, 5 au 18 janvier)
-- F-PAY-01 à 10. S-19. Interface fournisseur, adaptateur Notch Pay (après lecture de la documentation), adaptateur Campay, comptes connectés, frais, machine à états, webhooks, contre-vérification, reçus PDF, billets signés, scan hors ligne, rapprochement.
-- **Sortie :** paiement de bout en bout dans l'environnement de test de l'agrégateur ; test de double clic ; test de 200 paiements simultanés sur un quota de 150 ; scan hors ligne avec détection du double scan ; rapprochement qui détecte un écart injecté.
+### Phase 4 · Moteur Encaissement (S3, 5 au 18 janvier)
+- F-PAY-01 à 12, section 9, S-19. Adaptateur Notch Pay (comptes connectés par le service Sync, frais de plateforme), adaptateur Campay de secours, champ de paiement dans l'éditeur et le formulaire public, machine à états, webhooks signés, contre-vérification, idempotence, frais reportés ou non au payeur, reçus PDF numérotés avec code QR de vérification, billets signés Ed25519 avec catégories et quotas, application de scan hors ligne, remboursements, rapprochement quotidien, tableau des encaissements avec export comptable.
+- **Sortie :** paiement de bout en bout dans le bac à sable de l'agrégateur ; double clic et rejeu réseau sans double débit ; webhook falsifié rejeté ; 200 paiements simultanés pour un quota de 150 billets, jamais plus de 150 billets ; scan de 300 billets en mode avion avec détection des doubles scans ; aucun flux ne crédite un compte d'Arha pour le compte d'un client.
 
-### Phase 5 · Réponses, exports, intégrations, notifications (S4, 19 janvier au 1er février)
-- F-REP-01 à 07, F-ANA-01 à 03, F-NOT-01 et 02.
-- Tableau des réponses paginé côté serveur, statuts, réponses partielles, exports CSV, Excel, SPSS et Stata avec dictionnaire, Google Sheets, webhooks signés, résumés, entonnoir sans cookie, tableau de bord des paiements, e-mails.
-- **Sortie :** export SPSS ouvert avec libellés corrects (vérifié par lecture pyreadstat) ; webhook reçu et signature vérifiée par un récepteur de test ; tableau fluide avec 50 000 réponses de test.
+### Phase 5 · Mode enquêteur et qualité (S4, 19 janvier au 1er février)
+- F-TER-01 à 07. Comptes enquêteurs, activation, téléchargement des questionnaires, collecte hors ligne illimitée, file chiffrée, métadonnées d'entretien, GPS, synchronisation par lots idempotents, contrôle qualité V1, tableau d'avancement par enquêteur.
+- **Sortie :** 500 réponses collectées en mode avion sur un profil de téléphone modeste puis synchronisées sans doublon ni perte ; coupure simulée au milieu d'une synchronisation ; téléphone « perdu » sans réponse lisible ; drapeaux de qualité corrects sur un jeu de test.
 
-### Phase 6 · Facturation, quotas, confiance, console (S5, 2 au 15 février)
-- F-FAC-01 à 05, F-ORG-03, F-ADM-01 à 04, S-20.
-- Souscription par Mobile Money, factures numérotées, renouvellement, rétrogradation, compteurs d'usage, alertes, période de grâce, offre Pionnier, remise associative, filtre anti-hameçonnage, vérification d'organisation, console interne (signalements, suspensions, alertes de rapprochement, indicateurs du chapitre 15).
-- **Sortie :** cycle complet souscription, dépassement de quota, alerte, grâce, blocage, renouvellement ; formulaire frauduleux bloqué ; suspension effective en moins de 60 secondes.
+### Phase 6 · Réponses, exports statistiques, analyse (S5, 2 au 15 février)
+- F-REP-01 à 08, F-ANA-01 à 04, F-NOT-01 et 02, section 8 bis.
+- Tableau des réponses paginé côté serveur, statuts, réponses partielles, statut de paiement visible et filtrable, exports CSV, Excel, SPSS, Stata et R, dictionnaire, export anonyme, statistiques descriptives, tableaux croisés et khi-deux, entonnoir sans cookie, Google Sheets, webhooks signés, e-mails.
+- **Sortie :** le jeu de référence passe (statistiques égales à SPSS, fichiers .sav et .dta relus par pyreadstat avec libellés et codes corrects, script R exécuté dans un conteneur R) ; webhook reçu et vérifié ; tableau fluide avec 50 000 réponses.
 
-### Phase 7 · Durcissement et bêta (S6, 16 février au 1er mars)
-- Revue ASVS niveau 2, test de charge k6, test de restauration complet, `security.txt`, documents juridiques intégrés (CGU, DPA, politique de confidentialité, usage acceptable), site vitrine Astro avec tarifs et modèles, tableau de bord de supervision et alertes.
-- Bêta privée avec 15 à 20 organisations. Tri quotidien des retours. Gel des fonctionnalités le 23 février.
-- **Sortie :** aucune vulnérabilité haute ouverte ; restauration réussie et chronométrée sous 4 heures ; lancement public le 2 mars 2027.
+### Phase 7 · Facturation, Pass Mémoire, confiance, console (S6, 16 février au 1er mars)
+- F-FAC-01 à 06, F-ORG-03, F-ADM-01 à 05, S-20, section 9.0.
+- Encaissement des ventes d'Arha par Mobile Money (compte marchand Notch Pay), abonnements, Pass Mémoire de 120 jours sans renouvellement automatique, factures numérotées, renouvellement, rétrogradation, compteurs d'usage, commission par offre lue dans `plans.yaml`, alertes, période de grâce, offre Pionnier, Programme Encadreur, filtre anti-hameçonnage, vérification d'organisation, plafonds d'encaissement pour les comptes récents, console interne (signalements, suspensions, indicateurs, suivi d'Arha Services et d'Arha Études).
+- **Sortie :** achat d'un Pass Mémoire dans l'environnement de test de l'agrégateur ; cycle abonnement, dépassement, alerte, grâce, blocage, renouvellement ; changement d'offre qui modifie la commission dès le paiement suivant ; formulaire frauduleux bloqué ; suspension effective en moins de 60 secondes.
 
-### Phase 8 · Version 2.0 Arha Terrain (avril à mai 2027)
-- Application terrain installable, file locale chiffrée, assignations, quotas, GPS, photo, code-barres, signature, carte en direct, contrôle qualité (durée, réponses identiques, doublons, GPS), mode kiosque, gestion des enquêteurs facturés.
+### Phase 8 · Durcissement et bêta (S7, 1er au 15 mars 2027)
+- Revue ASVS niveau 2, test de charge k6, test de restauration complet, `security.txt`, documents juridiques intégrés (CGU, DPA, politique de confidentialité, usage acceptable, conditions d'encaissement pour les organisations, conditions d'Arha Services et d'Arha Études avec la règle d'intégrité), site vitrine Astro avec tarifs, modèles et guides, tableau de bord de supervision et alertes.
+- Bêta privée avec 20 à 25 pilotes (étudiants, enseignants, deux cabinets, deux écoles, deux organisateurs), dont au moins trois formulaires payants réels de faible montant. Tri quotidien des retours. Gel des fonctionnalités le 8 mars.
+- **Sortie :** aucune vulnérabilité haute ouverte ; restauration réussie et chronométrée sous 4 heures ; rapprochement sans écart sur toute la bêta ; lancement public le 16 mars 2027.
 
-### Phase 9 · Version 2.1 (juin à juillet 2027)
-- F-NOT-03 et 04 (WhatsApp Cloud API direct, modèles utilitaires approuvés, WhatsApp Flows, SMS par pack), Arha Intelligence (passerelle unique, retrait des champs identifiants, crédits, Gemini Flash-Lite par défaut, modèle interchangeable, correcteur de questions, classement des réponses ouvertes, synthèse), F-ANA-04 à 06, lecture à voix haute, traduction automatique relue, journal d'audit consultable, approbations, domaine personnalisé, API publique documentée, champs chiffrés, paiement par carte, remboursements (F-PAY-11).
+### Phase 9 · Version 2 (avril à juillet 2027)
+- Version 2.0 (avril à mai) : import de questionnaires Word, PDF et Excel par modèle de langage, avec relecture obligatoire avant enregistrement ; Arha Terrain avancé (F-TER-08, assignations par zone, quotas, carte en direct, contrôle qualité avancé, mode kiosque) ; paiement par carte (F-PAY-13).
+- Version 2.1 (juin à juillet) : F-NOT-03 et 04 (WhatsApp Cloud API direct, reçus et rappels par modèles utilitaires approuvés, WhatsApp Flows, SMS par pack), Arha Intelligence (passerelle unique, retrait des champs identifiants, crédits, Gemini Flash-Lite par défaut, modèle interchangeable, correcteur de questions, codage des réponses ouvertes, synthèse descriptive), F-ANA-05 et 06, banque de questions et d'échelles, lecture à voix haute, traduction automatique relue, journal d'audit consultable, approbations, domaine personnalisé, API publique documentée pour la collecte et l'encaissement, champs chiffrés.
 
 ### Phase 10 · Version 3 (août à novembre 2027)
-- Version 3.0 (août à septembre) : quiz, banque de questions, certificats vérifiables, imports Word, PDF, Excel et photo, banque de questions d'organisation, carte de la logique.
-- Version 3.1 (octobre à novembre) : adaptateur CinetPay et devise XOF, questions en langage naturel, pondération, formulaires enchaînés et récurrents, cotisations, réponse vocale transcrite, création par note vocale, relance par question de précision, vérification par rappel aléatoire, espace partenaire, résidence des données au Cameroun pour l'offre Entreprise.
-
+- Version 3.0 (août à septembre) : pondération et calcul de taille d'échantillon, quiz, certificats vérifiables, import par photo, carte de la logique, cotisations récurrentes (F-PAY-14).
+- Version 3.1 (octobre à novembre) : adaptateur CinetPay et devise XOF, questions en langage naturel, formulaires enchaînés et récurrents, réponse vocale transcrite, création par note vocale, relance par question de précision, vérification par rappel aléatoire, espace partenaire, résidence des données au Cameroun pour l'offre Institution.
 
 ## 18. Protocole de chaque session
 
@@ -688,15 +759,17 @@ Une fonctionnalité est terminée quand :
 - Livrer un texte d'interface seulement en français ou seulement en anglais.
 - Déployer en production sans l'accord explicite du porteur.
 - Supprimer des données d'un client sans procédure tracée.
+- Rédiger un mémoire, une thèse ou un article à la place d'un utilisateur.
+- Afficher une réponse de terrain comme enregistrée avant qu'elle soit persistée localement.
 
 
 ## 21. Annexes
 
 ### 21.1 Indicateurs à exposer dans la console interne
-Montant encaissé du mois, revenu récurrent mensuel, clients payants actifs, organisations actives (au moins dix réponses en 30 jours), conversion vers le payant sur 60 jours, attrition, réussite des paiements, disponibilité, p95 de l'API, part des services, coût d'infrastructure rapporté au chiffre d'affaires.
+Indicateurs directeurs : réponses valides collectées dans le mois (complètes et conformes au contrôle qualité) et volume encaissé dans le mois par les formulaires des clients. Puis : revenu récurrent mensuel, croissance mensuelle du revenu récurrent, rétention nette du revenu, organisations qui encaissent, taux de réussite des paiements, abonnés payants actifs, Pass Mémoire vendus, utilisateurs actifs (au moins un questionnaire avec dix réponses en 30 jours), exports statistiques du mois, conversion des étudiants vers le Pass, attrition, réussite de la synchronisation hors ligne, disponibilité, p95 de l'API, part d'Arha Services et d'Arha Études dans le revenu, coût d'infrastructure rapporté au chiffre d'affaires.
 
 ### 21.2 Paliers d'investissement (pour information)
-- P1 : 10 pilotes actifs, 3 promesses d'achat, un paiement réel réussi.
+- P1 : 20 pilotes actifs dont deux cabinets ou laboratoires et deux organisateurs ou écoles, 3 promesses d'achat, un paiement réel encaissé par un formulaire sur un compte connecté.
 - P2 : revenu récurrent d'au moins 300 000 FCFA pendant deux mois.
 - P3 : revenu récurrent d'au moins 1 000 000 FCFA pendant deux mois.
 - P4 : revenu récurrent d'au moins 3 000 000 FCFA pendant deux mois.
