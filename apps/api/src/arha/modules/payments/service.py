@@ -592,7 +592,12 @@ async def sync_scans(db: AsyncSession, scans: list[dict[str, Any]], user_id: uui
     return {"accepted": accepted, "duplicates": duplicates}
 
 
-_LINKS = {"subscription": "subscriptions", "pass": "student_passes", "study": "study_orders"}
+# One constant statement per purpose: no SQL is assembled from a variable.
+_LINKS = {
+    "subscription": text("update subscriptions set payment_id = :p where id = :s"),
+    "pass": text("update student_passes set payment_id = :p where id = :s"),
+    "study": text("update study_orders set payment_id = :p where id = :s"),
+}
 
 
 async def start_platform_payment(ctx: Any, *, org: Any, amount: int, msisdn: str, idempotency_key: str,
@@ -619,7 +624,7 @@ async def start_platform_payment(ctx: Any, *, org: Any, amount: int, msisdn: str
     await db.flush()
     payment_id = payment.id
     # Linked before the provider call so an early webhook always finds what was bought.
-    await db.execute(text(f"update {_LINKS[purpose]} set payment_id = :p where id = :s"),
+    await db.execute(_LINKS[purpose],
                      {"p": payment_id, "s": link_id})
     request = ChargeRequest(idempotency_key=key_hash, amount=amount, currency=org.currency, msisdn=e164,
                             channel=operator if operator in ("mtn", "orange") else "auto",  # type: ignore[arg-type]

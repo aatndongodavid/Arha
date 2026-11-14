@@ -9,19 +9,19 @@ jobs:
   images:
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262  # v4
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1  # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020  # v4
         with: { node-version: 22, cache: pnpm }
       - name: Build the public form shell needed by the API image
         run: pnpm install --frozen-lockfile && pnpm --filter @arha/forms build
-      - uses: docker/login-action@v3
+      - uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9  # v3
         with: { registry: ghcr.io, username: "${{ github.actor }}", password: "${{ secrets.GITHUB_TOKEN }}" }
       - name: Lowercase owner
         run: echo "OWNER=${GITHUB_REPOSITORY_OWNER,,}" >> "$GITHUB_ENV"
-      - uses: docker/build-push-action@v6
+      - uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8  # v6
         with: { context: ., file: infra/docker/api.Dockerfile, push: true, tags: "ghcr.io/${{ env.OWNER }}/arha-api:${{ github.sha }}" }
-      - uses: docker/build-push-action@v6
+      - uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8  # v6
         with:
           context: .
           file: infra/docker/static.Dockerfile
@@ -31,5 +31,5 @@ jobs:
             ARHA_APP_URL=${{ vars.ARHA_APP_URL }}
             ARHA_API_URL=${{ vars.ARHA_API_URL }}
             ARHA_SITE_URL=${{ vars.ARHA_SITE_URL }}
-      - uses: aquasecurity/trivy-action@0.28.0
+      - uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25  # v0.36.0
         with: { image-ref: "ghcr.io/${{ env.OWNER }}/arha-api:${{ github.sha }}", severity: "HIGH,CRITICAL", exit-code: "1", ignore-unfixed: true }
