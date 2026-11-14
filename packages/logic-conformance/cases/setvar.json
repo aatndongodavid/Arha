@@ -83,7 +83,7 @@
   "name": "gen_setvar_002",
   "base": "setvar",
   "answers": {
-   "q_n": -4
+   "q_n": 0.1
   },
   "expect": {
    "visible": [
@@ -105,7 +105,7 @@
    "errors": [
     {
      "field": "q_n",
-     "code": "below_min"
+     "code": "invalid_number"
     }
    ],
    "amount": 10000
@@ -353,7 +353,9 @@
   "name": "gen_setvar_011",
   "base": "setvar",
   "answers": {
-   "q_type": 0.5
+   "q_type": {
+    "missing": 98
+   }
   },
   "expect": {
    "visible": [
@@ -375,7 +377,7 @@
    "errors": [
     {
      "field": "q_type",
-     "code": "invalid_choice"
+     "code": "invalid_missing"
     }
    ],
    "amount": 10000
@@ -385,8 +387,7 @@
   "name": "gen_setvar_012",
   "base": "setvar",
   "answers": {
-   "q_type": false,
-   "q_n": 9.99
+   "q_type": 7
   },
   "expect": {
    "visible": [
@@ -409,10 +410,6 @@
     {
      "field": "q_type",
      "code": "invalid_choice"
-    },
-    {
-     "field": "q_n",
-     "code": "invalid_number"
     }
    ],
    "amount": 10000
@@ -454,7 +451,9 @@
   "name": "gen_setvar_014",
   "base": "setvar",
   "answers": {
-   "q_type": -0.5,
+   "q_type": {
+    "missing": 97
+   },
    "q_n": true
   },
   "expect": {
@@ -477,7 +476,7 @@
    "errors": [
     {
      "field": "q_type",
-     "code": "invalid_choice"
+     "code": "invalid_missing"
     },
     {
      "field": "q_n",
@@ -491,8 +490,10 @@
   "name": "gen_setvar_015",
   "base": "setvar",
   "answers": {
-   "q_n": "x",
-   "q_type": -0.5
+   "q_n": "3",
+   "q_type": {
+    "missing": 97
+   }
   },
   "expect": {
    "visible": [
@@ -514,11 +515,7 @@
    "errors": [
     {
      "field": "q_type",
-     "code": "invalid_choice"
-    },
-    {
-     "field": "q_n",
-     "code": "invalid_number"
+     "code": "invalid_missing"
     }
    ],
    "amount": 10000
@@ -647,7 +644,9 @@
   "name": "gen_setvar_020",
   "base": "setvar",
   "answers": {
-   "q_n": 0.1
+   "q_n": {
+    "missing": 98
+   }
   },
   "expect": {
    "visible": [
@@ -669,7 +668,7 @@
    "errors": [
     {
      "field": "q_n",
-     "code": "invalid_number"
+     "code": "invalid_missing"
     }
    ],
    "amount": 10000
@@ -679,8 +678,10 @@
   "name": "gen_setvar_021",
   "base": "setvar",
   "answers": {
-   "q_n": "a@b.cm",
-   "q_type": null
+   "q_n": {
+    "missing": 97
+   },
+   "q_type": false
   },
   "expect": {
    "visible": [
@@ -701,8 +702,12 @@
    },
    "errors": [
     {
+     "field": "q_type",
+     "code": "invalid_choice"
+    },
+    {
      "field": "q_n",
-     "code": "invalid_number"
+     "code": "invalid_missing"
     }
    ],
    "amount": 10000
@@ -712,8 +717,40 @@
   "name": "gen_setvar_022",
   "base": "setvar",
   "answers": {
-   "q_type": 0.1,
-   "q_n": "a@b.cm"
+   "q_type": false
+  },
+  "expect": {
+   "visible": [
+    "q_type",
+    "q_n",
+    "pay"
+   ],
+   "required": [],
+   "variables": {
+    "price": 10000
+   },
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_type",
+     "code": "invalid_choice"
+    }
+   ],
+   "amount": 10000
+  }
+ },
+ {
+  "name": "gen_setvar_023",
+  "base": "setvar",
+  "answers": {
+   "q_n": -0.5,
+   "q_type": 0.1
   },
   "expect": {
    "visible": [
@@ -746,43 +783,11 @@
   }
  },
  {
-  "name": "gen_setvar_023",
-  "base": "setvar",
-  "answers": {
-   "q_n": null,
-   "q_type": true
-  },
-  "expect": {
-   "visible": [
-    "q_type",
-    "q_n",
-    "pay"
-   ],
-   "required": [],
-   "variables": {
-    "price": 10000
-   },
-   "path": [
-    "p1"
-   ],
-   "ended": false,
-   "nextPage": {
-    "p1": null
-   },
-   "errors": [
-    {
-     "field": "q_type",
-     "code": "invalid_choice"
-    }
-   ],
-   "amount": 10000
-  }
- },
- {
   "name": "gen_setvar_024",
   "base": "setvar",
   "answers": {
-   "q_type": true
+   "q_type": 0.1,
+   "q_n": 0.1
   },
   "expect": {
    "visible": [
@@ -805,6 +810,10 @@
     {
      "field": "q_type",
      "code": "invalid_choice"
+    },
+    {
+     "field": "q_n",
+     "code": "invalid_number"
     }
    ],
    "amount": 10000

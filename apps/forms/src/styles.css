@@ -76,3 +76,10 @@ footer nav { display: flex; flex-wrap: wrap; gap: 4px 18px; }
 .badge { display: inline-block; padding: 4px 10px; margin-bottom: 8px; font-size: 13px; color: var(--green); border: 1px solid var(--green); border-radius: 99px; text-decoration: none; }
 .made { display: inline-block; margin-top: 8px; padding: 10px 0; font-size: 13px; color: var(--grey); }
 @media (prefers-reduced-motion: no-preference) { .primary, .scale span { transition: background .15s; } }
+.likert { margin: 0 0 14px; }
+.likert legend { font-weight: 400; font-size: 15px; }
+.likert .scale span { min-height: 44px; padding: 4px; font-size: 13px; text-align: center; line-height: 1.2; }
+.missing { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.missing .opt { flex: 1 1 140px; background: var(--sand); border-color: transparent; font-size: 14px; }
+.scan { position: relative; display: inline-block; margin-top: 8px; text-align: center; }
+.sr { position: absolute; inset: 0; opacity: 0; width: 100%; }

@@ -15,10 +15,11 @@ export type Block = Record<string, any>;
 
 export const BLOCK_TYPES: [string, string[]][] = [
   ["text", ["short_text", "long_text", "email", "phone", "url", "number"]],
-  ["choice", ["single_choice", "multi_choice", "dropdown", "yes_no", "ranking", "choice_grid"]],
+  ["choice", ["single_choice", "multi_choice", "dropdown", "yes_no", "ranking", "choice_grid", "likert_matrix"]],
   ["scale", ["rating", "linear_scale", "nps"]],
   ["date", ["date", "time", "date_range"]],
-  ["file", ["file_upload", "signature"]],
+  ["file", ["file_upload", "photo", "signature"]],
+  ["field", ["geopoint", "barcode"]],
   ["payment", ["payment_fixed", "payment_computed", "payment_open", "product_choice", "ticket_choice"]],
   ["structure", ["heading", "rich_text", "divider", "hidden", "computed_display", "consent"]],
 ];
@@ -26,11 +27,31 @@ const WITH_OPTIONS = new Set(["single_choice", "multi_choice", "dropdown", "rank
 const PRICED = new Set(["product_choice", "ticket_choice"]);
 const PAYMENT = new Set(["payment_fixed", "payment_computed", "payment_open", "product_choice", "ticket_choice"]);
 const NO_LABEL = new Set(["divider", "hidden", "rich_text", "heading"]);
+const NO_VARIABLE = new Set(["heading", "rich_text", "image", "divider", "computed_display", "payment_fixed", "payment_computed"]);
+const MISSING_OK = new Set(["short_text", "long_text", "number", "single_choice", "dropdown", "yes_no", "rating", "linear_scale", "nps", "date", "time", "email", "phone", "barcode"]);
+const MISSING_PRESETS: [number, string, string][] = [[98, "Ne sait pas", "Does not know"], [99, "Refus de répondre", "Refusal"]];
 const SECONDS: Record<string, number> = { long_text: 40, file_upload: 30, signature: 15, choice_grid: 25, ranking: 20, heading: 2, rich_text: 8, divider: 0, hidden: 0 };
 
 export const newId = (prefix: string, taken: Set<string>): string => {
   for (let i = 1; ; i++) if (!taken.has(`${prefix}${i}`)) return `${prefix}${i}`;
 };
+/** Copies the variable names and codes the server generated into the local draft (F-EDI-12). */
+function mergeNormalized(local: Schema, server: Schema): Schema {
+  const byId = new Map<string, any>(server.pages.flatMap((p: any) => p.blocks).map((b: any) => [b.id, b]));
+  let changed = false;
+  const next = structuredClone(local);
+  for (const page of next.pages) for (const b of page.blocks) {
+    const srv = byId.get(b.id);
+    if (!srv) continue;
+    if (!b.varName && srv.varName) { b.varName = srv.varName; changed = true; }
+    for (const key of ["options", "columns"]) {
+      const codes = new Map<string, number>((srv[key] ?? []).map((o: any) => [o.id, o.code]));
+      for (const o of b[key] ?? []) if (o.code == null && codes.has(o.id)) { o.code = codes.get(o.id); changed = true; }
+    }
+  }
+  return changed ? next : local;
+}
+
 export const allIds = (s: Schema): Set<string> =>
   new Set([...s.pages.flatMap((p: any) => [p.id, ...p.blocks.map((b: Block) => b.id)]), ...s.variables.map((v: any) => v.id), ...s.rules.map((r: any) => r.id)]);
 
@@ -39,6 +60,12 @@ function makeBlock(type: string, s: Schema): Block {
   const b: Block = { id, type, label: { fr: "", en: "" }, required: false };
   if (WITH_OPTIONS.has(type)) {
     b.options = [1, 2].map((n) => ({ id: `o${n}`, label: { fr: `Option ${n}`, en: `Option ${n}` }, code: n, ...(PRICED.has(type) ? { price: 1000 } : {}) }));
+  }
+  if (type === "likert_matrix") {
+    b.rows = [1, 2, 3].map((n) => ({ id: `r${n}`, label: { fr: `Affirmation ${n}`, en: `Statement ${n}` } }));
+    const scale = [["Pas du tout d'accord", "Strongly disagree"], ["Pas d'accord", "Disagree"], ["Neutre", "Neutral"],
+      ["D'accord", "Agree"], ["Tout à fait d'accord", "Strongly agree"]];
+    b.columns = scale.map(([fr, en], i) => ({ id: `c${i + 1}`, label: { fr, en }, code: i + 1 }));
   }
   if (type === "choice_grid") {
     b.rows = [{ id: "r1", label: { fr: "Ligne 1", en: "Row 1" } }];
@@ -102,6 +129,7 @@ export function Editor() {
     try {
       const r = await api<any>(`${base}/draft`, { method: "PUT", json: { schema: s, revision: revision.current } });
       revision.current = r.draft_revision;
+      setSchemaState((prev) => (prev ? mergeNormalized(prev, r.draft_schema) : prev));
       setSaving(dirty.current ? "saving" : "saved");
       qc.setQueryData(["form", formId], r);
     } catch (e) {
@@ -407,6 +435,7 @@ function BlockCard({ block: b, lang, open, disabled, schema, onToggle, onChange,
       <p className="mb-1.5 text-sm font-medium">{t(`editor.${key}`)}</p>
       {(b[key] ?? []).map((o: any, oi: number) => (
         <div key={o.id} className="mb-2 flex flex-wrap gap-2">
+          {key !== "rows" ? <span className="inline-flex min-h-11 w-12 items-center justify-center rounded-lg bg-beige font-mono text-xs" title={t("editor.option.code")}>{o.code ?? "-"}</span> : null}
           <Input aria-label={t("editor.option.label")} className="min-w-40 flex-1" value={o.label?.[lang] ?? ""} disabled={disabled}
             onChange={(e) => onChange((x) => { x[key][oi].label = { ...(x[key][oi].label ?? {}), [lang]: e.target.value }; })} />
           {priced ? (
@@ -471,8 +500,35 @@ function BlockCard({ block: b, lang, open, disabled, schema, onToggle, onChange,
               </div>
             </>
           ) : null}
+          {!NO_VARIABLE.has(b.type) ? (
+            <div className="mt-3">
+              <label className="mb-1.5 block text-sm font-medium" htmlFor={`var-name-${b.id}`}>{t("editor.varname")}</label>
+              <Input id={`var-name-${b.id}`} className="font-mono" maxLength={32} disabled={disabled} value={b.varName ?? ""}
+                placeholder={t("editor.varname.auto")}
+                onChange={(e) => onChange((x) => { const v = e.target.value.replace(/[^A-Za-z0-9_]/g, "").slice(0, 32); if (v) x.varName = v; else delete x.varName; })} />
+              <p className="mt-1 text-sm text-grey">{t("editor.varname.hint")}</p>
+            </div>
+          ) : null}
           {WITH_OPTIONS.has(b.type) ? optionList("options", PRICED.has(b.type)) : null}
-          {b.type === "choice_grid" ? <>{optionList("rows", false)}{optionList("columns", false)}</> : null}
+          {b.type === "choice_grid" || b.type === "likert_matrix" ? <>{optionList("rows", false)}{optionList("columns", false)}</> : null}
+          {MISSING_OK.has(b.type) ? (
+            <div className="mt-3">
+              <p className="mb-1.5 text-sm font-medium">{t("editor.missing")}</p>
+              {MISSING_PRESETS.map(([code, fr, en]) => {
+                const on = (b.missingCodes ?? []).some((m: any) => m.code === code);
+                return (
+                  <label key={code} className="mr-5 inline-flex items-center gap-2 text-sm">
+                    <input type="checkbox" className="h-4 w-4 accent-orange" checked={on} disabled={disabled} onChange={(e) => onChange((x) => {
+                      const rest = (x.missingCodes ?? []).filter((m: any) => m.code !== code);
+                      x.missingCodes = e.target.checked ? [...rest, { code, label: { fr, en } }].sort((m1: any, m2: any) => m1.code - m2.code) : rest;
+                      if (!x.missingCodes.length) delete x.missingCodes;
+                    })} />
+                    {t("editor.missing.item", { code, label: lang === "fr" ? fr : en })}
+                  </label>
+                );
+              })}
+            </div>
+          ) : null}
           {b.type === "payment_fixed" ? <NumberRow label={t("editor.amount")} value={b.amount} disabled={disabled} onChange={(v) => onChange((x) => { x.amount = v ?? 0; })} /> : null}
           {b.type === "payment_open" ? (
             <div className="grid gap-3 sm:grid-cols-2">

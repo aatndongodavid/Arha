@@ -94,7 +94,7 @@
   "name": "gen_hidden_002",
   "base": "hidden",
   "answers": {
-   "t_wa": -4
+   "t_wa": 0.1
   },
   "expect": {
    "visible": [
@@ -142,7 +142,7 @@
   "name": "gen_hidden_004",
   "base": "hidden",
   "answers": {
-   "src": 0
+   "src": 0.1
   },
   "expect": {
    "visible": [
@@ -172,8 +172,8 @@
   "base": "hidden",
   "answers": {
    "q_x": null,
-   "t_wa": true,
-   "src": 9
+   "t_wa": -2,
+   "src": 2.5
   },
   "expect": {
    "visible": [
@@ -261,7 +261,7 @@
   "name": "gen_hidden_008",
   "base": "hidden",
   "answers": {
-   "t_wa": 19,
+   "t_wa": 1000.0,
    "src": true
   },
   "expect": {
@@ -291,9 +291,8 @@
   "name": "gen_hidden_009",
   "base": "hidden",
   "answers": {
-   "q_x": true,
-   "src": false,
-   "t_wa": 26
+   "t_wa": -0.5,
+   "q_x": 15
   },
   "expect": {
    "visible": [
@@ -310,10 +309,6 @@
     "p1": null
    },
    "errors": [
-    {
-     "field": "src",
-     "code": "invalid_type"
-    },
     {
      "field": "q_x",
      "code": "invalid_type"

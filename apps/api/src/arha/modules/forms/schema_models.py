@@ -94,7 +94,12 @@ class Option(BaseModel):
     id: Id
     label: I18nText
     code: Annotated[
-        int | None, Field(description='Numeric code used in SPSS and Stata exports.')
+        int | None,
+        Field(
+            description='Stable numeric code of the choice, used in SPSS, Stata and R exports. Never renumbered.',
+            ge=-999999,
+            le=999999,
+        ),
     ] = None
     price: Annotated[
         int | None,
@@ -132,87 +137,12 @@ class Scale(BaseModel):
     maxLabel: I18nText | None = None
 
 
-class Block(BaseModel):
+class Capture(BaseModel):
     model_config = ConfigDict(
         extra='forbid',
     )
-    id: Id
-    type: Literal[
-        'short_text',
-        'long_text',
-        'email',
-        'phone',
-        'url',
-        'number',
-        'single_choice',
-        'multi_choice',
-        'dropdown',
-        'yes_no',
-        'ranking',
-        'choice_grid',
-        'rating',
-        'linear_scale',
-        'nps',
-        'date',
-        'time',
-        'date_range',
-        'file_upload',
-        'signature',
-        'payment_fixed',
-        'payment_computed',
-        'payment_open',
-        'product_choice',
-        'ticket_choice',
-        'heading',
-        'rich_text',
-        'image',
-        'divider',
-        'hidden',
-        'computed_display',
-        'consent',
-    ]
-    label: I18nText | None = None
-    help: I18nText | None = None
-    placeholder: I18nText | None = None
-    required: bool | None = None
-    validation: Validation | None = None
-    sensitive: bool | None = None
-    identifying: bool | None = None
-    variableName: Annotated[
-        str | None,
-        Field(
-            description='Export variable name (SPSS, Stata).',
-            pattern='^[a-zA-Z][a-zA-Z0-9_]{0,31}$',
-        ),
-    ] = None
-    options: Annotated[list[Option] | None, Field(max_length=200)] = None
-    rows: Annotated[list[Option] | None, Field(max_length=50)] = None
-    columns: Annotated[list[Option] | None, Field(max_length=20)] = None
-    scale: Scale | None = None
-    amount: Annotated[
-        int | None, Field(description='payment_fixed: amount in currency unit.', ge=0)
-    ] = None
-    minAmount: Annotated[
-        int | None, Field(description='payment_open: minimum amount.', ge=0)
-    ] = None
-    maxAmount: Annotated[int | None, Field(ge=0)] = None
-    variable: Annotated[
-        Id | None,
-        Field(description='payment_computed and computed_display: variable id.'),
-    ] = None
-    param: Annotated[
-        str | None,
-        Field(
-            description='hidden: URL parameter name.',
-            pattern='^[a-zA-Z][a-zA-Z0-9_]{0,31}$',
-        ),
-    ] = None
-    content: Annotated[
-        I18nText | None,
-        Field(description='heading, rich_text, consent: sanitized text.'),
-    ] = None
-    imageKey: Annotated[str | None, Field(max_length=200)] = None
-    alt: I18nText | None = None
+    highAccuracy: bool | None = None
+    maxAgeSeconds: Annotated[int | None, Field(ge=0, le=3600)] = None
 
 
 class Condition3(BaseModel):
@@ -264,6 +194,111 @@ class Expr4(BaseModel):
         extra='forbid',
     )
     ref: Id
+
+
+class MissingCode(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    code: Annotated[int, Field(ge=-999999, le=999999)]
+    label: I18nText
+
+
+class Block(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    id: Id
+    type: Literal[
+        'short_text',
+        'long_text',
+        'email',
+        'phone',
+        'url',
+        'number',
+        'single_choice',
+        'multi_choice',
+        'dropdown',
+        'yes_no',
+        'ranking',
+        'choice_grid',
+        'likert_matrix',
+        'rating',
+        'linear_scale',
+        'nps',
+        'date',
+        'time',
+        'date_range',
+        'file_upload',
+        'signature',
+        'geopoint',
+        'photo',
+        'barcode',
+        'payment_fixed',
+        'payment_computed',
+        'payment_open',
+        'product_choice',
+        'ticket_choice',
+        'heading',
+        'rich_text',
+        'image',
+        'divider',
+        'hidden',
+        'computed_display',
+        'consent',
+    ]
+    varName: Annotated[
+        str | None,
+        Field(
+            description='Variable name in exports: unique, 32 characters at most, letters, digits and underscores, starts with a letter (SPSS, Stata and R).',
+            pattern='^[A-Za-z][A-Za-z0-9_]{0,31}$',
+        ),
+    ] = None
+    label: I18nText | None = None
+    help: I18nText | None = None
+    placeholder: I18nText | None = None
+    required: bool | None = None
+    validation: Validation | None = None
+    sensitive: bool | None = None
+    identifying: bool | None = None
+    options: Annotated[list[Option] | None, Field(max_length=200)] = None
+    rows: Annotated[list[Option] | None, Field(max_length=50)] = None
+    columns: Annotated[list[Option] | None, Field(max_length=20)] = None
+    scale: Scale | None = None
+    amount: Annotated[
+        int | None, Field(description='payment_fixed: amount in currency unit.', ge=0)
+    ] = None
+    minAmount: Annotated[
+        int | None, Field(description='payment_open: minimum amount.', ge=0)
+    ] = None
+    maxAmount: Annotated[int | None, Field(ge=0)] = None
+    variable: Annotated[
+        Id | None,
+        Field(description='payment_computed and computed_display: variable id.'),
+    ] = None
+    param: Annotated[
+        str | None,
+        Field(
+            description='hidden: URL parameter name.',
+            pattern='^[a-zA-Z][a-zA-Z0-9_]{0,31}$',
+        ),
+    ] = None
+    content: Annotated[
+        I18nText | None,
+        Field(description='heading, rich_text, consent: sanitized text.'),
+    ] = None
+    imageKey: Annotated[str | None, Field(max_length=200)] = None
+    alt: I18nText | None = None
+    missingCodes: Annotated[
+        list[MissingCode] | None,
+        Field(
+            description='Declared missing values offered to the respondent, for example 98 (does not know) and 99 (refusal).',
+            max_length=5,
+        ),
+    ] = None
+    capture: Annotated[
+        Capture | None, Field(description='geopoint: capture options.')
+    ] = None
 
 
 class Page(BaseModel):

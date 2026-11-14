@@ -34,13 +34,13 @@ async def test_F_REP_04_spss_and_stata_keep_labels(owner_engine, tmp_path: Path)
     assert sav.status_code == 200
     (tmp_path / "e.sav").write_bytes(sav.content)
     df, meta = pyreadstat.read_sav(str(tmp_path / "e.sav"), output_format="polars")
-    assert len(df) == 3 and meta.column_names_to_labels["level"] == "Niveau"
-    assert meta.variable_value_labels["level"] == {1.0: "A", 2.0: "B"}
-    assert sorted(df["level"].to_list()) == [1.0, 2.0, 2.0]
+    assert len(df) == 3 and meta.column_names_to_labels["niveau"] == "Niveau"
+    assert meta.variable_value_labels["niveau"] == {1.0: "A", 2.0: "B"}
+    assert sorted(df["niveau"].to_list()) == [1.0, 2.0, 2.0]
     dta = await user.get(f"{base}?format=dta&lang=en")
     (tmp_path / "e.dta").write_bytes(dta.content)
     _, meta = pyreadstat.read_dta(str(tmp_path / "e.dta"), output_format="polars")
-    assert meta.column_names_to_labels["level"] == "Level" and meta.variable_value_labels["level"] == {1: "A", 2: "B"}
+    assert meta.column_names_to_labels["niveau"] == "Level" and meta.variable_value_labels["niveau"] == {1: "A", 2: "B"}
     csv = await user.get(f"{base}?format=csv")
     assert "Élise" in csv.content.decode("utf-8-sig")
     xlsx = await user.get(f"{base}?format=xlsx")

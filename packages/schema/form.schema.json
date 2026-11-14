@@ -5,27 +5,88 @@
   "description": "Arha form definition. Single source of truth: TypeScript and Python types are generated from this file.",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schemaVersion", "defaultLocale", "locales", "settings", "variables", "pages", "rules"],
+  "required": [
+    "schemaVersion",
+    "defaultLocale",
+    "locales",
+    "settings",
+    "variables",
+    "pages",
+    "rules"
+  ],
   "properties": {
-    "schemaVersion": { "const": 1 },
-    "id": { "type": "string", "maxLength": 64 },
-    "defaultLocale": { "$ref": "#/$defs/Locale" },
-    "locales": { "type": "array", "items": { "$ref": "#/$defs/Locale" }, "minItems": 1, "maxItems": 2, "uniqueItems": true },
-    "description": { "$ref": "#/$defs/I18nText" },
-    "settings": { "$ref": "#/$defs/Settings" },
-    "variables": { "type": "array", "maxItems": 50, "items": { "$ref": "#/$defs/Variable" } },
-    "pages": { "type": "array", "minItems": 1, "maxItems": 50, "items": { "$ref": "#/$defs/Page" } },
-    "rules": { "type": "array", "maxItems": 300, "items": { "$ref": "#/$defs/Rule" } }
+    "schemaVersion": {
+      "const": 1
+    },
+    "id": {
+      "type": "string",
+      "maxLength": 64
+    },
+    "defaultLocale": {
+      "$ref": "#/$defs/Locale"
+    },
+    "locales": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/Locale"
+      },
+      "minItems": 1,
+      "maxItems": 2,
+      "uniqueItems": true
+    },
+    "description": {
+      "$ref": "#/$defs/I18nText"
+    },
+    "settings": {
+      "$ref": "#/$defs/Settings"
+    },
+    "variables": {
+      "type": "array",
+      "maxItems": 50,
+      "items": {
+        "$ref": "#/$defs/Variable"
+      }
+    },
+    "pages": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 50,
+      "items": {
+        "$ref": "#/$defs/Page"
+      }
+    },
+    "rules": {
+      "type": "array",
+      "maxItems": 300,
+      "items": {
+        "$ref": "#/$defs/Rule"
+      }
+    }
   },
   "$defs": {
-    "Locale": { "type": "string", "enum": ["fr", "en"] },
-    "Id": { "type": "string", "pattern": "^[a-zA-Z][a-zA-Z0-9_]{0,39}$" },
+    "Locale": {
+      "type": "string",
+      "enum": [
+        "fr",
+        "en"
+      ]
+    },
+    "Id": {
+      "type": "string",
+      "pattern": "^[a-zA-Z][a-zA-Z0-9_]{0,39}$"
+    },
     "I18nText": {
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "fr": { "type": "string", "maxLength": 5000 },
-        "en": { "type": "string", "maxLength": 5000 }
+        "fr": {
+          "type": "string",
+          "maxLength": 5000
+        },
+        "en": {
+          "type": "string",
+          "maxLength": 5000
+        }
       }
     },
     "Settings": {
@@ -36,172 +97,538 @@
           "type": "object",
           "additionalProperties": false,
           "properties": {
-            "primary": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" },
-            "background": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" },
-            "font": { "type": "string", "enum": ["inter", "system", "serif"] },
-            "logoKey": { "type": ["string", "null"], "maxLength": 200 },
-            "coverKey": { "type": ["string", "null"], "maxLength": 200 }
+            "primary": {
+              "type": "string",
+              "pattern": "^#[0-9A-Fa-f]{6}$"
+            },
+            "background": {
+              "type": "string",
+              "pattern": "^#[0-9A-Fa-f]{6}$"
+            },
+            "font": {
+              "type": "string",
+              "enum": [
+                "inter",
+                "system",
+                "serif"
+              ]
+            },
+            "logoKey": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "maxLength": 200
+            },
+            "coverKey": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "maxLength": 200
+            }
           }
         },
         "closing": {
           "type": "object",
           "additionalProperties": false,
           "properties": {
-            "closesAt": { "type": ["string", "null"], "format": "date-time" },
-            "maxResponses": { "type": ["integer", "null"], "minimum": 1 },
-            "message": { "$ref": "#/$defs/I18nText" }
+            "closesAt": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "format": "date-time"
+            },
+            "maxResponses": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "minimum": 1
+            },
+            "message": {
+              "$ref": "#/$defs/I18nText"
+            }
           }
         },
         "ending": {
           "type": "object",
           "additionalProperties": false,
           "properties": {
-            "message": { "$ref": "#/$defs/I18nText" },
-            "redirectUrl": { "type": ["string", "null"], "maxLength": 2048, "pattern": "^https://" }
+            "message": {
+              "$ref": "#/$defs/I18nText"
+            },
+            "redirectUrl": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "maxLength": 2048,
+              "pattern": "^https://"
+            }
           }
         },
         "payments": {
           "type": "object",
           "additionalProperties": false,
           "properties": {
-            "enabled": { "type": "boolean" },
-            "currency": { "type": "string", "enum": ["XAF", "XOF", "NGN", "GHS", "KES"] },
-            "feeBearer": { "type": "string", "enum": ["org", "payer"] },
-            "provider": { "type": "string", "enum": ["notchpay", "campay", "fake"] }
+            "enabled": {
+              "type": "boolean"
+            },
+            "currency": {
+              "type": "string",
+              "enum": [
+                "XAF",
+                "XOF",
+                "NGN",
+                "GHS",
+                "KES"
+              ]
+            },
+            "feeBearer": {
+              "type": "string",
+              "enum": [
+                "org",
+                "payer"
+              ]
+            },
+            "provider": {
+              "type": "string",
+              "enum": [
+                "notchpay",
+                "campay",
+                "fake"
+              ]
+            }
           }
         },
         "consent": {
           "type": "object",
           "additionalProperties": false,
           "properties": {
-            "required": { "type": "boolean" },
-            "textVersion": { "type": "string", "maxLength": 32 }
+            "required": {
+              "type": "boolean"
+            },
+            "textVersion": {
+              "type": "string",
+              "maxLength": 32
+            }
           }
         },
-        "saveAndResume": { "type": "boolean" },
-        "showProgress": { "type": "boolean" },
-        "respondentEmailField": { "type": ["string", "null"] },
-        "confirmationMessage": { "$ref": "#/$defs/I18nText" }
+        "saveAndResume": {
+          "type": "boolean"
+        },
+        "showProgress": {
+          "type": "boolean"
+        },
+        "respondentEmailField": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "confirmationMessage": {
+          "$ref": "#/$defs/I18nText"
+        }
       }
     },
     "Variable": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "type"],
+      "required": [
+        "id",
+        "type"
+      ],
       "properties": {
-        "id": { "$ref": "#/$defs/Id" },
-        "type": { "type": "string", "enum": ["number", "text", "boolean"] },
-        "label": { "$ref": "#/$defs/I18nText" },
-        "formula": { "$ref": "#/$defs/Expr" },
-        "initial": { "type": ["number", "string", "boolean", "null"] }
+        "id": {
+          "$ref": "#/$defs/Id"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "number",
+            "text",
+            "boolean"
+          ]
+        },
+        "label": {
+          "$ref": "#/$defs/I18nText"
+        },
+        "formula": {
+          "$ref": "#/$defs/Expr"
+        },
+        "initial": {
+          "type": [
+            "number",
+            "string",
+            "boolean",
+            "null"
+          ]
+        }
       }
     },
     "Page": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "blocks"],
+      "required": [
+        "id",
+        "blocks"
+      ],
       "properties": {
-        "id": { "$ref": "#/$defs/Id" },
-        "title": { "$ref": "#/$defs/I18nText" },
-        "blocks": { "type": "array", "maxItems": 200, "items": { "$ref": "#/$defs/Block" } }
+        "id": {
+          "$ref": "#/$defs/Id"
+        },
+        "title": {
+          "$ref": "#/$defs/I18nText"
+        },
+        "blocks": {
+          "type": "array",
+          "maxItems": 200,
+          "items": {
+            "$ref": "#/$defs/Block"
+          }
+        }
       }
     },
     "Option": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "label"],
+      "required": [
+        "id",
+        "label"
+      ],
       "properties": {
-        "id": { "$ref": "#/$defs/Id" },
-        "label": { "$ref": "#/$defs/I18nText" },
-        "code": { "type": "integer", "description": "Numeric code used in SPSS and Stata exports." },
-        "price": { "type": "integer", "minimum": 0, "description": "Unit price in the currency unit (products, tickets)." },
-        "quota": { "type": ["integer", "null"], "minimum": 0 },
-        "maxQuantity": { "type": "integer", "minimum": 1, "maximum": 100 }
+        "id": {
+          "$ref": "#/$defs/Id"
+        },
+        "label": {
+          "$ref": "#/$defs/I18nText"
+        },
+        "code": {
+          "type": "integer",
+          "minimum": -999999,
+          "maximum": 999999,
+          "description": "Stable numeric code of the choice, used in SPSS, Stata and R exports. Never renumbered."
+        },
+        "price": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Unit price in the currency unit (products, tickets)."
+        },
+        "quota": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "maxQuantity": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        }
       }
     },
     "Validation": {
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "minLength": { "type": "integer", "minimum": 0 },
-        "maxLength": { "type": "integer", "minimum": 1, "maximum": 10000 },
-        "min": { "type": "number" },
-        "max": { "type": "number" },
-        "integer": { "type": "boolean" },
-        "minSelected": { "type": "integer", "minimum": 0 },
-        "maxSelected": { "type": "integer", "minimum": 1 },
-        "minDate": { "type": "string" },
-        "maxDate": { "type": "string" },
-        "maxFiles": { "type": "integer", "minimum": 1, "maximum": 10 },
-        "accept": { "type": "array", "items": { "type": "string", "enum": ["image", "pdf", "document"] } },
-        "defaultCountry": { "type": "string", "pattern": "^[A-Z]{2}$" }
+        "minLength": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "maxLength": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10000
+        },
+        "min": {
+          "type": "number"
+        },
+        "max": {
+          "type": "number"
+        },
+        "integer": {
+          "type": "boolean"
+        },
+        "minSelected": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "maxSelected": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "minDate": {
+          "type": "string"
+        },
+        "maxDate": {
+          "type": "string"
+        },
+        "maxFiles": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10
+        },
+        "accept": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "image",
+              "pdf",
+              "document"
+            ]
+          }
+        },
+        "defaultCountry": {
+          "type": "string",
+          "pattern": "^[A-Z]{2}$"
+        }
       }
     },
     "Block": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "type"],
+      "required": [
+        "id",
+        "type"
+      ],
       "properties": {
-        "id": { "$ref": "#/$defs/Id" },
+        "id": {
+          "$ref": "#/$defs/Id"
+        },
         "type": {
           "type": "string",
           "enum": [
-            "short_text", "long_text", "email", "phone", "url", "number",
-            "single_choice", "multi_choice", "dropdown", "yes_no", "ranking", "choice_grid",
-            "rating", "linear_scale", "nps", "date", "time", "date_range",
-            "file_upload", "signature",
-            "payment_fixed", "payment_computed", "payment_open", "product_choice", "ticket_choice",
-            "heading", "rich_text", "image", "divider", "hidden", "computed_display", "consent"
+            "short_text",
+            "long_text",
+            "email",
+            "phone",
+            "url",
+            "number",
+            "single_choice",
+            "multi_choice",
+            "dropdown",
+            "yes_no",
+            "ranking",
+            "choice_grid",
+            "likert_matrix",
+            "rating",
+            "linear_scale",
+            "nps",
+            "date",
+            "time",
+            "date_range",
+            "file_upload",
+            "signature",
+            "geopoint",
+            "photo",
+            "barcode",
+            "payment_fixed",
+            "payment_computed",
+            "payment_open",
+            "product_choice",
+            "ticket_choice",
+            "heading",
+            "rich_text",
+            "image",
+            "divider",
+            "hidden",
+            "computed_display",
+            "consent"
           ]
         },
-        "label": { "$ref": "#/$defs/I18nText" },
-        "help": { "$ref": "#/$defs/I18nText" },
-        "placeholder": { "$ref": "#/$defs/I18nText" },
-        "required": { "type": "boolean" },
-        "validation": { "$ref": "#/$defs/Validation" },
-        "sensitive": { "type": "boolean" },
-        "identifying": { "type": "boolean" },
-        "variableName": { "type": "string", "pattern": "^[a-zA-Z][a-zA-Z0-9_]{0,31}$", "description": "Export variable name (SPSS, Stata)." },
-        "options": { "type": "array", "maxItems": 200, "items": { "$ref": "#/$defs/Option" } },
-        "rows": { "type": "array", "maxItems": 50, "items": { "$ref": "#/$defs/Option" } },
-        "columns": { "type": "array", "maxItems": 20, "items": { "$ref": "#/$defs/Option" } },
+        "varName": {
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z0-9_]{0,31}$",
+          "description": "Variable name in exports: unique, 32 characters at most, letters, digits and underscores, starts with a letter (SPSS, Stata and R)."
+        },
+        "label": {
+          "$ref": "#/$defs/I18nText"
+        },
+        "help": {
+          "$ref": "#/$defs/I18nText"
+        },
+        "placeholder": {
+          "$ref": "#/$defs/I18nText"
+        },
+        "required": {
+          "type": "boolean"
+        },
+        "validation": {
+          "$ref": "#/$defs/Validation"
+        },
+        "sensitive": {
+          "type": "boolean"
+        },
+        "identifying": {
+          "type": "boolean"
+        },
+        "options": {
+          "type": "array",
+          "maxItems": 200,
+          "items": {
+            "$ref": "#/$defs/Option"
+          }
+        },
+        "rows": {
+          "type": "array",
+          "maxItems": 50,
+          "items": {
+            "$ref": "#/$defs/Option"
+          }
+        },
+        "columns": {
+          "type": "array",
+          "maxItems": 20,
+          "items": {
+            "$ref": "#/$defs/Option"
+          }
+        },
         "scale": {
           "type": "object",
           "additionalProperties": false,
           "properties": {
-            "min": { "type": "integer" },
-            "max": { "type": "integer" },
-            "minLabel": { "$ref": "#/$defs/I18nText" },
-            "maxLabel": { "$ref": "#/$defs/I18nText" }
+            "min": {
+              "type": "integer"
+            },
+            "max": {
+              "type": "integer"
+            },
+            "minLabel": {
+              "$ref": "#/$defs/I18nText"
+            },
+            "maxLabel": {
+              "$ref": "#/$defs/I18nText"
+            }
           }
         },
-        "amount": { "type": "integer", "minimum": 0, "description": "payment_fixed: amount in currency unit." },
-        "minAmount": { "type": "integer", "minimum": 0, "description": "payment_open: minimum amount." },
-        "maxAmount": { "type": "integer", "minimum": 0 },
-        "variable": { "$ref": "#/$defs/Id", "description": "payment_computed and computed_display: variable id." },
-        "param": { "type": "string", "pattern": "^[a-zA-Z][a-zA-Z0-9_]{0,31}$", "description": "hidden: URL parameter name." },
-        "content": { "$ref": "#/$defs/I18nText", "description": "heading, rich_text, consent: sanitized text." },
-        "imageKey": { "type": ["string", "null"], "maxLength": 200 },
-        "alt": { "$ref": "#/$defs/I18nText" }
+        "amount": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "payment_fixed: amount in currency unit."
+        },
+        "minAmount": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "payment_open: minimum amount."
+        },
+        "maxAmount": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "variable": {
+          "$ref": "#/$defs/Id",
+          "description": "payment_computed and computed_display: variable id."
+        },
+        "param": {
+          "type": "string",
+          "pattern": "^[a-zA-Z][a-zA-Z0-9_]{0,31}$",
+          "description": "hidden: URL parameter name."
+        },
+        "content": {
+          "$ref": "#/$defs/I18nText",
+          "description": "heading, rich_text, consent: sanitized text."
+        },
+        "imageKey": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 200
+        },
+        "alt": {
+          "$ref": "#/$defs/I18nText"
+        },
+        "missingCodes": {
+          "type": "array",
+          "maxItems": 5,
+          "items": {
+            "$ref": "#/$defs/MissingCode"
+          },
+          "description": "Declared missing values offered to the respondent, for example 98 (does not know) and 99 (refusal)."
+        },
+        "capture": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "highAccuracy": {
+              "type": "boolean"
+            },
+            "maxAgeSeconds": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 3600
+            }
+          },
+          "description": "geopoint: capture options."
+        }
       }
     },
     "Condition": {
       "oneOf": [
         {
-          "type": "object", "additionalProperties": false, "required": ["all"],
-          "properties": { "all": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/Condition" } } }
-        },
-        {
-          "type": "object", "additionalProperties": false, "required": ["any"],
-          "properties": { "any": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/Condition" } } }
-        },
-        {
-          "type": "object", "additionalProperties": false, "required": ["field", "op"],
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "all"
+          ],
           "properties": {
-            "field": { "$ref": "#/$defs/Id" },
+            "all": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "$ref": "#/$defs/Condition"
+              }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "any"
+          ],
+          "properties": {
+            "any": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "$ref": "#/$defs/Condition"
+              }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "field",
+            "op"
+          ],
+          "properties": {
+            "field": {
+              "$ref": "#/$defs/Id"
+            },
             "op": {
               "type": "string",
-              "enum": ["eq", "neq", "contains", "not_contains", "gt", "gte", "lt", "lte", "between", "empty", "not_empty", "in", "not_in"]
+              "enum": [
+                "eq",
+                "neq",
+                "contains",
+                "not_contains",
+                "gt",
+                "gte",
+                "lt",
+                "lte",
+                "between",
+                "empty",
+                "not_empty",
+                "in",
+                "not_in"
+              ]
             },
             "value": {}
           }
@@ -211,41 +638,170 @@
     "Action": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["action"],
+      "required": [
+        "action"
+      ],
       "properties": {
-        "action": { "type": "string", "enum": ["show", "hide", "require", "unrequire", "jump_to_page", "end_form", "set_variable"] },
-        "target": { "$ref": "#/$defs/Id" },
-        "value": { "$ref": "#/$defs/Expr" }
+        "action": {
+          "type": "string",
+          "enum": [
+            "show",
+            "hide",
+            "require",
+            "unrequire",
+            "jump_to_page",
+            "end_form",
+            "set_variable"
+          ]
+        },
+        "target": {
+          "$ref": "#/$defs/Id"
+        },
+        "value": {
+          "$ref": "#/$defs/Expr"
+        }
       }
     },
     "Rule": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "when", "then"],
+      "required": [
+        "id",
+        "when",
+        "then"
+      ],
       "properties": {
-        "id": { "$ref": "#/$defs/Id" },
-        "page": { "$ref": "#/$defs/Id", "description": "Page whose Next button triggers jump_to_page and end_form actions." },
-        "when": { "$ref": "#/$defs/Condition" },
-        "then": { "type": "array", "minItems": 1, "maxItems": 20, "items": { "$ref": "#/$defs/Action" } }
+        "id": {
+          "$ref": "#/$defs/Id"
+        },
+        "page": {
+          "$ref": "#/$defs/Id",
+          "description": "Page whose Next button triggers jump_to_page and end_form actions."
+        },
+        "when": {
+          "$ref": "#/$defs/Condition"
+        },
+        "then": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 20,
+          "items": {
+            "$ref": "#/$defs/Action"
+          }
+        }
       }
     },
     "Expr": {
       "oneOf": [
-        { "type": "object", "additionalProperties": false, "required": ["num"], "properties": { "num": { "type": "number" } } },
-        { "type": "object", "additionalProperties": false, "required": ["str"], "properties": { "str": { "type": "string", "maxLength": 500 } } },
-        { "type": "object", "additionalProperties": false, "required": ["bool"], "properties": { "bool": { "type": "boolean" } } },
-        { "type": "object", "additionalProperties": false, "required": ["ref"], "properties": { "ref": { "$ref": "#/$defs/Id" } } },
         {
-          "type": "object", "additionalProperties": false, "required": ["op", "args"],
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "num"
+          ],
+          "properties": {
+            "num": {
+              "type": "number"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "str"
+          ],
+          "properties": {
+            "str": {
+              "type": "string",
+              "maxLength": 500
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "bool"
+          ],
+          "properties": {
+            "bool": {
+              "type": "boolean"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "ref"
+          ],
+          "properties": {
+            "ref": {
+              "$ref": "#/$defs/Id"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "op",
+            "args"
+          ],
           "properties": {
             "op": {
               "type": "string",
-              "enum": ["add", "sub", "mul", "div", "round", "min", "max", "sum", "if", "eq", "neq", "gt", "gte", "lt", "lte", "and", "or", "not", "count_selected"]
+              "enum": [
+                "add",
+                "sub",
+                "mul",
+                "div",
+                "round",
+                "min",
+                "max",
+                "sum",
+                "if",
+                "eq",
+                "neq",
+                "gt",
+                "gte",
+                "lt",
+                "lte",
+                "and",
+                "or",
+                "not",
+                "count_selected"
+              ]
             },
-            "args": { "type": "array", "maxItems": 50, "items": { "$ref": "#/$defs/Expr" } }
+            "args": {
+              "type": "array",
+              "maxItems": 50,
+              "items": {
+                "$ref": "#/$defs/Expr"
+              }
+            }
           }
         }
       ]
+    },
+    "MissingCode": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "code",
+        "label"
+      ],
+      "properties": {
+        "code": {
+          "type": "integer",
+          "minimum": -999999,
+          "maximum": 999999
+        },
+        "label": {
+          "$ref": "#/$defs/I18nText"
+        }
+      }
     }
   }
 }

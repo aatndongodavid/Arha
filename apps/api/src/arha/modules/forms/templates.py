@@ -23,11 +23,11 @@ def _b(bid: str, kind: str, fr: str, en: str, required: bool = False, **extra: A
 def _identity(prefix: str = "") -> list[dict[str, Any]]:
     return [
         _b(f"{prefix}full_name", "short_text", "Nom et prénom", "Full name", True, identifying=True,
-           variableName="nom"),
+           varName="nom"),
         _b(f"{prefix}phone", "phone", "Numéro de téléphone", "Phone number", True, identifying=True,
-           validation={"defaultCountry": "CM"}, variableName="telephone"),
+           validation={"defaultCountry": "CM"}, varName="telephone"),
         _b(f"{prefix}email", "email", "Adresse e-mail", "Email address", False, identifying=True,
-           variableName="email"),
+           varName="email"),
     ]
 
 
@@ -253,17 +253,17 @@ TEMPLATES: dict[str, dict[str, Any]] = {
                           "Structured questionnaire ready for SPSS and Stata."),
         "schema": _form("Enquête ménage", "Household survey", [
             {"id": "p1", "title": _t("Ménage", "Household"), "blocks": [
-                _b("region", "dropdown", "Région", "Region", True, variableName="region", options=[
+                _b("region", "dropdown", "Région", "Region", True, varName="region", options=[
                     _opt("littoral", "Littoral", "Littoral", 1), _opt("centre", "Centre", "Centre", 2),
                     _opt("ouest", "Ouest", "West", 3), _opt("nord", "Nord", "North", 4)]),
-                _b("size", "number", "Taille du ménage", "Household size", True, variableName="taille",
+                _b("size", "number", "Taille du ménage", "Household size", True, varName="taille",
                    validation={"min": 1, "max": 40, "integer": True}),
                 _b("water", "single_choice", "Source principale d'eau", "Main water source", True,
-                   variableName="eau", options=[
+                   varName="eau", options=[
                        _opt("tap", "Robinet", "Tap", 1), _opt("well", "Puits", "Well", 2),
                        _opt("river", "Rivière", "River", 3), _opt("other", "Autre", "Other", 9)]),
                 _b("income", "linear_scale", "Satisfaction vis-à-vis du revenu", "Income satisfaction", True,
-                   variableName="revenu", scale={"min": 1, "max": 5}),
+                   varName="revenu", scale={"min": 1, "max": 5}),
             ]},
         ]),
     },

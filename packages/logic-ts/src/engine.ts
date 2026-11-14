@@ -13,6 +13,7 @@ export const INPUT_TYPES = new Set([
   "short_text", "long_text", "email", "phone", "url", "number", "single_choice", "multi_choice", "dropdown",
   "yes_no", "ranking", "choice_grid", "rating", "linear_scale", "nps", "date", "time", "date_range",
   "file_upload", "signature", "payment_open", "product_choice", "ticket_choice", "hidden", "consent",
+  "likert_matrix", "geopoint", "photo", "barcode",
 ]);
 export const PAYMENT_TYPES = new Set([
   "payment_fixed", "payment_computed", "payment_open", "product_choice", "ticket_choice",
@@ -213,6 +214,11 @@ function validDate(value: string): boolean {
   if (y < 1 || m < 1 || m > 12 || d < 1) return false;
   const dt = new Date(Date.UTC(y, m - 1, d));
   return dt.getUTCFullYear() === y && dt.getUTCMonth() === m - 1 && dt.getUTCDate() === d;
+}
+
+/** Declared missing value (section 7): `{ missing: 98 }`. */
+export function isMissing(v: unknown): v is { missing: number } {
+  return isDict(v) && Object.keys(v).length === 1 && typeof v.missing === "number" && Number.isInteger(v.missing);
 }
 
 export function conditionFields(cond: Dict): string[] {
@@ -537,7 +543,12 @@ export class Evaluator {
         if (required.has(bid)) this.err(bid, "required");
         continue;
       }
-      this.validateValue(bid, block, value);
+      if (isMissing(value)) {
+        const codes = new Set(((block.missingCodes as Dict[]) ?? []).map((m) => m.code));
+        if (!codes.has(value.missing)) this.err(bid, "invalid_missing");
+        continue;
+      }
+      this.validateValue(bid, block, value, required.has(bid));
     }
   }
 
@@ -555,7 +566,7 @@ export class Evaluator {
     return ["min" in rules ? toFixed(rules.min) : null, "max" in rules ? toFixed(rules.max) : null];
   }
 
-  private validateValue(bid: string, block: Dict, value: any): void {
+  private validateValue(bid: string, block: Dict, value: any, isRequired = false): void {
     const t = block.type as string;
     const rules: Dict = block.validation ?? {};
     const optionIds = new Set(((block.options as Dict[]) ?? []).map((o) => o.id as string));
@@ -596,11 +607,27 @@ export class Evaluator {
       if (typeof value !== "boolean") return this.err(bid, "invalid_choice");
     } else if (t === "consent") {
       if (value !== true) return this.err(bid, "required");
-    } else if (t === "choice_grid") {
+    } else if (t === "choice_grid" || t === "likert_matrix") {
       const rows = new Set(((block.rows as Dict[]) ?? []).map((r) => r.id));
       const cols = new Set(((block.columns as Dict[]) ?? []).map((c) => c.id));
       if (!isDict(value) || Object.entries(value).some(([k, v]) => !rows.has(k) || typeof v !== "string" || !cols.has(v)))
         return this.err(bid, "invalid_choice");
+      if (t === "likert_matrix" && isRequired) {
+        const keys = Object.keys(value);
+        if (keys.length !== rows.size || !keys.every((k) => rows.has(k))) return this.err(bid, "incomplete");
+      }
+    } else if (t === "geopoint") {
+      const num = (x: unknown) => typeof x === "number" && Number.isFinite(x);
+      if (!isDict(value) || !num(value.lat) || !num(value.lon)) return this.err(bid, "invalid_geopoint");
+      const lat = toFixed(value.lat);
+      const lon = toFixed(value.lon);
+      const acc = value.accuracy;
+      if (lat < -90n * SCALE || lat > 90n * SCALE || lon < -180n * SCALE || lon > 180n * SCALE ||
+          (acc !== undefined && acc !== null && (!num(acc) || toFixed(acc) < 0n)))
+        return this.err(bid, "invalid_geopoint");
+    } else if (t === "barcode") {
+      if (typeof value !== "string") return this.err(bid, "invalid_type");
+      if (codePointLength(value) > 200) return this.err(bid, "too_long");
     } else if (t === "date") {
       if (typeof value !== "string" || !validDate(value)) return this.err(bid, "invalid_date");
       if (rules.minDate && value < rules.minDate) return this.err(bid, "below_min");
@@ -615,7 +642,7 @@ export class Evaluator {
         value.start > value.end
       )
         return this.err(bid, "invalid_date");
-    } else if (t === "file_upload") {
+    } else if (t === "file_upload" || t === "photo") {
       if (!Array.isArray(value) || value.some((v) => typeof v !== "string" || codePointLength(v) > 200))
         return this.err(bid, "invalid_file");
       if (value.length > (rules.maxFiles ?? 1)) return this.err(bid, "too_many");

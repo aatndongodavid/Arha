@@ -27,7 +27,7 @@ def _label(block: dict[str, Any], locale: str) -> str:
 
 
 def _var_name(block: dict[str, Any], used: set[str]) -> str:
-    base = re.sub(r"[^A-Za-z0-9_]", "_", block.get("variableName") or block["id"])[:28] or "v"
+    base = re.sub(r"[^A-Za-z0-9_]", "_", block.get("varName") or block.get("variableName") or block["id"])[:28] or "v"
     if not base[0].isalpha():
         base = f"v{base}"[:28]
     name, i = base, 2
@@ -70,14 +70,14 @@ def build_columns(schema: dict[str, Any], locale: str) -> list[Column]:
                                    getter=lambda s, bid=bid, codes=codes: codes.get((s.answers or {}).get(bid))))
             elif b["type"] in ("multi_choice",):
                 for o in opts:  # one 0/1 dummy per option, the standard for statistical packages
-                    name = _var_name({"id": f"{b.get('variableName') or bid}_{o['id']}"}, used)
+                    name = _var_name({"id": f"{b.get("varName") or b.get("variableName") or bid}_{o['id']}"}, used)
                     cols.append(Column(name, f"{label}: {_label(o, locale)}", "num", {0: "Non" if locale == "fr" else
                                        "No", 1: "Oui" if locale == "fr" else "Yes"},
                                        getter=lambda s, bid=bid, oid=o["id"]: int(oid in ((s.answers or {}).get(bid)
                                                                                          or []))))
             elif b["type"] in ("product_choice", "ticket_choice"):
                 for o in opts:
-                    name = _var_name({"id": f"{b.get('variableName') or bid}_{o['id']}"}, used)
+                    name = _var_name({"id": f"{b.get("varName") or b.get("variableName") or bid}_{o['id']}"}, used)
                     cols.append(Column(name, f"{label}: {_label(o, locale)}", "num", getter=lambda s, bid=bid, oid=o[
                         "id"]: ((s.answers or {}).get(bid) or {}).get(oid)))
             elif b["type"] == "yes_no":

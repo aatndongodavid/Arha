@@ -105,7 +105,7 @@ function Signature({ id, value, onChange }: { id: string; value: string; onChang
   );
 }
 
-function Files({ id, value, max, ctx, onChange }: { id: string; value: string[]; max: number; ctx: FieldCtx; onChange: (v: string[]) => void }) {
+function Files({ id, value, max, ctx, onChange, photo }: { id: string; value: string[]; max: number; ctx: FieldCtx; onChange: (v: string[]) => void; photo?: boolean }) {
   const [state, setState] = useState<"" | "busy" | "failed">("");
   const pick = async (e: JSX.TargetedEvent<HTMLInputElement>) => {
     const file = e.currentTarget.files?.[0];
@@ -130,15 +130,74 @@ function Files({ id, value, max, ctx, onChange }: { id: string; value: string[];
           <button type="button" class="link" onClick={() => onChange(value.filter((x) => x !== k))}>{t("file.remove")}</button>
         </div>
       ))}
-      {value.length < max ? <input id={id} type="file" accept="image/*,application/pdf" onChange={pick} /> : null}
+      {value.length < max ? (photo
+        ? <input id={id} type="file" accept="image/*" capture="environment" onChange={pick} />
+        : <input id={id} type="file" accept="image/*,application/pdf" onChange={pick} />) : null}
       {state === "busy" ? <p class="help" role="status">{t("file.uploading")}</p> : null}
       {state === "failed" ? <p class="err" role="alert">{t("file.failed")}</p> : null}
     </div>
   );
 }
 
+/** A declared missing value is stored as `{ missing: code }` (section 7). */
+const missingOf = (v: unknown): number | null =>
+  v && typeof v === "object" && !Array.isArray(v) && Object.keys(v).length === 1 && typeof (v as any).missing === "number"
+    ? (v as any).missing : null;
+
+function GeoPoint({ id, value, onChange }: { id: string; value: any; onChange: (v: unknown) => void }) {
+  const [state, setState] = useState<"" | "busy" | "denied" | "unavailable">("");
+  const capture = () => {
+    if (!("geolocation" in navigator)) return setState("unavailable");
+    setState("busy");
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        setState("");
+        onChange({ lat: Math.round(pos.coords.latitude * 1e6) / 1e6, lon: Math.round(pos.coords.longitude * 1e6) / 1e6,
+                   accuracy: Math.round(pos.coords.accuracy) });
+      },
+      (err) => setState(err.code === err.PERMISSION_DENIED ? "denied" : "unavailable"),
+      { enableHighAccuracy: true, timeout: 20000, maximumAge: 60000 },
+    );
+  };
+  return (
+    <div>
+      {value?.lat != null ? <p class="note" role="status">{t("geo.value", { lat: value.lat, lon: value.lon, acc: value.accuracy ?? "?" })}</p> : null}
+      <button id={id} type="button" class="ghost" disabled={state === "busy"} onClick={capture}>
+        {state === "busy" ? t("geo.busy") : value?.lat != null ? t("geo.again") : t("geo.capture")}
+      </button>
+      {state === "denied" || state === "unavailable" ? <p class="err" role="alert">{t(`geo.${state}`)}</p> : null}
+    </div>
+  );
+}
+
+function Barcode({ id, value, onChange, common }: { id: string; value: string; onChange: (v: unknown) => void; common: Record<string, unknown> }) {
+  const [notFound, setNotFound] = useState(false);
+  const Detector = (globalThis as any).BarcodeDetector;
+  const scan = async (e: JSX.TargetedEvent<HTMLInputElement>) => {
+    const file = e.currentTarget.files?.[0];
+    e.currentTarget.value = "";
+    if (!file) return;
+    try {
+      const codes = await new Detector().detect(await createImageBitmap(file));
+      if (codes[0]?.rawValue) { setNotFound(false); return onChange(String(codes[0].rawValue).slice(0, 200)); }
+    } catch { /* unreadable picture */ }
+    setNotFound(true);
+  };
+  return (
+    <div>
+      <input {...common} type="text" autocomplete="off" value={value ?? ""} maxLength={200} onInput={(ev) => onChange(ev.currentTarget.value)} />
+      {Detector ? (
+        <label class="ghost scan">{t("barcode.scan")}<input type="file" accept="image/*" capture="environment" class="sr" onChange={scan} /></label>
+      ) : null}
+      {notFound ? <p class="err" role="alert">{t("barcode.notfound")}</p> : null}
+    </div>
+  );
+}
+
 export function Field(p: Props) {
-  const { block, value, ctx, onChange } = p;
+  const { block, ctx, onChange } = p;
+  const missing = missingOf(p.value);
+  const value = missing === null ? p.value : undefined;
   const type = block.type as string;
   const id = `f-${block.id}`;
   const L = (x: any) => tx(x, ctx.locale, ctx.fallback);
@@ -304,6 +363,34 @@ export function Field(p: Props) {
       );
       break;
     }
+    case "likert_matrix": {
+      group = true;
+      const v: Record<string, string> = value ?? {};
+      input = (block.rows ?? []).map((r: any) => (
+        <fieldset class="likert" key={r.id}>
+          <legend>{L(r.label)}</legend>
+          <div class="scale">
+            {(block.columns ?? []).map((c: any) => (
+              <label key={c.id} class={v[r.id] === c.id ? "on" : ""} title={L(c.label)}>
+                <input type="radio" name={`${id}-${r.id}`} checked={v[r.id] === c.id} aria-label={`${L(r.label)}: ${L(c.label)}`}
+                  onChange={() => onChange({ ...v, [r.id]: c.id })} />
+                <span>{L(c.label)}</span>
+              </label>
+            ))}
+          </div>
+        </fieldset>
+      ));
+      break;
+    }
+    case "geopoint":
+      input = <GeoPoint id={id} value={value} onChange={onChange} />;
+      break;
+    case "barcode":
+      input = <Barcode id={id} value={value} onChange={onChange} common={common} />;
+      break;
+    case "photo":
+      input = <Files id={id} value={Array.isArray(value) ? value : []} max={1} ctx={ctx} onChange={onChange} photo />;
+      break;
     case "choice_grid": {
       group = true;
       const v: Record<string, string> = value ?? {};
@@ -370,5 +457,21 @@ export function Field(p: Props) {
     default:
       return null;
   }
-  return <Wrap block={block} required={p.required} error={p.error} ctx={ctx} group={group}>{input}</Wrap>;
+  const missingCodes: { code: number; label: any }[] = block.missingCodes ?? [];
+  return (
+    <Wrap block={block} required={p.required} error={p.error} ctx={ctx} group={group || missingCodes.length > 0}>
+      {input}
+      {missingCodes.length ? (
+        <div class="missing">
+          {missingCodes.map((m) => (
+            <label class="opt" key={m.code}>
+              <input type="radio" name={`${id}-missing`} checked={missing === m.code}
+                onChange={() => onChange({ missing: m.code })} />
+              <span>{L(m.label)}</span>
+            </label>
+          ))}
+        </div>
+      ) : null}
+    </Wrap>
+  );
 }

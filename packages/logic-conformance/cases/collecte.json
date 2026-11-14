@@ -1,0 +1,1682 @@
+[
+ {
+  "name": "collecte_valid",
+  "base": "collecte",
+  "answers": {
+   "q_age": 34,
+   "q_sat": {
+    "r1": "c1",
+    "r2": "c3",
+    "r3": "c5"
+   },
+   "q_geo": {
+    "lat": 4.0511,
+    "lon": 9.7679,
+    "accuracy": 15
+   },
+   "q_bar": "MEN-0042",
+   "q_pic": [
+    "k/f/1"
+   ],
+   "q_sex": "f"
+  },
+  "expect": {
+   "errors": []
+  }
+ },
+ {
+  "name": "missing_declared_counts_as_answered",
+  "base": "collecte",
+  "answers": {
+   "q_age": {
+    "missing": 98
+   },
+   "q_sat": {
+    "r1": "c1",
+    "r2": "c3",
+    "r3": "c5"
+   }
+  },
+  "expect": {
+   "errors": []
+  }
+ },
+ {
+  "name": "missing_undeclared_is_refused",
+  "base": "collecte",
+  "answers": {
+   "q_age": {
+    "missing": 97
+   },
+   "q_sat": {
+    "r1": "c1",
+    "r2": "c3",
+    "r3": "c5"
+   }
+  },
+  "expect": {
+   "errors": [
+    {
+     "field": "q_age",
+     "code": "invalid_missing"
+    }
+   ]
+  }
+ },
+ {
+  "name": "missing_on_choice",
+  "base": "collecte",
+  "answers": {
+   "q_age": 40,
+   "q_sat": {
+    "r1": "c1",
+    "r2": "c3",
+    "r3": "c5"
+   },
+   "q_sex": {
+    "missing": 99
+   }
+  },
+  "expect": {
+   "errors": []
+  }
+ },
+ {
+  "name": "missing_on_question_without_codes",
+  "base": "collecte",
+  "answers": {
+   "q_age": 40,
+   "q_sat": {
+    "r1": "c1",
+    "r2": "c3",
+    "r3": "c5"
+   },
+   "q_bar": {
+    "missing": 99
+   }
+  },
+  "expect": {
+   "errors": [
+    {
+     "field": "q_bar",
+     "code": "invalid_missing"
+    }
+   ]
+  }
+ },
+ {
+  "name": "likert_required_incomplete",
+  "base": "collecte",
+  "answers": {
+   "q_age": 40,
+   "q_sat": {
+    "r1": "c1",
+    "r2": "c2"
+   }
+  },
+  "expect": {
+   "errors": [
+    {
+     "field": "q_sat",
+     "code": "incomplete"
+    }
+   ]
+  }
+ },
+ {
+  "name": "likert_optional_partial_ok",
+  "base": "collecte",
+  "answers": {
+   "q_age": 40,
+   "q_sat": {
+    "r1": "c1",
+    "r2": "c3",
+    "r3": "c5"
+   },
+   "q_lik": {
+    "a1": "k2"
+   }
+  },
+  "expect": {
+   "errors": []
+  }
+ },
+ {
+  "name": "likert_unknown_column",
+  "base": "collecte",
+  "answers": {
+   "q_age": 40,
+   "q_sat": {
+    "r1": "c9",
+    "r2": "c1",
+    "r3": "c1"
+   }
+  },
+  "expect": {
+   "errors": [
+    {
+     "field": "q_sat",
+     "code": "invalid_choice"
+    }
+   ]
+  }
+ },
+ {
+  "name": "geopoint_out_of_range",
+  "base": "collecte",
+  "answers": {
+   "q_age": 40,
+   "q_sat": {
+    "r1": "c1",
+    "r2": "c3",
+    "r3": "c5"
+   },
+   "q_geo": {
+    "lat": 91,
+    "lon": 0
+   }
+  },
+  "expect": {
+   "errors": [
+    {
+     "field": "q_geo",
+     "code": "invalid_geopoint"
+    }
+   ]
+  }
+ },
+ {
+  "name": "geopoint_text_coordinates",
+  "base": "collecte",
+  "answers": {
+   "q_age": 40,
+   "q_sat": {
+    "r1": "c1",
+    "r2": "c3",
+    "r3": "c5"
+   },
+   "q_geo": {
+    "lat": "4",
+    "lon": "9"
+   }
+  },
+  "expect": {
+   "errors": [
+    {
+     "field": "q_geo",
+     "code": "invalid_geopoint"
+    }
+   ]
+  }
+ },
+ {
+  "name": "geopoint_negative_accuracy",
+  "base": "collecte",
+  "answers": {
+   "q_age": 40,
+   "q_sat": {
+    "r1": "c1",
+    "r2": "c3",
+    "r3": "c5"
+   },
+   "q_geo": {
+    "lat": -4.5,
+    "lon": -179.9,
+    "accuracy": -1
+   }
+  },
+  "expect": {
+   "errors": [
+    {
+     "field": "q_geo",
+     "code": "invalid_geopoint"
+    }
+   ]
+  }
+ },
+ {
+  "name": "barcode_too_long",
+  "base": "collecte",
+  "answers": {
+   "q_age": 40,
+   "q_sat": {
+    "r1": "c1",
+    "r2": "c3",
+    "r3": "c5"
+   },
+   "q_bar": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  },
+  "expect": {
+   "errors": [
+    {
+     "field": "q_bar",
+     "code": "too_long"
+    }
+   ]
+  }
+ },
+ {
+  "name": "photo_two_files",
+  "base": "collecte",
+  "answers": {
+   "q_age": 40,
+   "q_sat": {
+    "r1": "c1",
+    "r2": "c3",
+    "r3": "c5"
+   },
+   "q_pic": [
+    "a",
+    "b"
+   ]
+  },
+  "expect": {
+   "errors": [
+    {
+     "field": "q_pic",
+     "code": "too_many"
+    }
+   ]
+  }
+ },
+ {
+  "name": "gen_collecte_000",
+  "base": "collecte",
+  "answers": {},
+  "expect": {
+   "visible": [
+    "q_age",
+    "q_sat",
+    "q_lik",
+    "q_geo",
+    "q_bar",
+    "q_pic",
+    "q_sex"
+   ],
+   "required": [
+    "q_age",
+    "q_sat"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_age",
+     "code": "required"
+    },
+    {
+     "field": "q_sat",
+     "code": "required"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_collecte_001",
+  "base": "collecte",
+  "answers": {
+   "q_age": null
+  },
+  "expect": {
+   "visible": [
+    "q_age",
+    "q_sat",
+    "q_lik",
+    "q_geo",
+    "q_bar",
+    "q_pic",
+    "q_sex"
+   ],
+   "required": [
+    "q_age",
+    "q_sat"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_age",
+     "code": "required"
+    },
+    {
+     "field": "q_sat",
+     "code": "required"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_collecte_002",
+  "base": "collecte",
+  "answers": {
+   "q_pic": 0.1
+  },
+  "expect": {
+   "visible": [
+    "q_age",
+    "q_sat",
+    "q_lik",
+    "q_geo",
+    "q_bar",
+    "q_pic",
+    "q_sex"
+   ],
+   "required": [
+    "q_age",
+    "q_sat"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_age",
+     "code": "required"
+    },
+    {
+     "field": "q_sat",
+     "code": "required"
+    },
+    {
+     "field": "q_pic",
+     "code": "invalid_file"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_collecte_003",
+  "base": "collecte",
+  "answers": {
+   "q_bar": null
+  },
+  "expect": {
+   "visible": [
+    "q_age",
+    "q_sat",
+    "q_lik",
+    "q_geo",
+    "q_bar",
+    "q_pic",
+    "q_sex"
+   ],
+   "required": [
+    "q_age",
+    "q_sat"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_age",
+     "code": "required"
+    },
+    {
+     "field": "q_sat",
+     "code": "required"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_collecte_004",
+  "base": "collecte",
+  "answers": {
+   "q_lik": {}
+  },
+  "expect": {
+   "visible": [
+    "q_age",
+    "q_sat",
+    "q_lik",
+    "q_geo",
+    "q_bar",
+    "q_pic",
+    "q_sex"
+   ],
+   "required": [
+    "q_age",
+    "q_sat"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_age",
+     "code": "required"
+    },
+    {
+     "field": "q_sat",
+     "code": "required"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_collecte_005",
+  "base": "collecte",
+  "answers": {
+   "q_lik": 0,
+   "q_sex": 18
+  },
+  "expect": {
+   "visible": [
+    "q_age",
+    "q_sat",
+    "q_lik",
+    "q_geo",
+    "q_bar",
+    "q_pic",
+    "q_sex"
+   ],
+   "required": [
+    "q_age",
+    "q_sat"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_age",
+     "code": "required"
+    },
+    {
+     "field": "q_sat",
+     "code": "required"
+    },
+    {
+     "field": "q_lik",
+     "code": "invalid_choice"
+    },
+    {
+     "field": "q_sex",
+     "code": "invalid_choice"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_collecte_006",
+  "base": "collecte",
+  "answers": {
+   "q_age": false
+  },
+  "expect": {
+   "visible": [
+    "q_age",
+    "q_sat",
+    "q_lik",
+    "q_geo",
+    "q_bar",
+    "q_pic",
+    "q_sex"
+   ],
+   "required": [
+    "q_age",
+    "q_sat"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_age",
+     "code": "invalid_number"
+    },
+    {
+     "field": "q_sat",
+     "code": "required"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_collecte_007",
+  "base": "collecte",
+  "answers": {
+   "q_sex": "h"
+  },
+  "expect": {
+   "visible": [
+    "q_age",
+    "q_sat",
+    "q_lik",
+    "q_geo",
+    "q_bar",
+    "q_pic",
+    "q_sex"
+   ],
+   "required": [
+    "q_age",
+    "q_sat"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_age",
+     "code": "required"
+    },
+    {
+     "field": "q_sat",
+     "code": "required"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_collecte_008",
+  "base": "collecte",
+  "answers": {
+   "q_sat": {
+    "missing": 98
+   },
+   "q_sex": true
+  },
+  "expect": {
+   "visible": [
+    "q_age",
+    "q_sat",
+    "q_lik",
+    "q_geo",
+    "q_bar",
+    "q_pic",
+    "q_sex"
+   ],
+   "required": [
+    "q_age",
+    "q_sat"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_age",
+     "code": "required"
+    },
+    {
+     "field": "q_sat",
+     "code": "invalid_missing"
+    },
+    {
+     "field": "q_sex",
+     "code": "invalid_choice"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_collecte_009",
+  "base": "collecte",
+  "answers": {
+   "q_age": false,
+   "q_sex": "h"
+  },
+  "expect": {
+   "visible": [
+    "q_age",
+    "q_sat",
+    "q_lik",
+    "q_geo",
+    "q_bar",
+    "q_pic",
+    "q_sex"
+   ],
+   "required": [
+    "q_age",
+    "q_sat"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_age",
+     "code": "invalid_number"
+    },
+    {
+     "field": "q_sat",
+     "code": "required"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_collecte_010",
+  "base": "collecte",
+  "answers": {
+   "q_geo": false,
+   "q_age": false
+  },
+  "expect": {
+   "visible": [
+    "q_age",
+    "q_sat",
+    "q_lik",
+    "q_geo",
+    "q_bar",
+    "q_pic",
+    "q_sex"
+   ],
+   "required": [
+    "q_age",
+    "q_sat"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_age",
+     "code": "invalid_number"
+    },
+    {
+     "field": "q_sat",
+     "code": "required"
+    },
+    {
+     "field": "q_geo",
+     "code": "invalid_geopoint"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_collecte_011",
+  "base": "collecte",
+  "answers": {
+   "q_geo": {
+    "lat": 0,
+    "lon": 0
+   }
+  },
+  "expect": {
+   "visible": [
+    "q_age",
+    "q_sat",
+    "q_lik",
+    "q_geo",
+    "q_bar",
+    "q_pic",
+    "q_sex"
+   ],
+   "required": [
+    "q_age",
+    "q_sat"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_age",
+     "code": "required"
+    },
+    {
+     "field": "q_sat",
+     "code": "required"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_collecte_012",
+  "base": "collecte",
+  "answers": {
+   "q_geo": -0.5,
+   "q_bar": 13,
+   "q_pic": true
+  },
+  "expect": {
+   "visible": [
+    "q_age",
+    "q_sat",
+    "q_lik",
+    "q_geo",
+    "q_bar",
+    "q_pic",
+    "q_sex"
+   ],
+   "required": [
+    "q_age",
+    "q_sat"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_age",
+     "code": "required"
+    },
+    {
+     "field": "q_sat",
+     "code": "required"
+    },
+    {
+     "field": "q_geo",
+     "code": "invalid_geopoint"
+    },
+    {
+     "field": "q_bar",
+     "code": "invalid_type"
+    },
+    {
+     "field": "q_pic",
+     "code": "invalid_file"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_collecte_013",
+  "base": "collecte",
+  "answers": {
+   "q_geo": -0.5,
+   "q_bar": false,
+   "q_pic": true
+  },
+  "expect": {
+   "visible": [
+    "q_age",
+    "q_sat",
+    "q_lik",
+    "q_geo",
+    "q_bar",
+    "q_pic",
+    "q_sex"
+   ],
+   "required": [
+    "q_age",
+    "q_sat"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_age",
+     "code": "required"
+    },
+    {
+     "field": "q_sat",
+     "code": "required"
+    },
+    {
+     "field": "q_geo",
+     "code": "invalid_geopoint"
+    },
+    {
+     "field": "q_bar",
+     "code": "invalid_type"
+    },
+    {
+     "field": "q_pic",
+     "code": "invalid_file"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_collecte_014",
+  "base": "collecte",
+  "answers": {
+   "q_geo": -0.5,
+   "q_bar": true,
+   "q_pic": true
+  },
+  "expect": {
+   "visible": [
+    "q_age",
+    "q_sat",
+    "q_lik",
+    "q_geo",
+    "q_bar",
+    "q_pic",
+    "q_sex"
+   ],
+   "required": [
+    "q_age",
+    "q_sat"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_age",
+     "code": "required"
+    },
+    {
+     "field": "q_sat",
+     "code": "required"
+    },
+    {
+     "field": "q_geo",
+     "code": "invalid_geopoint"
+    },
+    {
+     "field": "q_bar",
+     "code": "invalid_type"
+    },
+    {
+     "field": "q_pic",
+     "code": "invalid_file"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_collecte_015",
+  "base": "collecte",
+  "answers": {
+   "q_sat": "3",
+   "q_pic": -2,
+   "q_age": null,
+   "q_lik": null,
+   "q_sex": "zzz",
+   "q_bar": " ",
+   "q_geo": {
+    "missing": 98
+   }
+  },
+  "expect": {
+   "visible": [
+    "q_age",
+    "q_sat",
+    "q_lik",
+    "q_geo",
+    "q_bar",
+    "q_pic",
+    "q_sex"
+   ],
+   "required": [
+    "q_age",
+    "q_sat"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_age",
+     "code": "required"
+    },
+    {
+     "field": "q_sat",
+     "code": "invalid_choice"
+    },
+    {
+     "field": "q_geo",
+     "code": "invalid_missing"
+    },
+    {
+     "field": "q_pic",
+     "code": "invalid_file"
+    },
+    {
+     "field": "q_sex",
+     "code": "invalid_choice"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_collecte_016",
+  "base": "collecte",
+  "answers": {
+   "q_sat": "3",
+   "q_pic": null,
+   "q_age": null,
+   "q_lik": null,
+   "q_sex": "zzz",
+   "q_bar": " ",
+   "q_geo": {
+    "missing": 98
+   }
+  },
+  "expect": {
+   "visible": [
+    "q_age",
+    "q_sat",
+    "q_lik",
+    "q_geo",
+    "q_bar",
+    "q_pic",
+    "q_sex"
+   ],
+   "required": [
+    "q_age",
+    "q_sat"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_age",
+     "code": "required"
+    },
+    {
+     "field": "q_sat",
+     "code": "invalid_choice"
+    },
+    {
+     "field": "q_geo",
+     "code": "invalid_missing"
+    },
+    {
+     "field": "q_sex",
+     "code": "invalid_choice"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_collecte_017",
+  "base": "collecte",
+  "answers": {
+   "q_sat": "3",
+   "q_age": null,
+   "q_sex": "zzz",
+   "q_pic": " ",
+   "q_bar": null
+  },
+  "expect": {
+   "visible": [
+    "q_age",
+    "q_sat",
+    "q_lik",
+    "q_geo",
+    "q_bar",
+    "q_pic",
+    "q_sex"
+   ],
+   "required": [
+    "q_age",
+    "q_sat"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_age",
+     "code": "required"
+    },
+    {
+     "field": "q_sat",
+     "code": "invalid_choice"
+    },
+    {
+     "field": "q_sex",
+     "code": "invalid_choice"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_collecte_018",
+  "base": "collecte",
+  "answers": {
+   "q_sat": "3",
+   "q_age": null,
+   "q_sex": "zzz",
+   "q_pic": null,
+   "q_bar": null
+  },
+  "expect": {
+   "visible": [
+    "q_age",
+    "q_sat",
+    "q_lik",
+    "q_geo",
+    "q_bar",
+    "q_pic",
+    "q_sex"
+   ],
+   "required": [
+    "q_age",
+    "q_sat"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_age",
+     "code": "required"
+    },
+    {
+     "field": "q_sat",
+     "code": "invalid_choice"
+    },
+    {
+     "field": "q_sex",
+     "code": "invalid_choice"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_collecte_019",
+  "base": "collecte",
+  "answers": {
+   "q_sat": "3",
+   "q_age": null
+  },
+  "expect": {
+   "visible": [
+    "q_age",
+    "q_sat",
+    "q_lik",
+    "q_geo",
+    "q_bar",
+    "q_pic",
+    "q_sex"
+   ],
+   "required": [
+    "q_age",
+    "q_sat"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_age",
+     "code": "required"
+    },
+    {
+     "field": "q_sat",
+     "code": "invalid_choice"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_collecte_020",
+  "base": "collecte",
+  "answers": {
+   "q_lik": "a@b.cm",
+   "q_sat": {
+    "missing": 99
+   },
+   "q_bar": null,
+   "q_sex": true
+  },
+  "expect": {
+   "visible": [
+    "q_age",
+    "q_sat",
+    "q_lik",
+    "q_geo",
+    "q_bar",
+    "q_pic",
+    "q_sex"
+   ],
+   "required": [
+    "q_age",
+    "q_sat"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_age",
+     "code": "required"
+    },
+    {
+     "field": "q_sat",
+     "code": "invalid_missing"
+    },
+    {
+     "field": "q_lik",
+     "code": "invalid_choice"
+    },
+    {
+     "field": "q_sex",
+     "code": "invalid_choice"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_collecte_021",
+  "base": "collecte",
+  "answers": {
+   "q_lik": "a@b.cm",
+   "q_sat": " ",
+   "q_bar": null,
+   "q_sex": true
+  },
+  "expect": {
+   "visible": [
+    "q_age",
+    "q_sat",
+    "q_lik",
+    "q_geo",
+    "q_bar",
+    "q_pic",
+    "q_sex"
+   ],
+   "required": [
+    "q_age",
+    "q_sat"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_age",
+     "code": "required"
+    },
+    {
+     "field": "q_sat",
+     "code": "required"
+    },
+    {
+     "field": "q_lik",
+     "code": "invalid_choice"
+    },
+    {
+     "field": "q_sex",
+     "code": "invalid_choice"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_collecte_022",
+  "base": "collecte",
+  "answers": {
+   "q_lik": "a@b.cm",
+   "q_sat": "a@b.cm",
+   "q_bar": null,
+   "q_sex": true
+  },
+  "expect": {
+   "visible": [
+    "q_age",
+    "q_sat",
+    "q_lik",
+    "q_geo",
+    "q_bar",
+    "q_pic",
+    "q_sex"
+   ],
+   "required": [
+    "q_age",
+    "q_sat"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_age",
+     "code": "required"
+    },
+    {
+     "field": "q_sat",
+     "code": "invalid_choice"
+    },
+    {
+     "field": "q_lik",
+     "code": "invalid_choice"
+    },
+    {
+     "field": "q_sex",
+     "code": "invalid_choice"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_collecte_023",
+  "base": "collecte",
+  "answers": {
+   "q_sat": "a@b.cm",
+   "q_bar": null
+  },
+  "expect": {
+   "visible": [
+    "q_age",
+    "q_sat",
+    "q_lik",
+    "q_geo",
+    "q_bar",
+    "q_pic",
+    "q_sex"
+   ],
+   "required": [
+    "q_age",
+    "q_sat"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_age",
+     "code": "required"
+    },
+    {
+     "field": "q_sat",
+     "code": "invalid_choice"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_collecte_024",
+  "base": "collecte",
+  "answers": {
+   "q_sat": "a@b.cm"
+  },
+  "expect": {
+   "visible": [
+    "q_age",
+    "q_sat",
+    "q_lik",
+    "q_geo",
+    "q_bar",
+    "q_pic",
+    "q_sex"
+   ],
+   "required": [
+    "q_age",
+    "q_sat"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_age",
+     "code": "required"
+    },
+    {
+     "field": "q_sat",
+     "code": "invalid_choice"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_collecte_025",
+  "base": "collecte",
+  "answers": {
+   "q_sat": {
+    "r1": "c5",
+    "r2": "c3",
+    "r3": "c5"
+   }
+  },
+  "expect": {
+   "visible": [
+    "q_age",
+    "q_sat",
+    "q_lik",
+    "q_geo",
+    "q_bar",
+    "q_pic",
+    "q_sex"
+   ],
+   "required": [
+    "q_age",
+    "q_sat"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_age",
+     "code": "required"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_collecte_026",
+  "base": "collecte",
+  "answers": {
+   "q_sat": {
+    "r1": "c5",
+    "r2": "c5",
+    "r3": "c5"
+   }
+  },
+  "expect": {
+   "visible": [
+    "q_age",
+    "q_sat",
+    "q_lik",
+    "q_geo",
+    "q_bar",
+    "q_pic",
+    "q_sex"
+   ],
+   "required": [
+    "q_age",
+    "q_sat"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_age",
+     "code": "required"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_collecte_027",
+  "base": "collecte",
+  "answers": {
+   "q_sat": {},
+   "q_age": {
+    "missing": 98
+   }
+  },
+  "expect": {
+   "visible": [
+    "q_age",
+    "q_sat",
+    "q_lik",
+    "q_geo",
+    "q_bar",
+    "q_pic",
+    "q_sex"
+   ],
+   "required": [
+    "q_age",
+    "q_sat"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_sat",
+     "code": "required"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_collecte_028",
+  "base": "collecte",
+  "answers": {
+   "q_age": {
+    "missing": 98
+   },
+   "q_sex": 0.1
+  },
+  "expect": {
+   "visible": [
+    "q_age",
+    "q_sat",
+    "q_lik",
+    "q_geo",
+    "q_bar",
+    "q_pic",
+    "q_sex"
+   ],
+   "required": [
+    "q_age",
+    "q_sat"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_sat",
+     "code": "required"
+    },
+    {
+     "field": "q_sex",
+     "code": "invalid_choice"
+    }
+   ],
+   "amount": 0
+  }
+ },
+ {
+  "name": "gen_collecte_029",
+  "base": "collecte",
+  "answers": {
+   "q_sex": null,
+   "q_pic": 7,
+   "q_lik": 9.99
+  },
+  "expect": {
+   "visible": [
+    "q_age",
+    "q_sat",
+    "q_lik",
+    "q_geo",
+    "q_bar",
+    "q_pic",
+    "q_sex"
+   ],
+   "required": [
+    "q_age",
+    "q_sat"
+   ],
+   "variables": {},
+   "path": [
+    "p1"
+   ],
+   "ended": false,
+   "nextPage": {
+    "p1": null
+   },
+   "errors": [
+    {
+     "field": "q_age",
+     "code": "required"
+    },
+    {
+     "field": "q_sat",
+     "code": "required"
+    },
+    {
+     "field": "q_lik",
+     "code": "invalid_choice"
+    },
+    {
+     "field": "q_pic",
+     "code": "invalid_file"
+    }
+   ],
+   "amount": 0
+  }
+ }
+]

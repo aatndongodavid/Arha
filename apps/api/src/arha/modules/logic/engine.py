@@ -10,13 +10,14 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass, field
 from datetime import date
-from typing import Any
+from typing import Any, TypeGuard
 
 SCALE = 1_000_000
 INPUT_TYPES = {
     "short_text", "long_text", "email", "phone", "url", "number", "single_choice", "multi_choice", "dropdown",
     "yes_no", "ranking", "choice_grid", "rating", "linear_scale", "nps", "date", "time", "date_range",
     "file_upload", "signature", "payment_open", "product_choice", "ticket_choice", "hidden", "consent",
+    "likert_matrix", "geopoint", "photo", "barcode",
 }
 PAYMENT_TYPES = {"payment_fixed", "payment_computed", "payment_open", "product_choice", "ticket_choice"}
 CHOICE_TYPES = {"single_choice", "dropdown"}
@@ -477,9 +478,14 @@ class Evaluator:
                 if bid in required:
                     self._err(bid, "required")
                 continue
-            self._validate_value(bid, block, value)
+            if is_missing(value):
+                # Declared missing value (section 7): only the codes declared on the question are accepted.
+                if value.get("missing") not in {m.get("code") for m in block.get("missingCodes") or []}:
+                    self._err(bid, "invalid_missing")
+                continue
+            self._validate_value(bid, block, value, bid in required)
 
-    def _validate_value(self, bid: str, block: dict[str, Any], value: Any) -> None:
+    def _validate_value(self, bid: str, block: dict[str, Any], value: Any, required: bool = False) -> None:
         t = block["type"]
         rules = block.get("validation") or {}
         option_ids = {o["id"] for o in block.get("options") or []}
@@ -536,11 +542,28 @@ class Evaluator:
         elif t == "consent":
             if value is not True:
                 return self._err(bid, "required")
-        elif t == "choice_grid":
+        elif t in ("choice_grid", "likert_matrix"):
             rows = {r["id"] for r in block.get("rows") or []}
             cols = {c["id"] for c in block.get("columns") or []}
-            if not isinstance(value, dict) or any(k not in rows or v not in cols for k, v in value.items()):
+            if not isinstance(value, dict) or any(k not in rows or not isinstance(v, str) or v not in cols
+                                                  for k, v in value.items()):
                 return self._err(bid, "invalid_choice")
+            if t == "likert_matrix" and required and set(value) != rows:
+                return self._err(bid, "incomplete")
+        elif t == "geopoint":
+            if not isinstance(value, dict) or not _numeric_like(value.get("lat")) or not _numeric_like(
+                    value.get("lon")) or isinstance(value.get("lat"), str) or isinstance(value.get("lon"), str):
+                return self._err(bid, "invalid_geopoint")
+            lat, lon = to_fixed(value["lat"]), to_fixed(value["lon"])
+            acc = value.get("accuracy")
+            if not (-90 * SCALE <= lat <= 90 * SCALE and -180 * SCALE <= lon <= 180 * SCALE) or (
+                    acc is not None and (not _numeric_like(acc) or isinstance(acc, str) or to_fixed(acc) < 0)):
+                return self._err(bid, "invalid_geopoint")
+        elif t == "barcode":
+            if not isinstance(value, str):
+                return self._err(bid, "invalid_type")
+            if len(value) > 200:
+                return self._err(bid, "too_long")
         elif t == "date":
             if not isinstance(value, str) or not _valid_date(value):
                 return self._err(bid, "invalid_date")
@@ -555,7 +578,7 @@ class Evaluator:
             if (not isinstance(value, dict) or not _valid_date(str(value.get("start", "")))
                     or not _valid_date(str(value.get("end", ""))) or value["start"] > value["end"]):
                 return self._err(bid, "invalid_date")
-        elif t == "file_upload":
+        elif t in ("file_upload", "photo"):
             if not isinstance(value, list) or any(not isinstance(v, str) or len(v) > 200 for v in value):
                 return self._err(bid, "invalid_file")
             if len(value) > rules.get("maxFiles", 1):
@@ -629,6 +652,11 @@ class Evaluator:
                         items.append({"block": bid, "option": opt["id"], "quantity": q,
                                       "unit_price": int(opt.get("price", 0)), "amount": to_currency_unit(amt)})
         return total, items
+
+
+def is_missing(value: Any) -> TypeGuard[dict[str, Any]]:
+    return isinstance(value, dict) and len(value) == 1 and isinstance(value.get("missing"), int) and not isinstance(
+        value.get("missing"), bool)
 
 
 def _valid_date(value: str) -> bool:

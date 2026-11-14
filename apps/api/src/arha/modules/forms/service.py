@@ -70,7 +70,9 @@ def validate_schema(schema: dict[str, Any]) -> dict[str, Any]:
         raise AppError("form_schema_invalid", 422, extra={"errors": errors}) from exc
     if len(json.dumps(schema)) > 1_000_000:
         raise AppError("form_schema_invalid", 422)
-    return _sanitize(schema)  # type: ignore[no-any-return]
+    from arha.modules.logic.variables import normalize
+
+    return normalize(_sanitize(schema))
 
 
 def schema_hash(schema: dict[str, Any]) -> str:

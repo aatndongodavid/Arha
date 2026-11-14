@@ -1343,6 +1343,240 @@
   ],
   "rules": []
  },
+ "collecte": {
+  "schemaVersion": 1,
+  "defaultLocale": "fr",
+  "locales": [
+   "fr",
+   "en"
+  ],
+  "settings": {
+   "payments": {
+    "enabled": false,
+    "currency": "XAF",
+    "feeBearer": "org",
+    "provider": "fake"
+   }
+  },
+  "variables": [],
+  "pages": [
+   {
+    "id": "p1",
+    "blocks": [
+     {
+      "id": "q_age",
+      "type": "number",
+      "label": {
+       "fr": "Age",
+       "en": "Age"
+      },
+      "required": true,
+      "validation": {
+       "min": 0,
+       "max": 120
+      },
+      "missingCodes": [
+       {
+        "code": 98,
+        "label": {
+         "fr": "NSP",
+         "en": "NSP"
+        }
+       },
+       {
+        "code": 99,
+        "label": {
+         "fr": "Refus",
+         "en": "Refus"
+        }
+       }
+      ]
+     },
+     {
+      "id": "q_sat",
+      "type": "likert_matrix",
+      "label": {
+       "fr": "Satisfaction",
+       "en": "Satisfaction"
+      },
+      "required": true,
+      "rows": [
+       {
+        "id": "r1",
+        "label": {
+         "fr": "r1",
+         "en": "r1"
+        },
+        "code": 1
+       },
+       {
+        "id": "r2",
+        "label": {
+         "fr": "r2",
+         "en": "r2"
+        },
+        "code": 2
+       },
+       {
+        "id": "r3",
+        "label": {
+         "fr": "r3",
+         "en": "r3"
+        },
+        "code": 3
+       }
+      ],
+      "columns": [
+       {
+        "id": "c1",
+        "label": {
+         "fr": "c1",
+         "en": "c1"
+        },
+        "code": 1
+       },
+       {
+        "id": "c2",
+        "label": {
+         "fr": "c2",
+         "en": "c2"
+        },
+        "code": 2
+       },
+       {
+        "id": "c3",
+        "label": {
+         "fr": "c3",
+         "en": "c3"
+        },
+        "code": 3
+       },
+       {
+        "id": "c4",
+        "label": {
+         "fr": "c4",
+         "en": "c4"
+        },
+        "code": 4
+       },
+       {
+        "id": "c5",
+        "label": {
+         "fr": "c5",
+         "en": "c5"
+        },
+        "code": 5
+       }
+      ]
+     },
+     {
+      "id": "q_lik",
+      "type": "likert_matrix",
+      "label": {
+       "fr": "Optionnel",
+       "en": "Optionnel"
+      },
+      "rows": [
+       {
+        "id": "a1",
+        "label": {
+         "fr": "a1",
+         "en": "a1"
+        },
+        "code": 1
+       },
+       {
+        "id": "a2",
+        "label": {
+         "fr": "a2",
+         "en": "a2"
+        },
+        "code": 2
+       }
+      ],
+      "columns": [
+       {
+        "id": "k1",
+        "label": {
+         "fr": "k1",
+         "en": "k1"
+        },
+        "code": 1
+       },
+       {
+        "id": "k2",
+        "label": {
+         "fr": "k2",
+         "en": "k2"
+        },
+        "code": 2
+       }
+      ]
+     },
+     {
+      "id": "q_geo",
+      "type": "geopoint",
+      "label": {
+       "fr": "Position",
+       "en": "Position"
+      }
+     },
+     {
+      "id": "q_bar",
+      "type": "barcode",
+      "label": {
+       "fr": "Code",
+       "en": "Code"
+      }
+     },
+     {
+      "id": "q_pic",
+      "type": "photo",
+      "label": {
+       "fr": "Photo",
+       "en": "Photo"
+      }
+     },
+     {
+      "id": "q_sex",
+      "type": "single_choice",
+      "label": {
+       "fr": "Sexe",
+       "en": "Sexe"
+      },
+      "options": [
+       {
+        "id": "h",
+        "label": {
+         "fr": "h",
+         "en": "h"
+        },
+        "code": 1
+       },
+       {
+        "id": "f",
+        "label": {
+         "fr": "f",
+         "en": "f"
+        },
+        "code": 2
+       }
+      ],
+      "missingCodes": [
+       {
+        "code": 99,
+        "label": {
+         "fr": "Refus",
+         "en": "Refus"
+        }
+       }
+      ]
+     }
+    ]
+   }
+  ],
+  "rules": []
+ },
  "hidden": {
   "schemaVersion": 1,
   "defaultLocale": "fr",
