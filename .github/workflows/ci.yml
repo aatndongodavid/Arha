@@ -67,8 +67,10 @@ jobs:
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262  # v4
         with: { fetch-depth: 0 }
-      - uses: gitleaks/gitleaks-action@ff98106e4c7b2bc287b24eaf42907196329070c7  # v2
-        env: { GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}" }
+      - name: Gitleaks on the whole history
+        run: >-
+          docker run --rm -v "$PWD:/repo" ghcr.io/gitleaks/gitleaks:v8.24.3
+          git /repo --config /repo/.gitleaks.toml --redact --no-banner --exit-code 1
       - name: Semgrep
         run: >-
           docker run --rm -v "$PWD:/src" -w /src semgrep/semgrep:1.183.0
