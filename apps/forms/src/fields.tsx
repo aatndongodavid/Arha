@@ -147,7 +147,9 @@ export function Field(p: Props) {
   const options: Record<string, any>[] = block.options ?? [];
 
   if (type === "heading") return <h2>{L(block.content) || L(block.label)}</h2>;
-  if (type === "rich_text") return <div class="rich" dangerouslySetInnerHTML={{ __html: L(block.content) }} />; // sanitized by the server (nh3)
+  // Rich text is sanitized by the server with an nh3 allowlist before publication (S-08).
+  // nosemgrep: typescript.react.security.audit.react-dangerouslysetinnerhtml.react-dangerouslysetinnerhtml
+  if (type === "rich_text") return <div class="rich" dangerouslySetInnerHTML={{ __html: L(block.content) }} />;
   if (type === "divider") return <hr />;
   if (type === "image") return block.imageKey ? <img src={block.imageKey} alt={L(block.alt)} loading="lazy" /> : null;
   if (type === "hidden") return null;

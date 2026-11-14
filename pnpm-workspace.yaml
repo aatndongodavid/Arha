@@ -3,3 +3,9 @@ packages:
   - "apps/forms"
   - "apps/site"
   - "packages/*"
+
+# Supply chain (S-15): wait seven days before installing a new release, refuse
+# trust downgrades and transitive dependencies from git or tarball URLs.
+minimumReleaseAge: 10080
+trustPolicy: no-downgrade
+blockExoticSubdeps: true

@@ -60,6 +60,8 @@ async def is_password_pwned(password: str) -> bool:
     """k-anonymity check against Pwned Passwords: only a 5-char SHA-1 prefix leaves the server."""
     if not get_settings().pwned_passwords_check:
         return False
+    # SHA-1 is imposed by the Pwned Passwords range API (S-01); it is not used to protect anything.
+    # nosemgrep: python.lang.security.insecure-hash-algorithms.insecure-hash-algorithm-sha1
     digest = hashlib.sha1(password.encode(), usedforsecurity=False).hexdigest().upper()
     prefix, suffix = digest[:5], digest[5:]
     try:
